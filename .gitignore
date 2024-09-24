@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -28,3 +29,6 @@ node_modules/
 
 # dotenv environment variables file
 .env
+=======
+/vendor
+>>>>>>> 8577febf2ecdcab7d410d7c22240d0fed4d5febd
