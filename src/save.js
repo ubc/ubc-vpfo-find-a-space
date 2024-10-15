@@ -16,6 +16,7 @@ import { useBlockProps } from '@wordpress/block-editor';
  * @return {Element} Element to render.
  */
 export default function save({ attributes }) {
+  console.log(attributes);
 	return (
     <div id="ubc-vpfo-find-a-space-root" data-config={ JSON.stringify(attributes) }></div>
   );

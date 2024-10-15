@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import AppContainer from './app/AppContainer.js';
+import AppContainer from './app/AppContainer';
 
 const rootElement = document.getElementById('ubc-vpfo-find-a-space-root');
 

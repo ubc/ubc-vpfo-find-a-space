@@ -60,7 +60,10 @@ class Find_A_Space {
 		$this->plugin_name = 'ubc-vpfo-find-a-space';
 
 		// Only load the plugin when the Airtable API key and Base ID are defined.
-		if ( defined( 'UBC_VPFO_FIND_A_SPACE_AIRTABLE_API_KEY' ) && defined( 'UBC_VPFO_FIND_A_SPACE_AIRTABLE_API_KEY' ) ) {
+		if ( defined( 'UBC_VPFO_FIND_A_SPACE_AIRTABLE_API_KEY' )
+			&& defined( 'UBC_VPFO_SPACES_PAGE_AIRTABLE_BASE_ID_VAN' )
+			&& defined( 'UBC_VPFO_SPACES_PAGE_AIRTABLE_BASE_ID_OKAN' )
+		) {
 			$this->load_dependencies();
 		}
 	}
@@ -78,14 +81,14 @@ class Find_A_Space {
 		$this->ajax_handler = new Find_A_Space_Ajax_Handler();
 
 		add_action( 'init', array( $this, 'init_block' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), 100 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'localize_scripts' ), 100 );
 	}
 
 	public function init_block() {
 		register_block_type( plugin_dir_path( __DIR__ ) . 'build' );
 	}
 
-	public function enqueue_scripts() {
+	public function localize_scripts() {
 		wp_localize_script(
 			'create-block-ubc-vpfo-find-a-space-view-script',
 			'find_a_space_script_vars',

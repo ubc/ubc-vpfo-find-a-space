@@ -54,9 +54,9 @@ class Find_A_Space_Ajax_Handler {
 		add_action( 'wp_ajax_find_a_space_single_building', array( $this, 'single_building_callback' ) );
 		add_action( 'wp_ajax_nopriv_find_a_space_single_building', array( $this, 'single_building_callback' ) );
 
-		// List spaces (with filters)
-		add_action( 'wp_ajax_find_a_space_spaces', array( $this, 'spaces_callback' ) );
-		add_action( 'wp_ajax_nopriv_find_a_space_spaces', array( $this, 'spaces_callback' ) );
+		// List rooms (with filters)
+		add_action( 'wp_ajax_find_a_space_rooms', array( $this, 'rooms_callback' ) );
+		add_action( 'wp_ajax_nopriv_find_a_space_rooms', array( $this, 'rooms_callback' ) );
 	}
 
 	private function verify_nonce() {
@@ -69,7 +69,25 @@ class Find_A_Space_Ajax_Handler {
 			return wp_send_json_error( 'Invalid nonce' );
 		}
 
-		return wp_send_json( array( 'message' => 'Meta' ) );
+		$data = $_REQUEST['data'];
+
+		$campus = sanitize_text_field( $data['campus'] ?? null );
+		$formal = rest_sanitize_boolean( $data['formal'] ?? null );
+
+		$params = array(
+			'campus' => $campus,
+			'formal' => $formal,
+		);
+
+		$shared_amenities = $this->airtable_api->get( 'get_shared_amenities', $params );
+		$resources        = $this->airtable_api->get( 'get_resources', $params );
+
+		$payload = array(
+			'shared_amenities' => $shared_amenities,
+			'resources'        => $resources,
+		);
+
+		return wp_send_json( array( 'message' => $payload ) );
 	}
 
 	public function buildings_callback() {
@@ -87,9 +105,9 @@ class Find_A_Space_Ajax_Handler {
 			'formal' => $formal,
 		);
 
-		$records = $this->airtable_api->get( 'get_buildings', $params );
+		$data = $this->airtable_api->get( 'get_buildings', $params );
 
-		return wp_send_json( array( 'data' => $records ) );
+		return wp_send_json( array( 'data' => $data ) );
 	}
 
 	public function single_building_callback() {
@@ -100,11 +118,25 @@ class Find_A_Space_Ajax_Handler {
 		return wp_send_json( array( 'message' => 'Building single' ) );
 	}
 
-	public function spaces_callback() {
+	public function rooms_callback() {
 		if ( ! $this->verify_nonce() ) {
 			return wp_send_json_error( 'Invalid nonce' );
 		}
 
-		return wp_send_json( array( 'message' => 'Spaces' ) );
+		$data = $_REQUEST['data'];
+
+		$campus = sanitize_text_field( $data['campus'] ?? null );
+		$offset = sanitize_text_field( $data['offset'] ?? null );
+		$formal = rest_sanitize_boolean( $data['formal'] ?? null );
+
+		$params = array(
+			'campus' => $campus,
+			'formal' => $formal,
+			'offset' => $offset,
+		);
+
+		$data = $this->airtable_api->get( 'get_rooms', $params );
+
+		return wp_send_json( $data );
 	}
 }
