@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 === Ubc Vpfo Find A Space ===
 Contributors:      The WordPress Contributors
 Tags:              block
 Tested up to:      6.6
+=======
+=== Find Learning Space Block ===
+Contributors:      The WordPress Contributors
+Tags:              block
+Tested up to:      6.1
+>>>>>>> 7dbec184d75c852f09ac6c6f116919a2bb8bbfc9
 Stable tag:        0.1.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html

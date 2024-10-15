@@ -1,18 +1,1 @@
-/*!***************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/style.scss ***!
-  \***************************************************************************************************************************************************************************************************************************************/
-.vpfo-find-spaces-table {
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: 0 auto;
-}
-.vpfo-find-spaces-table tbody {
-  padding: 12px;
-}
-.vpfo-find-spaces-table th,
-.vpfo-find-spaces-table td {
-  border: 1px solid #ccc;
-  padding: 12px;
-}
-
-/*# sourceMappingURL=style-index.css.map*/
+.vpfo-find-spaces-table{margin:0 auto;width:-moz-fit-content;width:fit-content}.vpfo-find-spaces-table tbody{padding:12px}.vpfo-find-spaces-table td,.vpfo-find-spaces-table th{border:1px solid #ccc;padding:12px}
