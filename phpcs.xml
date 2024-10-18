@@ -8,4 +8,7 @@
     <!-- Ignore the vendor directory -->
     <exclude-pattern>vendor/*</exclude-pattern>
 
+    <!-- Ignore the node_modules directory -->
+    <exclude-pattern>node_modules/*</exclude-pattern>
+
 </ruleset>
