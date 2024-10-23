@@ -79,15 +79,23 @@ class Find_A_Space_Ajax_Handler {
 			'formal' => $formal,
 		);
 
-		$shared_amenities = $this->airtable_api->get( 'get_shared_amenities', $params );
-		$resources        = $this->airtable_api->get( 'get_resources', $params );
+		$shared_amenities   = $this->airtable_api->get( 'get_shared_amenities', $params );
+		$resources          = $this->airtable_api->get( 'get_resources', $params );
+		$informal_amenities = $this->airtable_api->get( 'get_informal_amenities', $params );
+		$accessibility      = $this->airtable_api->get( 'get_accessibility', $params );
+		$classroom_layouts  = $this->airtable_api->get( 'get_classroom_layouts', $params );
+		$furniture          = $this->airtable_api->get( 'get_furniture', $params );
 
 		$payload = array(
-			'shared_amenities' => $shared_amenities,
-			'resources'        => $resources,
+			'shared_amenities'   => $shared_amenities,
+			'resources'          => $resources,
+			'informal_amenities' => $informal_amenities,
+			'accessibility'      => $accessibility,
+			'classroom_layouts'  => $classroom_layouts,
+			'furniture'          => $furniture,
 		);
 
-		return wp_send_json( array( 'message' => $payload ) );
+		return wp_send_json( array( 'data' => $payload ) );
 	}
 
 	public function buildings_callback() {
@@ -125,14 +133,16 @@ class Find_A_Space_Ajax_Handler {
 
 		$data = $_REQUEST['data'];
 
-		$campus = sanitize_text_field( $data['campus'] ?? null );
-		$offset = sanitize_text_field( $data['offset'] ?? null );
-		$formal = rest_sanitize_boolean( $data['formal'] ?? null );
+		$campus  = sanitize_text_field( $data['campus'] ?? null );
+		$offset  = sanitize_text_field( $data['offset'] ?? null );
+		$formal  = rest_sanitize_boolean( $data['formal'] ?? null );
+		$filters = $data['filters'] ?? null;
 
 		$params = array(
-			'campus' => $campus,
-			'formal' => $formal,
-			'offset' => $offset,
+			'campus'  => $campus,
+			'formal'  => $formal,
+			'offset'  => $offset,
+			'filters' => $filters,
 		);
 
 		$data = $this->airtable_api->get( 'get_rooms', $params );

@@ -56,6 +56,7 @@ class Airtable_Api {
 					'Invalid Airtable response ' .
 					wp_json_encode(
 						array(
+							'error'    => $response['error'],
 							'params'   => $params,
 							'response' => $response,
 							'table'    => $table,
@@ -89,7 +90,7 @@ class Airtable_Api {
 		$cache_key = sprintf( '%s_%s_%s', $campus, $func, md5( wp_json_encode( $params ) ) );
 
 		// TODO: Remove this transient delete.
-		delete_transient( $cache_key );
+		// delete_transient( $cache_key );
 		$records = get_transient( $cache_key );
 
 		if ( $records ) {
@@ -101,6 +102,46 @@ class Airtable_Api {
 		set_transient( $cache_key, $records, self::CACHE_TTL ); // Cache for 1 hour
 
 		return $records;
+	}
+
+	public function get_informal_amenities( array $params ) {
+		$payload           = array();
+		$payload['fields'] = array(
+			'Name',
+			'Description',
+		);
+
+		return $this->airtable_get( 'Informal Spaces Amenities', $payload, $params );
+	}
+
+	public function get_accessibility( array $params ) {
+		$payload           = array();
+		$payload['fields'] = array(
+			'Name',
+			'Description',
+		);
+
+		return $this->airtable_get( 'Accessibility', $payload, $params );
+	}
+
+	public function get_classroom_layouts( array $params ) {
+		$payload           = array();
+		$payload['fields'] = array(
+			'Name',
+			'Description',
+		);
+
+		return $this->airtable_get( 'Classroom Layout', $payload, $params );
+	}
+
+	public function get_furniture( array $params ) {
+		$payload           = array();
+		$payload['fields'] = array(
+			'Name',
+			'Description',
+		);
+
+		return $this->airtable_get( 'Furniture', $payload, $params );
 	}
 
 	public function get_resources( array $params ) {
@@ -119,10 +160,10 @@ class Airtable_Api {
 		$payload['fields'] = array(
 			'Name',
 			'Category',
-			'Notes',
+			'Description',
 		);
 
-		return $this->airtable_get( 'Shared Amenities', $payload, $params );
+		return $this->airtable_get( 'Amenities', $payload, $params );
 	}
 
 	public function get_buildings( array $params ) {
@@ -131,12 +172,7 @@ class Airtable_Api {
 		$payload['fields'] = array(
 			'Building Code',
 			'Building Name',
-			'Building Address',
-			'Building Image',
-			'Building Content',
 		);
-
-		$payload['filterByFormula'] = 'Building Published = Yes';
 
 		return $this->airtable_get( 'Buildings', $payload, $params );
 	}
@@ -154,9 +190,63 @@ class Airtable_Api {
 			'Capacity',
 		);
 
-		$payload['pageSize'] = self::ROOMS_PER_PAGE;
-		$payload['offset']   = $params['offset'] ?? null;
+		$payload['pageSize']        = self::ROOMS_PER_PAGE;
+		$payload['offset']          = $params['offset'] ?? null;
+		$payload['filterByFormula'] = $this->get_rooms_filter_formula( $params['filters'] );
+
+		// dd($payload['filterByFormula']);
 
 		return $this->airtable_get( 'Classrooms', $payload, $params );
+	}
+
+	private function get_rooms_filter_formula( ?array $filters ): string {
+		$formula_parts = array();
+		if ( is_null( $filters ) ) {
+			return '';
+		}
+
+		$capacity_filter      = isset( $filters['capacityFilter'] ) ? (int) $filters['capacityFilter'] : null;
+		$audiovideo_filter    = $filters['audioVisualFilter'] ?? array();
+		$accessibility_filter = $filters['audioVisualFilter'] ?? array();
+		$building_filter      = $filters['buildingFilter'] ?? array();
+		$furniture_filter     = $filters['furnitureFilter'] ?? array();
+
+		if ( $capacity_filter ) {
+			$formula_parts[] = "Capacity >= $capacity_filter";
+		}
+
+		if ( ! empty( $audiovideo_filter ) ) {
+			foreach ( $audiovideo_filter as $filter ) {
+				$value = sanitize_text_field( $filter['value'] ?? '' );
+				if ( $value ) {
+					$formula_parts[] = "FIND('$value', {Filter_Amenities})";
+				}
+			}
+		}
+
+		if ( ! empty( $building_filter ) ) {
+			$building_code = sanitize_text_field( $building_filter['value'][0] ?? '' );
+			if ( $building_code ) {
+				$formula_parts[] = "Building Code = '$building_code'";
+			}
+		}
+
+		if ( ! empty( $furniture_filter ) ) {
+			$furniture = sanitize_text_field( $furniture_filter['value'][0] ?? '' );
+			if ( $furniture ) {
+				$formula_parts[] = "Furniture = '$furniture'";
+			}
+		}
+
+		if ( ! empty( $accessibility_filter ) ) {
+			foreach ( $accessibility_filter as $filter ) {
+				$value = sanitize_text_field( $filter['value'] ?? '' );
+				if ( $value ) {
+					$formula_parts[] = "FIND('$value', {Accessibility})";
+				}
+			}
+		}
+
+		return 'AND(' . implode( ', ', $formula_parts ) . ')';
 	}
 }
