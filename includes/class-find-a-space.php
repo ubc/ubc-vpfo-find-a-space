@@ -65,7 +65,7 @@ class Find_A_Space {
 			&& defined( 'UBC_VPFO_SPACES_PAGE_AIRTABLE_BASE_ID_OKAN' )
 		) {
 			$this->load_dependencies();
-		}
+        }
 	}
 
 	/**
@@ -81,7 +81,7 @@ class Find_A_Space {
 		$this->ajax_handler = new Find_A_Space_Ajax_Handler();
 
 		add_action( 'init', array( $this, 'init_block' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'localize_scripts' ), 100 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'localize_scripts' ), 10 );
 	}
 
 	public function init_block() {

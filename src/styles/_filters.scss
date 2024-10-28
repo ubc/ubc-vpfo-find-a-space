@@ -1,16 +1,50 @@
-.select-group {
+.vpfo-lsb-filters-container {
   margin-bottom: 1rem;
-}
 
-// Hide up/down arrows from number input.
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+  .input-group {
+    margin-bottom: 1rem;
+  
+    /* Basic styling for the input */
+    input {
+      display: block;
+      width: 100%; /* Full width */
+      padding: 12px; /* Padding */
+      border: 1px solid #ccc; /* Light gray border */
+      border-radius: 6px; /* Rounded corners */
+      font-size: 16px; /* Font size */
+      color: #555; /* Text color */
+      appearance: none; /* Remove default styling on some browsers */
+      box-sizing: border-box; /* Ensure padding doesn't affect width */
+      transition: border-color 0.3s ease; /* Smooth transition for focus */
 
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
+      /* Focused state */
+      &:focus {
+        outline: none; /* Remove default outline */
+        border-color: #999; /* Darker gray border on focus */
+      }
+  
+      /* Placeholder text styling */
+      &::placeholder {
+        color: #999; /* Placeholder text color */
+      }
+    }
+
+  }
+  
+  .select-group {
+    margin-bottom: 1rem;
+  }
+  
+  // Hide up/down arrows from number input.
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
 }

@@ -10,9 +10,10 @@ import {
 } from '@tanstack/react-table'
 
 type Room = {
-  'Title': string
-  'Room Number': string
-  'Capacity': string
+  'Title'        : string
+  'Room Number'  : string
+  'Capacity'     : string,
+  'Room Link'    : string,
 }
 
 const columnHelper = createColumnHelper<Room>()
@@ -26,6 +27,11 @@ const columns = [
   }),
   columnHelper.accessor('Capacity', {
     cell: info => info.getValue(),
+  }),
+  columnHelper.accessor('Room Link', {
+    cell: info => <>
+      <a target="_blank" href={ info.getValue() }>View Room</a>
+    </>
   }),
 ]
 
@@ -47,9 +53,10 @@ export default function Table(props) {
 
     if (res?.data?.records) {
       setRooms(res.data.records.map(room => ({
-        'Title'      : room.fields['Title'],
-        'Room Number': room.fields['Room Number'],
-        'Capacity'   : room.fields['Capacity'],
+        'Title'        : room.fields['Title'],
+        'Room Number'  : room.fields['Room Number'],
+        'Capacity'     : room.fields['Capacity'],
+        'Room Link'    : 'https://pl-theme.brendan.paperleaf.dev/classrooms/' + room.fields['Slug'],
       })));
     }
 
@@ -117,47 +124,52 @@ export default function Table(props) {
   });
 
   return (
-    <div className="vpfo-find-spaces-table">
-      <table>
-        <thead>
-          {table.getHeaderGroups().map(headerGroup => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map(row => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map(cell => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div>
-        {prevOffsets.length > 0 && (
-          <button onClick={prevPage} disabled={props.loading}>
-            Load prev page
-          </button>
-        )}
-        {offset && (
-          <button onClick={nextPage} disabled={props.loading}>
-            Load next page
-          </button>
-        )}
+    <div className="vpfo-lsb-table-container">
+      { props.loading &&
+        <div className="vpfo-lsb-loading-scrim"><div className="vpfo-lsb-loading-indicator"></div></div>
+      }
+      <div className="vpfo-lsb-table">
+        <table>
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map(row => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map(cell => (
+                  <td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div>
+          {prevOffsets.length > 0 && (
+            <button onClick={prevPage} disabled={props.loading}>
+              Load prev page
+            </button>
+          )}
+          {offset && (
+            <button onClick={nextPage} disabled={props.loading}>
+              Load next page
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

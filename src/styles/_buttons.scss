@@ -1,0 +1,32 @@
+button {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  padding: 12px 20px; /* Padding */
+  border: none; /* Remove border */
+  border-radius: 8px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  font-weight: bold; /* Bold text */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effects */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+
+  /* Hover effect */
+  &:hover {
+    background-color: #45a049; /* Darker green */
+    transform: translateY(-2px); /* Slight lift effect */
+  }
+
+  /* Focus effect */
+  &:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 0 4px rgba(72, 207, 173, 0.4); /* Custom focus shadow */
+  }
+
+  /* Disabled styling */
+  &:disabled {
+    background-color: #ccc; /* Gray background */
+    cursor: not-allowed; /* Show not-allowed cursor */
+    color: #666; /* Darker gray text */
+    box-shadow: none; /* Remove shadow */
+  }
+}

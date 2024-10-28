@@ -203,9 +203,17 @@ __webpack_require__.r(__webpack_exports__);
 function save({
   attributes
 }) {
-  console.log(attributes);
+  const defaultAttributes = {
+    campus: 'vancouver',
+    formal: false
+  };
+  attributes = {
+    ...defaultAttributes,
+    ...attributes
+  };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
     id: "ubc-vpfo-find-a-space-root",
+    className: "vpfo-lsb-block",
     "data-config": JSON.stringify(attributes)
   });
 }

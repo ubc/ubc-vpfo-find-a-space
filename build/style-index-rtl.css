@@ -1,32 +1,118 @@
 /*!***************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/style.scss ***!
   \***************************************************************************************************************************************************************************************************************************************/
-.select-group {
+.vpfo-lsb-block button {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  padding: 12px 20px; /* Padding */
+  border: none; /* Remove border */
+  border-radius: 8px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  font-weight: bold; /* Bold text */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effects */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  /* Hover effect */
+  /* Focus effect */
+  /* Disabled styling */
+}
+.vpfo-lsb-block button:hover {
+  background-color: #45a049; /* Darker green */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+.vpfo-lsb-block button:focus {
+  outline: none; /* Remove default focus outline */
+  box-shadow: 0 0 0 4px rgba(72, 207, 173, 0.4); /* Custom focus shadow */
+}
+.vpfo-lsb-block button:disabled {
+  background-color: #ccc; /* Gray background */
+  cursor: not-allowed; /* Show not-allowed cursor */
+  color: #666; /* Darker gray text */
+  box-shadow: none; /* Remove shadow */
+}
+.vpfo-lsb-block .vpfo-lsb-filters-container {
+  margin-bottom: 1rem;
+  /* Chrome, Safari, Edge, Opera */
+  /* Firefox */
+}
+.vpfo-lsb-block .vpfo-lsb-filters-container .input-group {
+  margin-bottom: 1rem;
+  /* Basic styling for the input */
+}
+.vpfo-lsb-block .vpfo-lsb-filters-container .input-group input {
+  display: block;
+  width: 100%; /* Full width */
+  padding: 12px; /* Padding */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 6px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  color: #555; /* Text color */
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; /* Remove default styling on some browsers */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  transition: border-color 0.3s ease; /* Smooth transition for focus */
+  /* Focused state */
+  /* Placeholder text styling */
+}
+.vpfo-lsb-block .vpfo-lsb-filters-container .input-group input:focus {
+  outline: none; /* Remove default outline */
+  border-color: #999; /* Darker gray border on focus */
+}
+.vpfo-lsb-block .vpfo-lsb-filters-container .input-group input::-moz-placeholder {
+  color: #999; /* Placeholder text color */
+}
+.vpfo-lsb-block .vpfo-lsb-filters-container .input-group input::placeholder {
+  color: #999; /* Placeholder text color */
+}
+.vpfo-lsb-block .vpfo-lsb-filters-container .select-group {
   margin-bottom: 1rem;
 }
-
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+.vpfo-lsb-block .vpfo-lsb-filters-container input::-webkit-outer-spin-button,
+.vpfo-lsb-block .vpfo-lsb-filters-container input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
-/* Firefox */
-input[type=number] {
+.vpfo-lsb-block .vpfo-lsb-filters-container input[type=number] {
   -moz-appearance: textfield;
 }
-
-.vpfo-find-spaces-table {
+.vpfo-lsb-block .vpfo-lsb-table-container {
+  position: relative;
+  min-height: 400px;
+}
+.vpfo-lsb-block .vpfo-lsb-table-container .vpfo-lsb-loading-scrim {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.vpfo-lsb-block .vpfo-lsb-table-container .vpfo-lsb-loading-scrim .vpfo-lsb-loading-indicator {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 10px solid #ddd;
+  border-top-color: blue;
+  animation: vpfo-loading 1s linear infinite;
+}
+@keyframes vpfo-loading {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+.vpfo-lsb-block .vpfo-lsb-table-container .vpfo-lsb-table {
   width: -moz-fit-content;
   width: fit-content;
   margin: 0 auto;
 }
-.vpfo-find-spaces-table tbody {
+.vpfo-lsb-block .vpfo-lsb-table-container .vpfo-lsb-table tbody {
   padding: 12px;
 }
-.vpfo-find-spaces-table th,
-.vpfo-find-spaces-table td {
-  border: 1px solid #ccc;
+.vpfo-lsb-block .vpfo-lsb-table-container .vpfo-lsb-table th,
+.vpfo-lsb-block .vpfo-lsb-table-container .vpfo-lsb-table td {
   padding: 12px;
 }

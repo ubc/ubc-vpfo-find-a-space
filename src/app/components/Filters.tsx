@@ -6,8 +6,20 @@ import makeAnimated from 'react-select/animated';
 
 const animatedComponents = makeAnimated();
 
+const groupRecordsByCategory = (data) => {
+  return data.reduce((acc, current) => {
+    const category = current.fields.Category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(current.fields.Name);
+    return acc;
+  }, {});
+};
+
 export default function Filters(props) {
   const context = React.useContext(StateContext);
+  const isFormal = context.config.formal;
 
   // Meta, which contains Amenities, Resources, and Informal Amenities data.
   const [meta, setMeta] = useState(null);
@@ -27,6 +39,9 @@ export default function Filters(props) {
   // Furniture Options
   const [furnitureOptions, setFurnitureOptions] = useState<any[]>([]);
 
+  // Furniture Options
+  const [ISAmenitiesOptions, setISAmenitiesOptions] = useState<any[]>([]);
+
   /**
    * Form States
   */
@@ -35,17 +50,7 @@ export default function Filters(props) {
   const [buildingFilter, setBuildingFilter] = useState({});
   const [furnitureFilter, setFurnitureFilter] = useState<any[]>([]);
   const [capacityFilter, setCapacityFilter] = useState<null|number>(null);
-
-  const groupRecordsByCategory = (data) => {
-    return data.reduce((acc, current) => {
-      const category = current.fields.Category;
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(current.fields.Name);
-      return acc;
-    }, {});
-  };
+  const [ISAmenitiesFilter, setISAmenitiesFilter] = useState<any[]>([]);
 
   const setupBuildingOptions = (records) => {
     let options = [];
@@ -65,6 +70,7 @@ export default function Filters(props) {
       ...context.config,
     }
     const buildings = await getBuildings(payload);
+    console.log(buildings);
 
     const data = buildings?.data?.data?.records || {};
     
@@ -132,6 +138,19 @@ export default function Filters(props) {
     setFurnitureOptions(options);
   }
 
+  const setupISAmenitiesOptions = (meta) => {
+    let options = [];
+
+    options = meta.informal_amenities.records.map(record => {
+      return {
+        label: record.fields.Name,
+        value: record.fields.Name,
+      }
+    })
+
+    setISAmenitiesOptions(options);
+  }
+
   const setupMeta = async () => {
     let payload = {
       ...context.config,
@@ -153,6 +172,9 @@ export default function Filters(props) {
 
     // Layout filter.
     setupLayoutOptions(data);
+
+    // Informal Spaces Amenities filter.
+    setupISAmenitiesOptions(data);
   }
 
   useEffect(() => {
@@ -166,81 +188,149 @@ export default function Filters(props) {
     props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, capacityFilter });
   }
 
+  const renderFormalFilters = () => {
+    return <>
+      {/* <h5>Formal Filters</h5> */}
+      { renderFurnitureSelect() }
+      { renderCapacityInput() }
+      { renderBuildingSelect() }
+      { renderAccessibilitySelect() }
+      { renderAudioVideoSelect() }
+    </>
+  }
+
+  const renderInformalFilters = () => {
+    return <>
+      {/* <h5>Informal Filters</h5> */}
+      { renderFurnitureSelect() }
+      { renderCapacityInput() }
+      { renderBuildingSelect() }
+      { renderAccessibilitySelect() }
+      { renderISAmenitiesSelect() }
+    </>
+  }
+
+  const renderCapacityInput = () => {
+    return (
+      <div className="input-group">
+        <label htmlFor="vpfo-lsb-capacity-input">
+          Capacity
+        </label>
+        <input 
+          type="number" 
+          id="vpfo-lsb-capacity-input" 
+          name="vpfo-lsb-capacity" 
+          min="0"
+          placeholder="Enter minimum"
+          onChange={(e) => setCapacityFilter(parseInt(e.target.value))}
+        />
+      </div>
+    )
+  }
+
+  const renderFurnitureSelect = () => {
+    return (
+      <div className="select-group">
+        <label id="vpfo-lsb-furniture" htmlFor="vpfo-lsb-furniture-input">
+          Style & Layout
+        </label>
+        <Select 
+          options={furnitureOptions}
+          name="vpfo-lsb-furniture"
+          isClearable
+          components={animatedComponents}
+          inputId="vpfo-lsb-furniture-input"
+          onChange={(selected) => setFurnitureFilter(selected)}
+        />
+      </div>
+    )
+  }
+
+  const renderISAmenitiesSelect = () => {
+    return (
+      <div className="select-group">
+        <label id="vpfo-lsb-informal-amenities" htmlFor="vpfo-lsb-informal-amenities-input">
+          Amenities
+        </label>
+        <Select 
+          options={ISAmenitiesOptions}
+          isMulti
+          isClearable
+          name="vpfo-lsb-informal-amenities"
+          components={animatedComponents}
+          inputId="vpfo-lsb-informal-amenities-input"
+          onChange={(selected) => setISAmenitiesFilter(selected)}
+        />
+      </div>
+    )
+  }
+
+  const renderBuildingSelect = () => {
+    return (
+      <div className="select-group">
+        <label id="vpfo-lsb-building" htmlFor="vpfo-lsb-building-input">
+          Building
+        </label>
+        <Select 
+          options={buildingOptions}
+          name="vpfo-lsb-building"
+          isClearable
+          components={animatedComponents}
+          inputId="vpfo-lsb-building-input"
+          onChange={(selected) => setBuildingFilter(selected)}
+        />
+      </div>
+    )
+  }
+
+  const renderAccessibilitySelect = () => {
+    return (
+      <div className="select-group">
+        <label id="vpfo-lsb-accessibility" htmlFor="vpfo-lsb-accessibility-input">
+          Accessibility
+        </label>
+        <Select 
+          options={accessibilityOptions}
+          isMulti
+          isClearable
+          name="vpfo-lsb-accessibility"
+          components={animatedComponents}
+          inputId="vpfo-lsb-accessibility-input"
+          onChange={(selected) => setAccessibilityFilter(selected)}
+        />
+      </div>
+    )
+  }
+
+  const renderAudioVideoSelect = () => {
+    return (
+      <div className="select-group">
+        <label id="vpfo-lsb-audio-visual" htmlFor="vpfo-lsb-audio-visual-input">
+          Audio Visual
+        </label>
+        <Select 
+          options={audioVisualOptions}
+          isMulti
+          isClearable
+          name="vpfo-lsb-audio-visual"
+          components={animatedComponents}
+          inputId="vpfo-lsb-audio-visual-input"
+          onChange={(selected) => setAudioVisualFilter(selected)}
+        />
+      </div>
+    )
+  }
+
   return (<>
 
     { meta == null && <>Loading ...</> }
     {
-      meta !== null && 
+      meta !== null &&
       <>
-        <form onSubmit={submitFilters}>
+        <form onSubmit={submitFilters} className="vpfo-lsb-filters-container">
 
-          <div className="input-group">
-            <label htmlFor="vpfo-lsb-capacity-input">
-              Capacity
-            </label>
-            <input 
-              type="number" 
-              id="vpfo-lsb-capacity-input" 
-              name="vpfo-lsb-capacity" 
-              min="0"
-              placeholder="Enter minimum"
-              onChange={(e) => setCapacityFilter(parseInt(e.target.value))}
-            />
-          </div>
-
-          <div className="select-group">
-            <label id="vpfo-lsb-furniture" htmlFor="vpfo-lsb-furniture-input">
-              Style & Layout
-            </label>
-            <Select 
-              options={furnitureOptions}
-              name="vpfo-lsb-furniture"
-              components={animatedComponents}
-              inputId="vpfo-lsb-furniture-input"
-              onChange={(selected) => setFurnitureFilter(selected)}
-            />
-          </div>
-
-          <div className="select-group">
-            <label id="vpfo-lsb-building" htmlFor="vpfo-lsb-building-input">
-              Building
-            </label>
-            <Select 
-              options={buildingOptions}
-              name="vpfo-lsb-building"
-              components={animatedComponents}
-              inputId="vpfo-lsb-building-input"
-              onChange={(selected) => setBuildingFilter(selected)}
-            />
-          </div>
-
-          <div className="select-group">
-            <label id="vpfo-lsb-accessibility" htmlFor="vpfo-lsb-accessibility-input">
-              Accessibility
-            </label>
-            <Select 
-              options={accessibilityOptions}
-              isMulti
-              name="vpfo-lsb-accessibility"
-              components={animatedComponents}
-              inputId="vpfo-lsb-accessibility-input"
-              onChange={(selected) => setAccessibilityFilter(selected)}
-            />
-          </div>
-
-          <div className="select-group">
-            <label id="vpfo-lsb-audio-visual" htmlFor="vpfo-lsb-audio-visual-input">
-              Audio Visual
-            </label>
-            <Select 
-              options={audioVisualOptions}
-              isMulti
-              name="vpfo-lsb-audio-visual"
-              components={animatedComponents}
-              inputId="vpfo-lsb-audio-visual-input"
-              onChange={(selected) => setAudioVisualFilter(selected)}
-            />
-          </div>
+          { isFormal === true && renderFormalFilters() }
+          { isFormal === false && renderInformalFilters() }
 
           <button
             type="submit"

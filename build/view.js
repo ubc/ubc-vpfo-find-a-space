@@ -2641,8 +2641,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const animatedComponents = (0,react_select_animated__WEBPACK_IMPORTED_MODULE_3__["default"])();
+const groupRecordsByCategory = data => {
+  return data.reduce((acc, current) => {
+    const category = current.fields.Category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(current.fields.Name);
+    return acc;
+  }, {});
+};
 function Filters(props) {
   const context = react__WEBPACK_IMPORTED_MODULE_0___default().useContext(_StateProvider__WEBPACK_IMPORTED_MODULE_1__.StateContext);
+  const isFormal = context.config.formal;
 
   // Meta, which contains Amenities, Resources, and Informal Amenities data.
   const [meta, setMeta] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
@@ -2662,6 +2673,9 @@ function Filters(props) {
   // Furniture Options
   const [furnitureOptions, setFurnitureOptions] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
 
+  // Furniture Options
+  const [ISAmenitiesOptions, setISAmenitiesOptions] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+
   /**
    * Form States
   */
@@ -2670,16 +2684,7 @@ function Filters(props) {
   const [buildingFilter, setBuildingFilter] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({});
   const [furnitureFilter, setFurnitureFilter] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [capacityFilter, setCapacityFilter] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const groupRecordsByCategory = data => {
-    return data.reduce((acc, current) => {
-      const category = current.fields.Category;
-      if (!acc[category]) {
-        acc[category] = [];
-      }
-      acc[category].push(current.fields.Name);
-      return acc;
-    }, {});
-  };
+  const [ISAmenitiesFilter, setISAmenitiesFilter] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const setupBuildingOptions = records => {
     let options = [];
     options = records.map(building => {
@@ -2695,6 +2700,7 @@ function Filters(props) {
       ...context.config
     };
     const buildings = await (0,_services_api__WEBPACK_IMPORTED_MODULE_2__.getBuildings)(payload);
+    console.log(buildings);
     const data = buildings?.data?.data?.records || {};
     setBuildings(data);
 
@@ -2747,6 +2753,16 @@ function Filters(props) {
     });
     setFurnitureOptions(options);
   };
+  const setupISAmenitiesOptions = meta => {
+    let options = [];
+    options = meta.informal_amenities.records.map(record => {
+      return {
+        label: record.fields.Name,
+        value: record.fields.Name
+      };
+    });
+    setISAmenitiesOptions(options);
+  };
   const setupMeta = async () => {
     let payload = {
       ...context.config
@@ -2766,6 +2782,9 @@ function Filters(props) {
 
     // Layout filter.
     setupLayoutOptions(data);
+
+    // Informal Spaces Amenities filter.
+    setupISAmenitiesOptions(data);
   };
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setupBuildings();
@@ -2788,80 +2807,128 @@ function Filters(props) {
       capacityFilter
     });
   };
+  const renderFormalFilters = () => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
+      children: [renderFurnitureSelect(), renderCapacityInput(), renderBuildingSelect(), renderAccessibilitySelect(), renderAudioVideoSelect()]
+    });
+  };
+  const renderInformalFilters = () => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
+      children: [renderFurnitureSelect(), renderCapacityInput(), renderBuildingSelect(), renderAccessibilitySelect(), renderISAmenitiesSelect()]
+    });
+  };
+  const renderCapacityInput = () => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      className: "input-group",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
+        htmlFor: "vpfo-lsb-capacity-input",
+        children: "Capacity"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
+        type: "number",
+        id: "vpfo-lsb-capacity-input",
+        name: "vpfo-lsb-capacity",
+        min: "0",
+        placeholder: "Enter minimum",
+        onChange: e => setCapacityFilter(parseInt(e.target.value))
+      })]
+    });
+  };
+  const renderFurnitureSelect = () => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      className: "select-group",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
+        id: "vpfo-lsb-furniture",
+        htmlFor: "vpfo-lsb-furniture-input",
+        children: "Style & Layout"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        options: furnitureOptions,
+        name: "vpfo-lsb-furniture",
+        isClearable: true,
+        components: animatedComponents,
+        inputId: "vpfo-lsb-furniture-input",
+        onChange: selected => setFurnitureFilter(selected)
+      })]
+    });
+  };
+  const renderISAmenitiesSelect = () => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      className: "select-group",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
+        id: "vpfo-lsb-informal-amenities",
+        htmlFor: "vpfo-lsb-informal-amenities-input",
+        children: "Amenities"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        options: ISAmenitiesOptions,
+        isMulti: true,
+        isClearable: true,
+        name: "vpfo-lsb-informal-amenities",
+        components: animatedComponents,
+        inputId: "vpfo-lsb-informal-amenities-input",
+        onChange: selected => setISAmenitiesFilter(selected)
+      })]
+    });
+  };
+  const renderBuildingSelect = () => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      className: "select-group",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
+        id: "vpfo-lsb-building",
+        htmlFor: "vpfo-lsb-building-input",
+        children: "Building"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        options: buildingOptions,
+        name: "vpfo-lsb-building",
+        isClearable: true,
+        components: animatedComponents,
+        inputId: "vpfo-lsb-building-input",
+        onChange: selected => setBuildingFilter(selected)
+      })]
+    });
+  };
+  const renderAccessibilitySelect = () => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      className: "select-group",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
+        id: "vpfo-lsb-accessibility",
+        htmlFor: "vpfo-lsb-accessibility-input",
+        children: "Accessibility"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        options: accessibilityOptions,
+        isMulti: true,
+        isClearable: true,
+        name: "vpfo-lsb-accessibility",
+        components: animatedComponents,
+        inputId: "vpfo-lsb-accessibility-input",
+        onChange: selected => setAccessibilityFilter(selected)
+      })]
+    });
+  };
+  const renderAudioVideoSelect = () => {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      className: "select-group",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
+        id: "vpfo-lsb-audio-visual",
+        htmlFor: "vpfo-lsb-audio-visual-input",
+        children: "Audio Visual"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        options: audioVisualOptions,
+        isMulti: true,
+        isClearable: true,
+        name: "vpfo-lsb-audio-visual",
+        components: animatedComponents,
+        inputId: "vpfo-lsb-audio-visual-input",
+        onChange: selected => setAudioVisualFilter(selected)
+      })]
+    });
+  };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
     children: [meta == null && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
       children: "Loading ..."
     }), meta !== null && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("form", {
         onSubmit: submitFilters,
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-          className: "input-group",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-            htmlFor: "vpfo-lsb-capacity-input",
-            children: "Capacity"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
-            type: "number",
-            id: "vpfo-lsb-capacity-input",
-            name: "vpfo-lsb-capacity",
-            min: "0",
-            placeholder: "Enter minimum",
-            onChange: e => setCapacityFilter(parseInt(e.target.value))
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-          className: "select-group",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-            id: "vpfo-lsb-furniture",
-            htmlFor: "vpfo-lsb-furniture-input",
-            children: "Style & Layout"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
-            options: furnitureOptions,
-            name: "vpfo-lsb-furniture",
-            components: animatedComponents,
-            inputId: "vpfo-lsb-furniture-input",
-            onChange: selected => setFurnitureFilter(selected)
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-          className: "select-group",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-            id: "vpfo-lsb-building",
-            htmlFor: "vpfo-lsb-building-input",
-            children: "Building"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
-            options: buildingOptions,
-            name: "vpfo-lsb-building",
-            components: animatedComponents,
-            inputId: "vpfo-lsb-building-input",
-            onChange: selected => setBuildingFilter(selected)
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-          className: "select-group",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-            id: "vpfo-lsb-accessibility",
-            htmlFor: "vpfo-lsb-accessibility-input",
-            children: "Accessibility"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
-            options: accessibilityOptions,
-            isMulti: true,
-            name: "vpfo-lsb-accessibility",
-            components: animatedComponents,
-            inputId: "vpfo-lsb-accessibility-input",
-            onChange: selected => setAccessibilityFilter(selected)
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-          className: "select-group",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-            id: "vpfo-lsb-audio-visual",
-            htmlFor: "vpfo-lsb-audio-visual-input",
-            children: "Audio Visual"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_select__WEBPACK_IMPORTED_MODULE_5__["default"], {
-            options: audioVisualOptions,
-            isMulti: true,
-            name: "vpfo-lsb-audio-visual",
-            components: animatedComponents,
-            inputId: "vpfo-lsb-audio-visual-input",
-            onChange: selected => setAudioVisualFilter(selected)
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+        className: "vpfo-lsb-filters-container",
+        children: [isFormal === true && renderFormalFilters(), isFormal === false && renderInformalFilters(), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
           type: "submit",
           disabled: props.loading,
           children: "Submit Filters"
@@ -2904,6 +2971,14 @@ const columns = [columnHelper.accessor('Title', {
   cell: info => info.getValue()
 }), columnHelper.accessor('Capacity', {
   cell: info => info.getValue()
+}), columnHelper.accessor('Room Link', {
+  cell: info => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
+      target: "_blank",
+      href: info.getValue(),
+      children: "View Room"
+    })
+  })
 })];
 function Table(props) {
   const context = react__WEBPACK_IMPORTED_MODULE_0___default().useContext(_StateProvider__WEBPACK_IMPORTED_MODULE_1__.StateContext);
@@ -2922,7 +2997,8 @@ function Table(props) {
       setRooms(res.data.records.map(room => ({
         'Title': room.fields['Title'],
         'Room Number': room.fields['Room Number'],
-        'Capacity': room.fields['Capacity']
+        'Capacity': room.fields['Capacity'],
+        'Room Link': 'https://pl-theme.brendan.paperleaf.dev/classrooms/' + room.fields['Slug']
       })));
     }
     if (res?.data === null) {
@@ -2983,30 +3059,38 @@ function Table(props) {
     manualPagination: true // turn off client-side pagination
   });
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-    className: "vpfo-find-spaces-table",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("table", {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("thead", {
-        children: table.getHeaderGroups().map(headerGroup => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
-          children: headerGroup.headers.map(header => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
-            children: header.isPlaceholder ? null : (0,_tanstack_react_table__WEBPACK_IMPORTED_MODULE_5__.flexRender)(header.column.columnDef.header, header.getContext())
-          }, header.id))
-        }, headerGroup.id))
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tbody", {
-        children: table.getRowModel().rows.map(row => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
-          children: row.getVisibleCells().map(cell => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
-            children: (0,_tanstack_react_table__WEBPACK_IMPORTED_MODULE_5__.flexRender)(cell.column.columnDef.cell, cell.getContext())
-          }, cell.id))
-        }, row.id))
-      })]
+    className: "vpfo-lsb-table-container",
+    children: [props.loading && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+      className: "vpfo-lsb-loading-scrim",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+        className: "vpfo-lsb-loading-indicator"
+      })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-      children: [prevOffsets.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-        onClick: prevPage,
-        disabled: props.loading,
-        children: "Load prev page"
-      }), offset && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-        onClick: nextPage,
-        disabled: props.loading,
-        children: "Load next page"
+      className: "vpfo-lsb-table",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("table", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("thead", {
+          children: table.getHeaderGroups().map(headerGroup => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
+            children: headerGroup.headers.map(header => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("th", {
+              children: header.isPlaceholder ? null : (0,_tanstack_react_table__WEBPACK_IMPORTED_MODULE_5__.flexRender)(header.column.columnDef.header, header.getContext())
+            }, header.id))
+          }, headerGroup.id))
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tbody", {
+          children: table.getRowModel().rows.map(row => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
+            children: row.getVisibleCells().map(cell => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+              children: (0,_tanstack_react_table__WEBPACK_IMPORTED_MODULE_5__.flexRender)(cell.column.columnDef.cell, cell.getContext())
+            }, cell.id))
+          }, row.id))
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+        children: [prevOffsets.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
+          onClick: prevPage,
+          disabled: props.loading,
+          children: "Load prev page"
+        }), offset && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
+          onClick: nextPage,
+          disabled: props.loading,
+          children: "Load next page"
+        })]
       })]
     })]
   });

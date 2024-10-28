@@ -1,3 +1,6 @@
-@import 'filters';
-@import 'search';
-@import 'table';
+.vpfo-lsb-block {
+  @import 'buttons';
+  @import 'filters';
+  @import 'search';
+  @import 'table';
+}
