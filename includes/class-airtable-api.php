@@ -213,9 +213,10 @@ class Airtable_Api {
 			'Building Code',
 			'Room Number',
 			'Image Gallery',
-			'Classroom Layout',
 			'Capacity',
 			'Slug',
+			'Filter_RoomLayoutType',
+			'Filter_Furniture',
 		);
 
 		$payload['pageSize']        = self::ROOMS_PER_PAGE;
@@ -224,7 +225,11 @@ class Airtable_Api {
 
 		// dd($payload['filterByFormula']);
 
-		return $this->airtable_get( 'Classrooms', $payload, $params );
+		$rooms = $this->airtable_get( 'Classrooms', $payload, $params );
+
+		// dd($rooms);
+
+		return $rooms;
 	}
 
 	private function filter_empty_options( array $response, array $params ) {
@@ -250,6 +255,7 @@ class Airtable_Api {
 	private function get_rooms_filter_formula( array $params ): string {
 		$formula_parts = array();
 		$filters       = isset( $params['filters'] ) ? $params['filters'] : null;
+		$search        = isset( $params['search'] ) ? $params['search'] : null;
 
 		$is_informal_string = rest_sanitize_boolean( $params['formal'] ) ? '0' : '1';
 
@@ -259,7 +265,8 @@ class Airtable_Api {
 		// Filter to informal / formal learning spaces.
 		$formula_parts[] = '{Is Informal Space} = ' . $is_informal_string;
 
-		if ( is_null( $filters ) ) {
+		// Return early if no filters or search are being applied.
+		if ( is_null( $filters ) && is_null( $search ) ) {
 			return 'AND(' . implode( ', ', $formula_parts ) . ')';
 		}
 
@@ -313,6 +320,24 @@ class Airtable_Api {
 					$formula_parts[] = "FIND('$value', {Filter_Accessibility})";
 				}
 			}
+		}
+
+		// Finally, apply search if provided.
+		if ( $search ) {
+			$search               = preg_replace( '/[^A-Za-z0-9 ]/', '', $search ); // Remove non alphanumeric characters
+			$search_parts         = explode( ' ', $search ); // Explode search string into parts
+			$search_formula_parts = array();
+
+			foreach ( $search_parts as $part ) {
+				$part = strtolower( trim( $part ) );
+
+				$search_formula_parts[] = "FIND('$part', LOWER({Title}))";
+				$search_formula_parts[] = "FIND('$part', LOWER({Building Name}))";
+				$search_formula_parts[] = "FIND('$part', LOWER({Building Code}))";
+				$search_formula_parts[] = "FIND('$part', LOWER({Room Number}))";
+			}
+
+			$formula_parts[] = 'OR(' . implode( ', ', $search_formula_parts ) . ')';
 		}
 
 		if ( count( $formula_parts ) === 0 ) {

@@ -1,39 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StateContext } from '../StateProvider';
 import { getRooms } from '../services/api';
-
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
-
-type Room = {
-  'Title'        : string
-  'Room Number'  : string
-  'Capacity'     : string,
-  'Room Link'    : string,
-}
-
-const columnHelper = createColumnHelper<Room>()
-
-const columns = [
-  columnHelper.accessor('Title', {
-    cell: info => info.getValue(),
-  }),
-  columnHelper.accessor('Room Number', {
-    cell: info => info.getValue(),
-  }),
-  columnHelper.accessor('Capacity', {
-    cell: info => info.getValue(),
-  }),
-  columnHelper.accessor('Room Link', {
-    cell: info => <>
-      <a target="_blank" href={ info.getValue() }>View Room</a>
-    </>
-  }),
-]
+import ClassroomCard from './ClassroomCard';
 
 export default function Table(props) {
   const context                       = React.useContext(StateContext);
@@ -53,10 +21,13 @@ export default function Table(props) {
 
     if (res?.data?.records) {
       setRooms(res.data.records.map(room => ({
-        'Title'        : room.fields['Title'],
-        'Room Number'  : room.fields['Room Number'],
-        'Capacity'     : room.fields['Capacity'],
-        'Room Link'    : 'https://pl-theme.brendan.paperleaf.dev/classrooms/' + room.fields['Slug'],
+        'Title'                : room.fields['Title'],
+        'Room Number'          : room.fields['Room Number'],
+        'Capacity'             : room.fields['Capacity'],
+        'Room Link'            : 'https://pl-theme.brendan.paperleaf.dev/classrooms/' + room.fields['Slug'],
+        'Image Gallery'        : room.fields['Image Gallery'],
+        'Filter_Furniture'     : room.fields['Filter_Furniture'],
+        'Filter_RoomLayoutType': room.fields['Filter_RoomLayoutType'],
       })));
     }
 
@@ -116,48 +87,23 @@ export default function Table(props) {
     getPage();
   }, [props.filters]);
 
-  const table = useReactTable({
-    columns,
-    data: rooms,
-    getCoreRowModel: getCoreRowModel(),
-    manualPagination: true, // turn off client-side pagination
-  });
-
   return (
     <div className="vpfo-lsb-table-container">
       { props.loading &&
         <div className="vpfo-lsb-loading-scrim"><div className="vpfo-lsb-loading-indicator"></div></div>
       }
       <div className="vpfo-lsb-table">
-        <table>
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map(row => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        { rooms.length === 0 && props.loading === false && <>
+          <div className="vpfo-lsb-no-results">No results found.</div>
+        </>}
+
+        { rooms.length !== 0 && <>
+          <div className="vpfo-lsb-result-list">
+            { rooms.map((room, idx) => {
+              return <ClassroomCard key={idx} room={room} />
+            })}
+          </div>
+        </>}
         <div>
           {prevOffsets.length > 0 && (
             <button onClick={prevPage} disabled={props.loading}>

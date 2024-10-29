@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StateContext } from '../StateProvider';
 import { getBuildings, getMeta } from '../services/api';
+import Search from './Search';
 import Select, { MultiValue, Options } from 'react-select'
 import makeAnimated from 'react-select/animated';
 
@@ -328,6 +329,8 @@ export default function Filters(props) {
       meta !== null &&
       <>
         <form onSubmit={submitFilters} className="vpfo-lsb-filters-container">
+
+          <Search setLoading={props.setLoading} />
 
           { isFormal === true && renderFormalFilters() }
           { isFormal === false && renderInformalFilters() }

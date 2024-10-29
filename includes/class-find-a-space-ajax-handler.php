@@ -135,6 +135,7 @@ class Find_A_Space_Ajax_Handler {
 
 		$campus  = sanitize_text_field( $data['campus'] ?? null );
 		$offset  = sanitize_text_field( $data['offset'] ?? null );
+		$search  = sanitize_text_field( $data['search'] ?? null );
 		$formal  = rest_sanitize_boolean( $data['formal'] ?? null );
 		$filters = $data['filters'] ?? null;
 
@@ -143,6 +144,7 @@ class Find_A_Space_Ajax_Handler {
 			'formal'  => $formal,
 			'offset'  => $offset,
 			'filters' => $filters,
+			'search'  => $search,
 		);
 
 		$data = $this->airtable_api->get( 'get_rooms', $params );
