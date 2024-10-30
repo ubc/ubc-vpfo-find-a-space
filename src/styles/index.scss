@@ -1,7 +1,30 @@
-.vpfo-lsb-block {
-  // TODO: Replace this with Tailwind?
-  @import 'buttons';
-  @import 'filters';
-  @import 'search';
-  @import 'table';
+@import 'variables';
+@import 'mixins';
+
+@import 'filters';
+@import 'search';
+@import 'table';
+
+@import 'classroom-card';
+
+& {
+	-webkit-font-smoothing: antialiased;
+	font-family: $font-whitney;
+	color: $ubc-blue;
+
+	.btn {
+		@include btn;
+	}
+
+	.btn-primary {
+		@include btn-primary;
+	}
+
+	.btn-secondary {
+		@include btn-secondary;
+	}
+
+	.btn-border-thick {
+		border-width: 0.125rem;
+	}
 }

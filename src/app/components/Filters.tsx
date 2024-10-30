@@ -338,6 +338,7 @@ export default function Filters(props) {
           <button
             type="submit"
             disabled={props.loading}
+            className="btn btn-secondary ms-5 text-nowrap"
           >
             Submit Filters
           </button>

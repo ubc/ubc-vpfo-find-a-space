@@ -11,6 +11,10 @@ export default function ClassroomCard(props) {
     const thumb = room['Image Gallery'][0] ?? null;
     let thumbProps = {} as any;
 
+    if ( ! thumb ) {
+      return <div className="classroom-thumbnail no-image"></div>
+    }
+
     if (thumb && thumb['url'] ) {
       if ( thumb['url'] ) {
         thumbProps.src = thumb['url'];
@@ -26,12 +30,14 @@ export default function ClassroomCard(props) {
       }
     }
     
-    return <img
-      src={ thumbProps.src }
-      alt={ thumbProps.alt }
-      width={ thumbProps.width }
-      height={ thumbProps.height }
-    />
+    return <div className="classroom-thumbnail">
+      <img
+        src={ thumbProps.src }
+        alt={ thumbProps.alt }
+        width={ thumbProps.width }
+        height={ thumbProps.height }
+      />
+    </div>
   }
 
   const renderRoomInformation = () => {
@@ -45,6 +51,7 @@ export default function ClassroomCard(props) {
         </div>
         <a
           href={room['Room Link'] }
+          target="_blank"
           className="btn btn-secondary ms-5 text-nowrap">View Space</a>
       </div>
     )

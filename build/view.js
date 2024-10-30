@@ -2642,6 +2642,11 @@ function ClassroomCard(props) {
     var _room$ImageGallery$;
     const thumb = (_room$ImageGallery$ = room['Image Gallery'][0]) !== null && _room$ImageGallery$ !== void 0 ? _room$ImageGallery$ : null;
     let thumbProps = {};
+    if (!thumb) {
+      return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+        className: "classroom-thumbnail no-image"
+      });
+    }
     if (thumb && thumb['url']) {
       if (thumb['url']) {
         thumbProps.src = thumb['url'];
@@ -2656,11 +2661,14 @@ function ClassroomCard(props) {
         thumbProps.alt = room['Title'];
       }
     }
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("img", {
-      src: thumbProps.src,
-      alt: thumbProps.alt,
-      width: thumbProps.width,
-      height: thumbProps.height
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      className: "classroom-thumbnail",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("img", {
+        src: thumbProps.src,
+        alt: thumbProps.alt,
+        width: thumbProps.width,
+        height: thumbProps.height
+      })
     });
   };
   const renderRoomInformation = () => {
@@ -2677,6 +2685,7 @@ function ClassroomCard(props) {
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
         href: room['Room Link'],
+        target: "_blank",
         className: "btn btn-secondary ms-5 text-nowrap",
         children: "View Space"
       })]
@@ -3051,6 +3060,7 @@ function Filters(props) {
         }), isFormal === true && renderFormalFilters(), isFormal === false && renderInformalFilters(), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("button", {
           type: "submit",
           disabled: props.loading,
+          className: "btn btn-secondary ms-5 text-nowrap",
           children: "Submit Filters"
         })]
       })
