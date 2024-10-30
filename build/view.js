@@ -3189,7 +3189,7 @@ function Table(props) {
         'Title': room.fields['Title'],
         'Room Number': room.fields['Room Number'],
         'Capacity': room.fields['Capacity'],
-        'Room Link': 'https://pl-theme.brendan.paperleaf.dev/classrooms/' + room.fields['Slug'],
+        'Room Link': 'https://ubccms.brendan.paperleaf.dev/classrooms/' + room.fields['Slug'],
         'Image Gallery': room.fields['Image Gallery'],
         'Filter_Furniture': room.fields['Filter_Furniture'],
         'Filter_RoomLayoutType': room.fields['Filter_RoomLayoutType']
