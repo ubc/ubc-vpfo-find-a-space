@@ -13,8 +13,22 @@ export default function App() {
     setFilters(newFilters);
   }
 
-  return (<>
-    <Filters onSubmitFilters={handleSubmitFilters} loading={loading} setLoading={setLoading} />
-    <Table filters={filters} loading={loading} setLoading={setLoading} />
-  </>);
+  const handleClearFilters = () => {
+    setFilters({});
+  }
+
+  return (<div className="vpfo-lsb-container">
+    <Filters
+      filters={filters}
+      loading={loading}
+      onSubmitFilters={handleSubmitFilters}
+      setLoading={setLoading}
+    />
+    <Table
+      filters={filters}
+      loading={loading}
+      setLoading={setLoading}
+      clearFilters={handleClearFilters}
+    />
+  </div>);
 }

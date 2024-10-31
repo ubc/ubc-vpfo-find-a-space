@@ -1,38 +1,49 @@
 .vpfo-lsb-filters-container {
+  @include vpfo-box-shadow;
+  border-top: 16px solid $ubc-blue;
   margin-bottom: 1rem;
+  padding: 16px;
+  padding-bottom: 32px;
+  margin-right: 16px;
 
-  .input-group {
-    margin-bottom: 1rem;
-  
-    /* Basic styling for the input */
-    input {
-      display: block;
-      width: 100%; /* Full width */
-      padding: 12px; /* Padding */
-      border: 1px solid #ccc; /* Light gray border */
-      border-radius: 6px; /* Rounded corners */
-      font-size: 16px; /* Font size */
-      color: #555; /* Text color */
-      appearance: none; /* Remove default styling on some browsers */
-      box-sizing: border-box; /* Ensure padding doesn't affect width */
-      transition: border-color 0.3s ease; /* Smooth transition for focus */
+  height: fit-content;
+  background: $utility-white;
+  position: sticky;
+  overflow-y: scroll;
+  top: 16px;
+  max-height: 100vh;
 
-      /* Focused state */
-      &:focus {
-        outline: none; /* Remove default outline */
-        border-color: #999; /* Darker gray border on focus */
-      }
-  
-      /* Placeholder text styling */
-      &::placeholder {
-        color: #999; /* Placeholder text color */
-      }
-    }
-
-  }
-  
+  .input-group,
   .select-group {
     margin-bottom: 1rem;
+
+    label {
+      font-family: $font-whitney;
+      font-weight: 600;
+      color: $ubc-blue;
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+
+  .input-group input {
+    max-width: 100%;
+    border: 1px solid $ubc-grey-medium-dark;
+    padding: 8px;
+  }
+
+  // Styled in Filters.tsx
+  .select-group select {
+  }
+
+  .vpfo-lsb-filter-heading {
+    font-family: $font-whitney;
+    font-weight: 700;
+    color: $ubc-blue;
+    font-size: 14px;
+    line-height: 30px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
   }
   
   // Hide up/down arrows from number input.

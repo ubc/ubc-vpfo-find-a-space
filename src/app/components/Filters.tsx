@@ -4,8 +4,19 @@ import { getBuildings, getMeta } from '../services/api';
 import Search from './Search';
 import Select, { MultiValue, Options } from 'react-select'
 import makeAnimated from 'react-select/animated';
+import _ from 'lodash';
 
 const animatedComponents = makeAnimated();
+const selectStyles = {
+  control: (baseStyles, state) => ({
+    ...baseStyles,
+    borderColor: '#5E869F',
+    borderRadius: '0px',
+    ":hover": {
+      borderColor: '#5E869F',
+    }
+  }),
+}
 
 const groupRecordsByCategory = (data) => {
   return data.reduce((acc, current) => {
@@ -71,7 +82,7 @@ export default function Filters(props) {
       ...context.config,
     }
     const buildings = await getBuildings(payload);
-    console.log(buildings);
+    // console.log(buildings);
 
     const data = buildings?.data?.data?.records || {};
     
@@ -183,15 +194,27 @@ export default function Filters(props) {
     setupMeta();
   }, []);
 
+  useEffect(() => {
+    if ( _.isEmpty(props.filters) ) {
+      // Ensure our filter states are empty.
+      setAudioVisualFilter([]);
+      setAccessibilityFilter([]);
+      setBuildingFilter({});
+      setFurnitureFilter([]);
+      setCapacityFilter(null);
+      setISAmenitiesFilter([]);
+    }
+  }, [props.filters])
+
   const submitFilters = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Filters:", { audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, capacityFilter });
+    // console.log("Filters:", { audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, capacityFilter });
     props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, capacityFilter });
   }
 
   const renderFormalFilters = () => {
     return <>
-      {/* <h5>Formal Filters</h5> */}
+      <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
       { renderFurnitureSelect() }
       { renderCapacityInput() }
       { renderBuildingSelect() }
@@ -202,7 +225,7 @@ export default function Filters(props) {
 
   const renderInformalFilters = () => {
     return <>
-      {/* <h5>Informal Filters</h5> */}
+      <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
       { renderFurnitureSelect() }
       { renderCapacityInput() }
       { renderBuildingSelect() }
@@ -239,6 +262,7 @@ export default function Filters(props) {
           options={furnitureOptions}
           name="vpfo-lsb-furniture"
           isClearable
+          styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-furniture-input"
           onChange={(selected) => setFurnitureFilter(selected)}
@@ -257,6 +281,7 @@ export default function Filters(props) {
           options={ISAmenitiesOptions}
           isMulti
           isClearable
+          styles={selectStyles}
           name="vpfo-lsb-informal-amenities"
           components={animatedComponents}
           inputId="vpfo-lsb-informal-amenities-input"
@@ -276,6 +301,7 @@ export default function Filters(props) {
           options={buildingOptions}
           name="vpfo-lsb-building"
           isClearable
+          styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-building-input"
           onChange={(selected) => setBuildingFilter(selected)}
@@ -294,6 +320,7 @@ export default function Filters(props) {
           options={accessibilityOptions}
           isMulti
           isClearable
+          styles={selectStyles}
           name="vpfo-lsb-accessibility"
           components={animatedComponents}
           inputId="vpfo-lsb-accessibility-input"
@@ -313,6 +340,7 @@ export default function Filters(props) {
           options={audioVisualOptions}
           isMulti
           isClearable
+          styles={selectStyles}
           name="vpfo-lsb-audio-visual"
           components={animatedComponents}
           inputId="vpfo-lsb-audio-visual-input"
@@ -329,7 +357,9 @@ export default function Filters(props) {
 
   return (<>
 
-    { meta == null && <>Loading ...</> }
+    { meta === null &&
+      <div className="vpfo-lsb-loading-scrim"><div className="vpfo-lsb-loading-indicator"></div></div>
+    }
     {
       meta !== null &&
       <>

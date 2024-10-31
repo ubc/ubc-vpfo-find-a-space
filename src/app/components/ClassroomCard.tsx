@@ -3,7 +3,6 @@ import { StateContext } from '../StateProvider';
 
 export default function ClassroomCard(props) {
   const context = React.useContext(StateContext);
-  const isFormal = context.config.formal;
 
   const room = props.room;
 
@@ -33,6 +32,7 @@ export default function ClassroomCard(props) {
     
     return <div className="classroom-thumbnail">
       <img
+        key={ thumbProps.src }
         src={ thumbProps.src }
         alt={ thumbProps.alt }
         width={ thumbProps.width }
@@ -51,7 +51,7 @@ export default function ClassroomCard(props) {
           <div className="classroom-building-name fw-bold text-uppercase mt-2">{ room['Building Name'] }</div>
         </div>
         <a
-          href={room['Room Link'] }
+          href={ room['Room Link'] }
           target="_blank"
           className="btn btn-secondary ms-5 text-nowrap">View Space</a>
       </div>

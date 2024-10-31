@@ -7,6 +7,17 @@ import _ from 'lodash';
 
 const animatedComponents = makeAnimated();
 
+const selectStyles = {
+  control: (baseStyles, state) => ({
+    ...baseStyles,
+    borderColor: '#5E869F',
+    borderRadius: '0px',
+    ":hover": {
+      borderColor: '#5E869F',
+    }
+  }),
+}
+
 export default function Search(props) {
   const context = React.useContext(StateContext);
 
@@ -29,13 +40,11 @@ export default function Search(props) {
     if (res?.data?.records) {
       options = res.data.records.map(room => ({
         label: room.fields.Title,
-        value: room.fields.Slug
+        value: room.fields['Room Link']
       }));
     } else {
       options = []
     }
-
-    // console.log('Found:', { options });
 
     callback(options);
 
@@ -43,22 +52,24 @@ export default function Search(props) {
   }
 
   return (<>
-    <div className="select-group">
-      <label id="vpfo-lsb-search" htmlFor="vpfo-lsb-search-input">
+    <div>
+      <label id="vpfo-lsb-search" htmlFor="vpfo-lsb-search-input" className="vpfo-lsb-filter-heading">
         Search
       </label>
-      <AsyncSelect
-        cacheOptions
-        escapeClearsValue={false}
-        loadOptions={getSelectOptions}
-        name="vpfo-lsb-search"
-        components={animatedComponents}
-        inputId="vpfo-lsb-search-input"
-        placeholder="Enter 3 or more characters to search"
-        loadingMessage={() => 'Loading...'}
-        onChange={(selected) => console.log('Option selected:', { selected })}
-      />
+      <div className="select-group">
+        <AsyncSelect
+          cacheOptions
+          escapeClearsValue={false}
+          loadOptions={getSelectOptions}
+          name="vpfo-lsb-search"
+          styles={selectStyles}
+          components={animatedComponents}
+          inputId="vpfo-lsb-search-input"
+          placeholder="Search"
+          loadingMessage={() => 'Loading...'}
+          onChange={(selected) =>  window.open(selected.value, '_blank')}
+        />
+      </div>
     </div>
-    
   </>);
 }

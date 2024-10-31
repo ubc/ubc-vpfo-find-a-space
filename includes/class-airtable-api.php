@@ -94,7 +94,7 @@ class Airtable_Api {
 		$cache_key = sprintf( '%s_%s_%s', $campus, $func, md5( wp_json_encode( $params ) ) );
 
 		// TODO: Remove this transient delete.
-		delete_transient( $cache_key );
+		// delete_transient( $cache_key );
 		$records = get_transient( $cache_key );
 
 		if ( $records ) {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StateContext } from '../StateProvider';
 import { getRooms } from '../services/api';
 import ClassroomCard from './ClassroomCard';
+import _ from 'lodash';
 
 export default function Table(props) {
   const context                             = React.useContext(StateContext);
@@ -9,6 +10,7 @@ export default function Table(props) {
   const [nextPageOffset, setNextPageOffset] = useState(null);
   const [prevPageOffset, setPrevPageOffset] = useState(null);
   const [prevOffsets, setPrevOffsets]       = useState([]);
+  const containerRef = React.useRef(null);
 
   async function getPage(currentOffset = null) {
     props.setLoading(true);
@@ -17,8 +19,14 @@ export default function Table(props) {
       offset: currentOffset,
       filters: props.filters,
     };
-
-    const res = await getRooms(payload) as any;
+    let res = null;
+    try {
+      res = await getRooms(payload) as any;
+    } catch(err) {
+      console.error('Error fetching rooms:', err);
+      props.setLoading(false);
+      return;
+    }
 
     if (res?.data?.records) {
       setRooms(res.data.records.map(room => ({
@@ -54,6 +62,8 @@ export default function Table(props) {
       setPrevPageOffset(newPrevPageOffset);
       await getPage(nextPageOffset);
     }
+
+    executeScroll();
   }
 
   // Move to the previous page
@@ -65,7 +75,7 @@ export default function Table(props) {
       newPrevOffsets.pop();
 
       setPrevOffsets(newPrevOffsets);
-      getPage(prevPageOffset); // Go to the previous page.
+      await getPage(prevPageOffset); // Go to the previous page.
 
       if ( newPrevOffsets.length === 1 || newPrevOffsets.length === 0 ) {
         setPrevPageOffset(null);
@@ -74,6 +84,8 @@ export default function Table(props) {
         setPrevPageOffset(newPrevOffsets[newPrevOffsets.length - 2]);
       }
     }
+
+    executeScroll();
   }
 
   useEffect(() => {
@@ -89,12 +101,68 @@ export default function Table(props) {
 
     // Fetch a new page, with the new filters via props.
     getPage();
+    executeScroll();
   }, [props.filters]);
 
+  const executeScroll = () => containerRef.current.scrollIntoView({ behavior: "smooth" })
+
+  const getCurrentFilters = () => {
+    let filters = [];
+
+    ['accessibilityFilter', 'audioVisualFilter'].forEach(key => {
+      if ( ! _.isEmpty(props.filters[key] ) ) {
+        props.filters[key].forEach(filter => {
+          filters.push(filter.label);
+        })
+      }
+    });
+
+    ['buildingFilter', 'furnitureFilter'].forEach(key => {
+      if ( ! _.isEmpty(props.filters[key] ) ) {
+        // console.log(props.filters[key]);
+        filters.push(props.filters[key].label);
+      }
+    });
+
+    if ( props.filters['capacityFilter'] && props.filters['capacityFilter'] !== null ) {
+      // console.log(props.filters['capacityFilter'])
+      filters.push('Capacity ' + props.filters['capacityFilter']);
+    }
+
+    return filters;
+  }
+
+  const hasActiveFilter = () => {
+    return getCurrentFilters().length > 0;
+  }
+
+  const clearFilters = () => {
+    props.clearFilters();
+  }
+
+  const renderActiveFilters = () => {
+    return <div className="vpfo-lsb-filter-slugs">
+      {getCurrentFilters().map((filter) => {
+        return <div key={filter} className="vpfo-lsb-filter-slug">{filter}</div>;
+      })}
+      <a role="button" tabindex="0" className="vpfo-lsb-filter-clear-all" onClick={clearFilters}>
+        Clear filters
+        <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.70615 2.06895C10.0968 1.67832 10.0968 1.04395 9.70615 0.65332C9.31553 0.262695 8.68115 0.262695 8.29053 0.65332L4.9999 3.94707L1.70615 0.656445C1.31553 0.26582 0.681152 0.26582 0.290527 0.656445C-0.100098 1.04707 -0.100098 1.68145 0.290527 2.07207L3.58428 5.3627L0.293652 8.65645C-0.0969726 9.04707 -0.0969726 9.68145 0.293652 10.0721C0.684277 10.4627 1.31865 10.4627 1.70928 10.0721L4.9999 6.77832L8.29365 10.0689C8.68428 10.4596 9.31865 10.4596 9.70928 10.0689C10.0999 9.67832 10.0999 9.04395 9.70928 8.65332L6.41553 5.3627L9.70615 2.06895Z" fill="#005DA6"/>
+        </svg>
+      </a>
+    </div>;
+  }
+
   return (
-    <div className="vpfo-lsb-table-container">
+    <div ref={containerRef} className="vpfo-lsb-table-container">
       { props.loading &&
         <div className="vpfo-lsb-loading-scrim"><div className="vpfo-lsb-loading-indicator"></div></div>
+      }
+      { hasActiveFilter() &&
+        <div className="vpfo-lsb-current-filters">
+          { renderActiveFilters() }
+        </div>
       }
       <div className="vpfo-lsb-table">
 
@@ -117,7 +185,7 @@ export default function Table(props) {
             </button>
           )}
           {nextPageOffset && (
-            <button className="btn btn-secondary text-nowrap" onClick={nextPage} disabled={props.loading}>
+            <button className="btn btn-primary text-nowrap" onClick={nextPage} disabled={props.loading}>
               Next page
             </button>
           )}
