@@ -2640,13 +2640,14 @@ function ClassroomCard(props) {
   const room = props.room;
   const renderImage = () => {
     var _room$ImageGallery$;
-    const thumb = (_room$ImageGallery$ = room['Image Gallery'][0]) !== null && _room$ImageGallery$ !== void 0 ? _room$ImageGallery$ : null;
-    let thumbProps = {};
-    if (!thumb) {
+    const hasThumb = typeof room['Image Gallery'] !== 'undefined' && room['Image Gallery'].length > 0;
+    if (!hasThumb) {
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "classroom-thumbnail no-image"
       });
     }
+    const thumb = (_room$ImageGallery$ = room['Image Gallery'][0]) !== null && _room$ImageGallery$ !== void 0 ? _room$ImageGallery$ : null;
+    let thumbProps = {};
     if (thumb && thumb['url']) {
       if (thumb['url']) {
         thumbProps.src = thumb['url'];
@@ -2730,7 +2731,7 @@ function ClassroomCard(props) {
       className: "classroom-card d-flex flex-column flex-md-row pt-5 pt-md-0 ps-md-5 position-relative",
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "accent position-absolute"
-      }), room['Image Gallery'][0] !== null && renderImage(), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+      }), renderImage(), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
         className: "classroom-details p-5 ps-md-0 ms-md-9 flex-grow-1",
         children: [renderRoomInformation(), renderRoomMeta()]
       })]
@@ -3048,6 +3049,10 @@ function Filters(props) {
       })]
     });
   };
+  let btnClass = "btn btn-primary text-nowrap";
+  if (props.loading) {
+    btnClass += " disabled";
+  }
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
     children: [meta == null && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
       children: "Loading ..."
@@ -3060,7 +3065,7 @@ function Filters(props) {
         }), isFormal === true && renderFormalFilters(), isFormal === false && renderInformalFilters(), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("button", {
           type: "submit",
           disabled: props.loading,
-          className: "btn btn-secondary ms-5 text-nowrap",
+          className: btnClass,
           children: "Submit Filters"
         })]
       })
@@ -3174,7 +3179,8 @@ __webpack_require__.r(__webpack_exports__);
 function Table(props) {
   const context = react__WEBPACK_IMPORTED_MODULE_0___default().useContext(_StateProvider__WEBPACK_IMPORTED_MODULE_1__.StateContext);
   const [rooms, setRooms] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [offset, setOffset] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [nextPageOffset, setNextPageOffset] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [prevPageOffset, setPrevPageOffset] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [prevOffsets, setPrevOffsets] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   async function getPage(currentOffset = null) {
     props.setLoading(true);
@@ -3189,7 +3195,7 @@ function Table(props) {
         'Title': room.fields['Title'],
         'Room Number': room.fields['Room Number'],
         'Capacity': room.fields['Capacity'],
-        'Room Link': 'https://ubccms.brendan.paperleaf.dev/classrooms/' + room.fields['Slug'],
+        'Room Link': room.fields['Room Link'],
         'Image Gallery': room.fields['Image Gallery'],
         'Filter_Furniture': room.fields['Filter_Furniture'],
         'Filter_RoomLayoutType': room.fields['Filter_RoomLayoutType']
@@ -3198,40 +3204,39 @@ function Table(props) {
     if (res?.data === null) {
       setRooms([]);
     }
-    if (res?.data?.offset) {
-      setOffset(res.data.offset);
+    const newNextPageOffset = res?.data?.offset;
+    if (newNextPageOffset) {
+      setNextPageOffset(newNextPageOffset);
     }
     props.setLoading(false);
   }
 
   // Move to the next page
   async function nextPage() {
-    if (offset) {
+    if (nextPageOffset) {
+      const newPrevPageOffset = prevOffsets.length !== 0 ? prevOffsets[prevOffsets.length - 1] : null;
       // Push the current offset to the stack of previous offsets before moving to the next
-      setPrevOffsets(prev => [...prev, offset]);
-      await getPage(offset);
+      setPrevOffsets(prev => [...prev, nextPageOffset]);
+      setPrevPageOffset(newPrevPageOffset);
+      await getPage(nextPageOffset);
     }
   }
 
   // Move to the previous page
   async function prevPage() {
-    if (prevOffsets.length) {
-      // Clone the previous offsets array
+    if (prevOffsets.length > 0) {
+      // Create a new array representing the new previous offsets
       const newPrevOffsets = [...prevOffsets];
+      // Always pop off the top item. This represents the current page.
+      newPrevOffsets.pop();
+      setPrevOffsets(newPrevOffsets);
+      getPage(prevPageOffset); // Go to the previous page.
 
-      // Pop the last offset (this is the offset for the current page)
-      const previousOffset = newPrevOffsets.pop();
-
-      // Load the previous page using that offset
-      await getPage(previousOffset);
-
-      // After loading, update the state
-      setPrevOffsets(newPrevOffsets); // Set the updated previous offsets
-      setOffset(previousOffset); // Set the offset to the previous page
-    } else {
-      // If no previous offsets, go back to the first page
-      await getPage(null); // Load the first page
-      setOffset(null); // Reset offset to null for the first page
+      if (newPrevOffsets.length === 1 || newPrevOffsets.length === 0) {
+        setPrevPageOffset(null);
+      } else {
+        setPrevPageOffset(newPrevOffsets[newPrevOffsets.length - 2]);
+      }
     }
   }
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -3240,7 +3245,8 @@ function Table(props) {
   }, []);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     // Reset offsets, and previous offsets
-    setOffset(null);
+    setNextPageOffset(null);
+    setPrevPageOffset(null);
     setPrevOffsets([]);
 
     // Fetch a new page, with the new filters via props.
@@ -3262,7 +3268,7 @@ function Table(props) {
         })
       }), rooms.length !== 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-          className: "vpfo-lsb-result-list",
+          className: "vpfo-lsb-result-list mb-5",
           children: rooms.map((room, idx) => {
             return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ClassroomCard__WEBPACK_IMPORTED_MODULE_3__["default"], {
               room: room
@@ -3270,14 +3276,16 @@ function Table(props) {
           })
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-        children: [prevOffsets.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+        children: [prevOffsets.length !== 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+          className: "btn btn-secondary me-5 text-nowrap",
           onClick: prevPage,
           disabled: props.loading,
-          children: "Load prev page"
-        }), offset && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+          children: "Prev page"
+        }), nextPageOffset && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
+          className: "btn btn-secondary text-nowrap",
           onClick: nextPage,
           disabled: props.loading,
-          children: "Load next page"
+          children: "Next page"
         })]
       })]
     })]

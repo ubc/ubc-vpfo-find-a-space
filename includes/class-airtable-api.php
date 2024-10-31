@@ -67,7 +67,10 @@ class Airtable_Api {
 			}
 
 			// Return an empty result.
-			return null;
+			return array(
+				'records' => array(),
+				'offset'  => null,
+			);
 		}
 
 		$res = array(
@@ -227,7 +230,19 @@ class Airtable_Api {
 
 		$rooms = $this->airtable_get( 'Classrooms', $payload, $params );
 
-		// dd($rooms);
+		if ( null !== $rooms['records'] ) {
+			$rooms['records'] = array_map(
+				function ( $record ) {
+					$fields              = (array) $record->fields;
+					$fields['Room Link'] = sprintf( '%s/classrooms/%s', get_site_url(), $fields['Slug'] );
+
+					$record->fields = $fields;
+
+					return $record;
+				},
+				$rooms['records']
+			);
+		}
 
 		return $rooms;
 	}
@@ -242,6 +257,10 @@ class Airtable_Api {
 				$response['records'],
 				function ( $record ) use ( $formal ) {
 					$key = $formal ? 'Formal Count' : 'Informal Count';
+					if ( ! property_exists( $record->fields, $key ) ) {
+						return true;
+					}
+
 					return 0 !== $record->fields->$key;
 				}
 			)

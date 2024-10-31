@@ -19009,8 +19009,6 @@ a > .vpfo-lsb-block code {
 .vpfo-lsb-block .btn-primary.disabled, .vpfo-lsb-block .btn-primary[disabled] {
   background: #8B8C9A;
   border-color: #98B2C3;
-  text-transform: none;
-  font-weight: 700;
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -19025,6 +19023,11 @@ a > .vpfo-lsb-block code {
 .vpfo-lsb-block .btn-secondary:focus, .vpfo-lsb-block .btn-secondary:focus-within {
   box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 6px #002145;
   outline: none;
+}
+.vpfo-lsb-block .btn-secondary.disabled, .vpfo-lsb-block .btn-secondary[disabled] {
+  background: #8B8C9A;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 .vpfo-lsb-block .btn-border-thick {
   border-width: 0.125rem;

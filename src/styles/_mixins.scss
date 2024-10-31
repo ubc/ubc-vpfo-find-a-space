@@ -42,8 +42,8 @@
 	&.disabled, &[disabled] {
 		background: $utility-grey-inactive;
 		border-color: $ubc-grey-medium;
-		text-transform: none;
-		font-weight: 700;
+		// text-transform: none;
+		// font-weight: 700;
 		cursor: not-allowed;
 		pointer-events: none;
 	}
@@ -61,5 +61,12 @@
 	&:focus, &:focus-within {
 		box-shadow: 0 0 0 3px $utility-white, 0 0 0 6px $ubc-blue;
         outline: none;
+	}
+
+  &.disabled, &[disabled] {
+		background: $utility-grey-inactive;
+		// border-color: $ubc-grey-medium;
+		cursor: not-allowed;
+		pointer-events: none;
 	}
 }

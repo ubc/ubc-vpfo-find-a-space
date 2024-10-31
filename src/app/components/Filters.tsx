@@ -322,6 +322,11 @@ export default function Filters(props) {
     )
   }
 
+  let btnClass = "btn btn-primary text-nowrap";
+  if (props.loading) {
+    btnClass += " disabled";
+  }
+
   return (<>
 
     { meta == null && <>Loading ...</> }
@@ -338,7 +343,7 @@ export default function Filters(props) {
           <button
             type="submit"
             disabled={props.loading}
-            className="btn btn-secondary ms-5 text-nowrap"
+            className={btnClass}
           >
             Submit Filters
           </button>
