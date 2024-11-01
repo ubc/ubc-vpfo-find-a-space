@@ -196,6 +196,7 @@ export default function Filters(props) {
 
   useEffect(() => {
     if ( _.isEmpty(props.filters) ) {
+      console.log('clearing filters');
       // Ensure our filter states are empty.
       setAudioVisualFilter([]);
       setAccessibilityFilter([]);
@@ -246,6 +247,7 @@ export default function Filters(props) {
           name="vpfo-lsb-capacity" 
           min="0"
           placeholder="Enter minimum"
+          value={capacityFilter}
           onChange={(e) => setCapacityFilter(parseInt(e.target.value))}
         />
       </div>
@@ -260,6 +262,7 @@ export default function Filters(props) {
         </label>
         <Select 
           options={furnitureOptions}
+          value={furnitureFilter}
           name="vpfo-lsb-furniture"
           isClearable
           styles={selectStyles}
@@ -279,6 +282,7 @@ export default function Filters(props) {
         </label>
         <Select 
           options={ISAmenitiesOptions}
+          value={ISAmenitiesFilter}
           isMulti
           isClearable
           styles={selectStyles}
@@ -299,6 +303,7 @@ export default function Filters(props) {
         </label>
         <Select 
           options={buildingOptions}
+          value={buildingFilter}
           name="vpfo-lsb-building"
           isClearable
           styles={selectStyles}
@@ -318,6 +323,7 @@ export default function Filters(props) {
         </label>
         <Select 
           options={accessibilityOptions}
+          value={accessibilityFilter}
           isMulti
           isClearable
           styles={selectStyles}
@@ -338,6 +344,7 @@ export default function Filters(props) {
         </label>
         <Select 
           options={audioVisualOptions}
+          value={audioVisualFilter}
           isMulti
           isClearable
           styles={selectStyles}

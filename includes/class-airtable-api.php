@@ -90,20 +90,20 @@ class Airtable_Api {
 		// Sort the parameters to ensure consistent cache keys.
 		ksort( $params );
 
-		// Create cache key for this request.
-		$cache_key = sprintf( '%s_%s_%s', $campus, $func, md5( wp_json_encode( $params ) ) );
+		// // Create cache key for this request.
+		// $cache_key = sprintf( '%s_%s_%s', $campus, $func, md5( wp_json_encode( $params ) ) );
 
-		// TODO: Remove this transient delete.
-		// delete_transient( $cache_key );
-		$records = get_transient( $cache_key );
+		// // TODO: Remove this transient delete.
+		// // delete_transient( $cache_key );
+		// $records = get_transient( $cache_key );
 
-		if ( $records ) {
-			return $records;
-		}
+		// if ( $records ) {
+			// return $records;
+		// }
 
 		$records = call_user_func_array( array( $this, $func ), array( 'params' => $params ) );
 
-		set_transient( $cache_key, $records, self::CACHE_TTL ); // Cache for 1 hour
+		// set_transient( $cache_key, $records, self::CACHE_TTL ); // Cache for 1 hour
 
 		return $records;
 	}

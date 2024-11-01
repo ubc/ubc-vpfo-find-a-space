@@ -104,7 +104,10 @@ export default function Table(props) {
     executeScroll();
   }, [props.filters]);
 
-  const executeScroll = () => containerRef.current.scrollIntoView({ behavior: "smooth" })
+  const executeScroll = () => setTimeout(
+    () => containerRef.current.scrollIntoView({ behavior: "smooth" }),
+    200
+  )
 
   const getCurrentFilters = () => {
     let filters = [];
