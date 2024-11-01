@@ -1,7 +1,11 @@
 .vpfo-lsb-container {
   position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+
+  @include media-breakpoint-up(md) {
+    flex-direction: row;
+  }
 
   .vpfo-lsb-filter-slugs {
     display: flex;

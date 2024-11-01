@@ -64,6 +64,7 @@ export default function Search(props) {
           name="vpfo-lsb-search"
           styles={selectStyles}
           components={animatedComponents}
+          noOptionsMessage={() => 'Start typing to search'}
           inputId="vpfo-lsb-search-input"
           placeholder="Search"
           loadingMessage={() => 'Loading...'}

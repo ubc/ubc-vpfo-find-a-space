@@ -33,6 +33,8 @@ export default function Filters(props) {
   const context = React.useContext(StateContext);
   const isFormal = context.config.formal;
 
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
   // Meta, which contains Amenities, Resources, and Informal Amenities data.
   const [meta, setMeta] = useState(null);
 
@@ -196,7 +198,6 @@ export default function Filters(props) {
 
   useEffect(() => {
     if ( _.isEmpty(props.filters) ) {
-      console.log('clearing filters');
       // Ensure our filter states are empty.
       setAudioVisualFilter([]);
       setAccessibilityFilter([]);
@@ -357,19 +358,47 @@ export default function Filters(props) {
     )
   }
 
+  const toggleFilters = () => {
+    setFiltersOpen(!filtersOpen);
+  }
+
   let btnClass = "btn btn-primary text-nowrap";
   if (props.loading) {
     btnClass += " disabled";
   }
 
+  let filterToggleClass = 'vpfo-lsb-filters-mobile-toggle';
+  if ( filtersOpen === true) {
+    filterToggleClass += ' vpfo-lsb-filters-mobile-toggle-open'
+  } else {
+    filterToggleClass += ' vpfo-lsb-filters-mobile-toggle-closed'
+  }
+
   return (<>
 
     { meta === null &&
-      <div className="vpfo-lsb-loading-scrim"><div className="vpfo-lsb-loading-indicator"></div></div>
+      <div className="vpfo-lsb-filters-container vpfo-lsb-filters-container-loading">
+        <div className="vpfo-lsb-loading-indicator loading"></div>
+      </div>
     }
     {
       meta !== null &&
       <>
+        <div className={filterToggleClass} onClick={toggleFilters}>
+          <h5>Search and Filter</h5>
+          { filtersOpen === true &&
+            <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.70628 1.74619C10.0969 1.35557 10.0969 0.721191 9.70628 0.330566C9.31565 -0.0600586 8.68128 -0.0600586 8.29065 0.330566L5.00002 3.62432L1.70627 0.333691C1.31565 -0.0569337 0.681274 -0.0569337 0.290649 0.333691C-0.0999756 0.724316 -0.0999756 1.35869 0.290649 1.74932L3.5844 5.03994L0.293775 8.33369C-0.0968505 8.72432 -0.0968505 9.35869 0.293775 9.74932C0.6844 10.1399 1.31877 10.1399 1.7094 9.74932L5.00002 6.45557L8.29378 9.74619C8.6844 10.1368 9.31878 10.1368 9.7094 9.74619C10.1 9.35557 10.1 8.72119 9.7094 8.33057L6.41565 5.03994L9.70628 1.74619Z" fill="white"/>
+            </svg>
+          }
+          {
+            filtersOpen === false &&
+            <svg width="17" height="15" viewBox="0 0 17 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0.62188 1.12548C0.82813 0.687976 1.26563 0.409851 1.75 0.409851H15.25C15.7344 0.409851 16.1719 0.687976 16.3781 1.12548C16.5844 1.56298 16.5219 2.0786 16.2156 2.4536L10.5 9.43798V13.4099C10.5 13.788 10.2875 14.1349 9.94688 14.3036C9.60626 14.4724 9.20313 14.438 8.90001 14.2099L6.90001 12.7099C6.64688 12.5224 6.5 12.2255 6.5 11.9099V9.43798L0.781255 2.45048C0.47813 2.0786 0.412505 1.55985 0.62188 1.12548Z" fill="white"/>
+            </svg>
+          }
+        </div>
+
         <form onSubmit={submitFilters} className="vpfo-lsb-filters-container">
 
           <Search setLoading={props.setLoading} />
