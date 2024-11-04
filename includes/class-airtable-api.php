@@ -19,21 +19,17 @@ class Airtable_Api {
 	);
 
 	public function __construct( array $settings ) {
-		$api_key      = $settings['api_key'];
-		$van_base_id  = $settings['base_id_van'];
-		$okan_base_id = $settings['base_id_okan'];
-
 		$this->van_airtable = new Airtable(
 			array(
-				'api_key' => $api_key,
-				'base'    => $van_base_id,
+				'api_key' => $settings['api_key'],
+				'base'    => $settings['base_id_van'],
 			)
 		);
 
 		$this->okan_airtable = new Airtable(
 			array(
-				'api_key' => $api_key,
-				'base'    => $okan_base_id,
+				'api_key' => $settings['api_key'],
+				'base'    => $settings['base_id_okan'],
 			)
 		);
 	}
