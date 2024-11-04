@@ -30,15 +30,9 @@
     align-items: center;
 
     .vpfo-lsb-loading-indicator {
-      width: 20px;
-      height: 20px;
-      border: 1px solid #ddd;
-
-      @include media-breakpoint-up(lg) {
-        width: 100px;
-        height: 100px;
-        border: 10px solid #ddd;
-      }
+      width: 100px;
+      height: 100px;
+      border: 10px solid #ddd;
 
       border-radius: 50%;
       border-top-color: $ubc-blue;
