@@ -36,8 +36,8 @@ class Find_A_Space_Ajax_Handler {
 	 *
 	 * @since    1.0.0
 	 */
-	public function __construct() {
-		$this->airtable_api = new Airtable_Api();
+	public function __construct( array $settings ) {
+		$this->airtable_api = new Airtable_Api( $settings );
 		$this->register_handlers();
 	}
 
@@ -75,8 +75,9 @@ class Find_A_Space_Ajax_Handler {
 		$formal = rest_sanitize_boolean( $data['formal'] ?? null );
 
 		$params = array(
-			'campus' => $campus,
-			'formal' => $formal,
+			'campus'       => $campus,
+			'formal'       => $formal,
+			'should_cache' => true,
 		);
 
 		$shared_amenities   = $this->airtable_api->get( 'get_shared_amenities', $params );
@@ -109,8 +110,9 @@ class Find_A_Space_Ajax_Handler {
 		$formal = rest_sanitize_boolean( $data['formal'] ?? null );
 
 		$params = array(
-			'campus' => $campus,
-			'formal' => $formal,
+			'campus'       => $campus,
+			'formal'       => $formal,
+			'should_cache' => true,
 		);
 
 		$data = $this->airtable_api->get( 'get_buildings', $params );

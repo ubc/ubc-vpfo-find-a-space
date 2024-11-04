@@ -47,6 +47,14 @@ class Find_A_Space {
 	protected $ajax_handler;
 
 	/**
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      Find_A_Space_Airtable_Options    $airtable_options
+	 */
+	protected $airtable_options;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * @since    1.0.0
@@ -59,13 +67,19 @@ class Find_A_Space {
 		}
 		$this->plugin_name = 'ubc-vpfo-find-a-space';
 
+		// Always instantiate the options page class.
+		require_once plugin_dir_path( __DIR__ ) . 'includes/class-find-a-space-airtable-options.php';
+		$this->airtable_options = new Find_A_Space_Airtable_Options();
+
+		$settings = $this->airtable_options->get_settings();
+
 		// Only load the plugin when the Airtable API key and Base ID are defined.
-		if ( defined( 'UBC_VPFO_FIND_A_SPACE_AIRTABLE_API_KEY' )
-			&& defined( 'UBC_VPFO_SPACES_PAGE_AIRTABLE_BASE_ID_VAN' )
-			&& defined( 'UBC_VPFO_SPACES_PAGE_AIRTABLE_BASE_ID_OKAN' )
+		if ( $settings['api_key']
+			&& $settings['base_id_van']
+			&& $settings['base_id_okan']
 		) {
-			$this->load_dependencies();
-        }
+			$this->load_dependencies( $settings );
+		}
 	}
 
 	/**
@@ -74,11 +88,11 @@ class Find_A_Space {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function load_dependencies() {
+	private function load_dependencies( array $settings ) {
 		require_once plugin_dir_path( __DIR__ ) . 'includes/class-find-a-space-ajax-handler.php';
 		require_once plugin_dir_path( __DIR__ ) . 'includes/class-airtable-api.php';
 
-		$this->ajax_handler = new Find_A_Space_Ajax_Handler();
+		$this->ajax_handler = new Find_A_Space_Ajax_Handler( $settings );
 
 		add_action( 'init', array( $this, 'init_block' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'localize_scripts' ), 10 );
