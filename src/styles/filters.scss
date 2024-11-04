@@ -9,7 +9,7 @@
   padding-bottom: 32px;
   margin-right: 16px;
 
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(lg) {
     width: 220px;
     min-width: 220px;
 
@@ -22,7 +22,7 @@
 
   &.vpfo-lsb-filters-container-loading {
     display: none;
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(lg) {
       display: flex;
     }
     min-height: 600px;
@@ -34,7 +34,7 @@
       height: 20px;
       border: 1px solid #ddd;
 
-      @include media-breakpoint-up(md) {
+      @include media-breakpoint-up(lg) {
         width: 100px;
         height: 100px;
         border: 10px solid #ddd;
@@ -70,6 +70,8 @@
     max-width: 100%;
     border: 1px solid $ubc-grey-medium-dark;
     padding: 8px;
+    height: auto;
+    width: 100%;
   }
 
   // Styled in Filters.tsx
@@ -108,8 +110,9 @@
   padding: 16px;
   background: $ubc-blue;
   color: white;
+  cursor: pointer;
 
-  @include media-breakpoint-up(md) {
+  @include media-breakpoint-up(lg) {
     display: none;
   }
   
@@ -138,7 +141,7 @@
     display: block;
     border-top: none;
 
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(lg) {
       border-top: 16px solid $ubc-blue;      
     }
   }
@@ -147,7 +150,7 @@
     display: none;
     
 
-    @include media-breakpoint-up(md) {
+    @include media-breakpoint-up(lg) {
       display: block;
       
     }

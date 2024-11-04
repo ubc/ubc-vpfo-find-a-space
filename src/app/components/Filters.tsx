@@ -378,7 +378,7 @@ export default function Filters(props) {
 
     { meta === null &&
       <div className="vpfo-lsb-filters-container vpfo-lsb-filters-container-loading">
-        <div className="vpfo-lsb-loading-indicator loading"></div>
+        <div className="vpfo-lsb-loading-scrim"><div className="vpfo-lsb-loading-indicator"></div></div>
       </div>
     }
     {
