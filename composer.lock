@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
     "content-hash": "a9b434938b6697c68f9f83da1ea94575",
     "packages": [
         {
@@ -1324,10 +1323,6 @@
             "time": "2022-03-08T17:03:00+00:00"
         }
     ],
-=======
-    "content-hash": "36eae911b9cfc9679e3dd8b817ba9c01",
-    "packages": [],
->>>>>>> 7dbec184d75c852f09ac6c6f116919a2bb8bbfc9
     "packages-dev": [
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -1575,7 +1570,6 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-<<<<<<< HEAD
             "version": "3.10.3",
             "source": {
                 "type": "git",
@@ -1586,18 +1580,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/62d32998e820bddc40f99f8251958aed187a5c9c",
                 "reference": "62d32998e820bddc40f99f8251958aed187a5c9c",
-=======
-            "version": "3.10.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "86e5f5dd9a840c46810ebe5ff1885581c42a3017"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/86e5f5dd9a840c46810ebe5ff1885581c42a3017",
-                "reference": "86e5f5dd9a840c46810ebe5ff1885581c42a3017",
->>>>>>> 7dbec184d75c852f09ac6c6f116919a2bb8bbfc9
                 "shasum": ""
             },
             "require": {
@@ -1664,7 +1646,6 @@
                     "type": "open_collective"
                 }
             ],
-<<<<<<< HEAD
             "time": "2024-09-18T10:38:58+00:00"
         },
         {
@@ -1749,9 +1730,6 @@
                 }
             ],
             "time": "2024-09-16T10:07:02+00:00"
-=======
-            "time": "2024-07-21T23:26:44+00:00"
->>>>>>> 7dbec184d75c852f09ac6c6f116919a2bb8bbfc9
         },
         {
             "name": "wp-coding-standards/wpcs",
