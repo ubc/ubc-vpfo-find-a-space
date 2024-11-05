@@ -2,6 +2,9 @@
 
 namespace UbcVpfoFindASpace;
 
+use DOMDocument;
+use DOMXPath;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -32,11 +35,21 @@ class Find_A_Space_Ajax_Handler {
 	protected $airtable_api;
 
 	/**
+	 * Plugin settings, containing airtable information and base urls.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $settings
+	 */
+	protected $settings;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * @since    1.0.0
 	 */
 	public function __construct( array $settings ) {
+		$this->settings = $settings;
 		$this->airtable_api = new Airtable_Api( $settings );
 		$this->register_handlers();
 	}
@@ -57,6 +70,14 @@ class Find_A_Space_Ajax_Handler {
 		// List rooms (with filters)
 		add_action( 'wp_ajax_find_a_space_rooms', array( $this, 'rooms_callback' ) );
 		add_action( 'wp_ajax_nopriv_find_a_space_rooms', array( $this, 'rooms_callback' ) );
+
+		// Single room
+		add_action( 'wp_ajax_find_a_space_classroom', array( $this, 'single_classroom_callback' ) );
+		add_action( 'wp_ajax_nopriv_find_a_space_classroom', array( $this, 'single_classroom_callback' ) );
+
+		// Single building
+		add_action( 'wp_ajax_find_a_space_building', array( $this, 'single_building_callback' ) );
+		add_action( 'wp_ajax_nopriv_find_a_space_building', array( $this, 'single_building_callback' ) );
 	}
 
 	private function verify_nonce() {
@@ -120,12 +141,83 @@ class Find_A_Space_Ajax_Handler {
 		return wp_send_json( array( 'data' => $data ) );
 	}
 
+	private function get_html_in_selector( string $html, string $selector ) {
+		// Load the HTML into DOMDocument
+		libxml_use_internal_errors( true );
+		$dom = new DOMDocument();
+		$dom->loadHTML( $html );
+		libxml_clear_errors();
+
+		// Use DOMXPath to query for specific content
+		$xpath    = new DOMXPath( $dom );
+		$selector = sprintf( "//section[contains(@class, '%s')]", $selector );
+		$elements = $xpath->query( $selector );
+
+		if ( 0 === $elements->length ) {
+			return null;
+		}
+
+		return $dom->saveHTML( $elements[0] );
+	}
+
 	public function single_building_callback() {
 		if ( ! $this->verify_nonce() ) {
 			return wp_send_json_error( 'Invalid nonce' );
 		}
 
-		return wp_send_json( array( 'message' => 'Building single' ) );
+		$data = $_REQUEST['data'];
+
+		$slug         = sanitize_text_field( $data['slug'] ?? null );
+		$campus       = sanitize_text_field( $data['campus'] ?? null );
+		$base_url_key = sprintf( '%s_%s', 'base_url', $campus );
+
+		$base_url = $this->settings[ $base_url_key ];
+		if ( ! $base_url ) {
+			return wp_send_json_error( 'Base URL not found' );
+		}
+
+		$url = sprintf( '%s/buildings/%s', $base_url, $slug );
+
+		$res = wp_remote_get( $url, array( 'method' => 'GET' ) );
+
+		if ( is_wp_error( $res ) ) {
+			return wp_send_json_error( 'Failed to fetch building data' );
+		}
+
+		$html = wp_remote_retrieve_body( $res );
+		$html = $this->get_html_in_selector( $html, 'vpfo-spaces-page' );
+
+		return wp_send_json( array( 'html' => $html ) );
+	}
+
+	public function single_classroom_callback() {
+		if ( ! $this->verify_nonce() ) {
+			return wp_send_json_error( 'Invalid nonce' );
+		}
+
+		$data = $_REQUEST['data'];
+
+		$slug         = sanitize_text_field( $data['slug'] ?? null );
+		$campus       = sanitize_text_field( $data['campus'] ?? null );
+		$base_url_key = sprintf( '%s_%s', 'base_url', $campus );
+
+		$base_url = $this->settings[ $base_url_key ];
+		if ( ! $base_url ) {
+			return wp_send_json_error( 'Base URL not found' );
+		}
+
+		$url = sprintf( '%s/classrooms/%s', $base_url, $slug );
+
+		$res = wp_remote_get( $url, array( 'method' => 'GET' ) );
+
+		if ( is_wp_error( $res ) ) {
+			return wp_send_json_error( 'Failed to fetch classroom data' );
+		}
+
+		$html = wp_remote_retrieve_body( $res );
+		$html = $this->get_html_in_selector( $html, 'vpfo-spaces-page' );
+
+		return wp_send_json( array( 'html' => $html ) );
 	}
 
 	public function rooms_callback() {

@@ -56,15 +56,29 @@ export default function Filters(props) {
   // Furniture Options
   const [ISAmenitiesOptions, setISAmenitiesOptions] = useState<any[]>([]);
 
+  const getInitialFilterState = (key) => {
+    if ( ! props.filters ) {
+      return null;
+    }
+
+    const filter = props.filters[key];
+
+    if ( filter === undefined || filter === null ) {
+      return null;
+    }
+
+    return filter;
+  }
+
   /**
    * Form States
   */
-  const [audioVisualFilter, setAudioVisualFilter] = useState<any[]>([]);
-  const [accessibilityFilter, setAccessibilityFilter] = useState<any[]>([]);
-  const [buildingFilter, setBuildingFilter] = useState({});
-  const [furnitureFilter, setFurnitureFilter] = useState<any[]>([]);
-  const [capacityFilter, setCapacityFilter] = useState<null|number>(null);
-  const [ISAmenitiesFilter, setISAmenitiesFilter] = useState<any[]>([]);
+  const [audioVisualFilter, setAudioVisualFilter] = useState<any[]>(getInitialFilterState('audioVisualFilter') ?? []);
+  const [accessibilityFilter, setAccessibilityFilter] = useState<any[]>(getInitialFilterState('accessibilityFilter') ?? []);
+  const [buildingFilter, setBuildingFilter] = useState(getInitialFilterState('buildingFilter') ?? {});
+  const [furnitureFilter, setFurnitureFilter] = useState<any[]>(getInitialFilterState('furnitureFilter') ?? []);
+  const [capacityFilter, setCapacityFilter] = useState<null|number>(getInitialFilterState('capacityFilter') ?? '');
+  const [ISAmenitiesFilter, setISAmenitiesFilter] = useState<any[]>(getInitialFilterState('ISAmenitiesFilter') ?? []);
 
   const setupBuildingOptions = (records) => {
     let options = [];
@@ -203,7 +217,7 @@ export default function Filters(props) {
       setAccessibilityFilter([]);
       setBuildingFilter({});
       setFurnitureFilter([]);
-      setCapacityFilter(null);
+      setCapacityFilter('');
       setISAmenitiesFilter([]);
     }
   }, [props.filters])

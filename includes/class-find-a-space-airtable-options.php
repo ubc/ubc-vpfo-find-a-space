@@ -19,13 +19,15 @@ defined( 'ABSPATH' ) || exit;
  */
 class Find_A_Space_Airtable_Options {
 
-	const NONCE_KEY           = 'ubc-vpfo-airtable-options-nonce';
-	const OPTION_GROUP        = 'reading';
-	const OPTION_SECTION_ID   = 'ubc_vpfo_airtable_section';
-	const OPTION_PAGE         = 'reading';
-	const OPTION_API_KEY      = 'UBC_VPFO_AIRTABLE_API_KEY';
-	const OPTION_BASE_ID_VAN  = 'UBC_VPFO_AIRTABLE_BASE_ID_VAN';
-	const OPTION_BASE_ID_OKAN = 'UBC_VPFO_AIRTABLE_BASE_ID_OKAN';
+	const NONCE_KEY            = 'ubc-vpfo-airtable-options-nonce';
+	const OPTION_GROUP         = 'reading';
+	const OPTION_SECTION_ID    = 'ubc_vpfo_airtable_section';
+	const OPTION_PAGE          = 'reading';
+	const OPTION_API_KEY       = 'UBC_VPFO_AIRTABLE_API_KEY';
+	const OPTION_BASE_ID_VAN   = 'UBC_VPFO_AIRTABLE_BASE_ID_VAN';
+	const OPTION_BASE_ID_OKAN  = 'UBC_VPFO_AIRTABLE_BASE_ID_OKAN';
+	const OPTION_BASE_URL_VAN  = 'UBC_VPFO_AIRTABLE_BASE_URL_VAN';
+	const OPTION_BASE_URL_OKAN = 'UBC_VPFO_AIRTABLE_BASE_URL_OKAN';
 
 	/**
 	 * Initialize the class and register settings.
@@ -51,9 +53,31 @@ class Find_A_Space_Airtable_Options {
 		);
 
 		// Register each field within the section.
-		$this->add_text_field( self::OPTION_API_KEY, __( 'Airtable API Key', 'ubc-vpfo-find-a-space' ) );
-		$this->add_text_field( self::OPTION_BASE_ID_VAN, __( 'Airtable Base ID - Vancouver', 'ubc-vpfo-find-a-space' ) );
-		$this->add_text_field( self::OPTION_BASE_ID_OKAN, __( 'Airtable Base ID - Okanagan', 'ubc-vpfo-find-a-space' ) );
+		$this->add_text_field(
+			self::OPTION_API_KEY,
+			__( 'Airtable API Key', 'ubc-vpfo-find-a-space' ),
+			''
+		);
+		$this->add_text_field(
+			self::OPTION_BASE_ID_VAN,
+			__( 'Airtable Base ID - Vancouver', 'ubc-vpfo-find-a-space' ),
+			''
+		);
+		$this->add_text_field(
+			self::OPTION_BASE_ID_OKAN,
+			__( 'Airtable Base ID - Okanagan', 'ubc-vpfo-find-a-space' ),
+			''
+		);
+		$this->add_text_field(
+			self::OPTION_BASE_URL_VAN,
+			__( 'Base url - Vancouver', 'ubc-vpfo-find-a-space' ),
+			__( 'Eg. https://learningspaces.ubc.ca', 'ubc-vpfo-find-a-space' )
+		);
+		$this->add_text_field(
+			self::OPTION_BASE_URL_OKAN,
+			__( 'Base url - Okanagan', 'ubc-vpfo-find-a-space' ),
+			__( 'Eg. https://learningspaces.ok.ubc.ca', 'ubc-vpfo-find-a-space' )
+		);
 
 		// Register the settings themselves.
 		register_setting(
@@ -85,6 +109,26 @@ class Find_A_Space_Airtable_Options {
 				'default'           => null,
 			)
 		);
+
+		register_setting(
+			self::OPTION_GROUP,
+			self::OPTION_BASE_URL_VAN,
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+				'default'           => null,
+			)
+		);
+
+		register_setting(
+			self::OPTION_GROUP,
+			self::OPTION_BASE_URL_OKAN,
+			array(
+				'type'              => 'string',
+				'sanitize_callback' => 'sanitize_text_field',
+				'default'           => null,
+			)
+		);
 	}
 
 	/**
@@ -92,8 +136,9 @@ class Find_A_Space_Airtable_Options {
 	 *
 	 * @param string $id    The option field ID.
 	 * @param string $title The field title.
+	 * @param string $placeholder The placeholder text for the field.
 	 */
-	private function add_text_field( $id, $title ) {
+	private function add_text_field( $id, $title, $placeholder ) {
 		add_settings_field(
 			$id,
 			$title,
@@ -103,6 +148,7 @@ class Find_A_Space_Airtable_Options {
 			array(
 				'label_for'   => $id,
 				'option_name' => $id,
+				'placeholder' => $placeholder,
 			)
 		);
 	}
@@ -121,8 +167,9 @@ class Find_A_Space_Airtable_Options {
 	 */
 	public function display_text_field( $args ) {
 		$option_name = $args['option_name'];
+		$placeholder = $args['placeholder'] ?? '';
 		$value       = get_option( $option_name );
-		echo '<input type="text" id="' . esc_attr( $option_name ) . '" name="' . esc_attr( $option_name ) . '" value="' . esc_attr( $value ) . '" class="regular-text">';
+		echo '<input type="text" id="' . esc_attr( $option_name ) . '" name="' . esc_attr( $option_name ) . '" placeholder="' . esc_attr( $placeholder ) . '" value="' . esc_attr( $value ) . '" class="regular-text">';
 	}
 
 	/**
@@ -132,9 +179,11 @@ class Find_A_Space_Airtable_Options {
 	 */
 	public function get_settings() {
 		return array(
-			'api_key'      => get_option( self::OPTION_API_KEY ),
-			'base_id_van'  => get_option( self::OPTION_BASE_ID_VAN ),
-			'base_id_okan' => get_option( self::OPTION_BASE_ID_OKAN ),
+			'api_key'            => get_option( self::OPTION_API_KEY ),
+			'base_id_van'        => get_option( self::OPTION_BASE_ID_VAN ),
+			'base_id_okan'       => get_option( self::OPTION_BASE_ID_OKAN ),
+			'base_url_vancouver' => untrailingslashit( get_option( self::OPTION_BASE_URL_VAN ) ),
+			'base_url_okanagan'  => untrailingslashit( get_option( self::OPTION_BASE_URL_OKAN ) ),
 		);
 	}
 }

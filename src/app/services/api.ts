@@ -11,6 +11,14 @@ function ajaxPost(action, payload) {
   });
 }
 
+export function getClassroom(payload) {
+  return ajaxPost('find_a_space_classroom', payload);
+}
+
+export function getBuilding(payload) {
+  return ajaxPost('find_a_space_building', payload);
+}
+
 export function getMeta(payload) {
   return ajaxPost('find_a_space_meta', payload);
 }

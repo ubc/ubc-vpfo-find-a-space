@@ -53,7 +53,7 @@ export default function ClassroomCard(props) {
         <a
           href={ room['Room Link'] }
           target="_blank"
-          className="btn btn-secondary ms-5 text-nowrap">View Space</a>
+          className="btn btn-secondary ms-5 text-nowrap vpfo-classroom-link">View Space</a>
       </div>
     )
   }
