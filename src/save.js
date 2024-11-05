@@ -16,17 +16,17 @@ import { useBlockProps } from '@wordpress/block-editor';
  * @return {Element} Element to render.
  */
 export default function save({ attributes }) {
-  const defaultAttributes = {
-    campus: 'vancouver',
-    formal: false,
-  }
+	const defaultAttributes = {
+		campus: 'vancouver',
+		formal: false,
+	}
 
-  attributes = {
-    ...defaultAttributes,
-    ...attributes,
-  }
+	attributes = {
+		...defaultAttributes,
+		...attributes,
+	}
 
 	return (
-    <div id="ubc-vpfo-find-a-space-root" className="vpfo-lsb-block" data-config={ JSON.stringify(attributes) }></div>
-  );
+		<div id="ubc-vpfo-find-a-space-root" className="vpfo-lsb-block" data-config={ JSON.stringify(attributes) }></div>
+	);
 }

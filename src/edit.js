@@ -32,36 +32,36 @@ import './editor.scss';
  * @return {Element} Element to render.
  */
 export default function Edit({ attributes, setAttributes }) {
-  const { campus, formal } = attributes;
+	const { campus, formal } = attributes;
 
 	return (
-    <>
-      <InspectorControls>
-        <PanelBody title={ __( 'Settings', 'ubc-vpfo-find-a-space-block' ) }>
-          <ToggleControl
-            label={ __( 'Formal', 'ubc-vpfo-find-a-space-block' ) }
-            checked={ formal }
-            onChange={ ( checked ) => setAttributes( { formal: checked } ) }
-          />
-          <SelectControl
-            label={ __( 'Campus', 'ubc-vpfo-find-a-space-block' )}
-            value={ campus }
-            options={ [
-                { label: 'Vancouver', value: 'vancouver' },
-                { label: 'Okanagan', value: 'okanagan' },
-            ] }
-            onChange={ ( newCampus ) => setAttributes( { campus: newCampus } ) }
-        />
-        </PanelBody>
-      </InspectorControls>
-      <div>
-        <p { ...useBlockProps() }>
-          { __(
-            'Ubc Vpfo Find A Space',
-            'ubc-vpfo-find-a-space'
-          ) }
-        </p>
-      </div>
+		<>
+			<InspectorControls>
+				<PanelBody title={ __( 'Settings', 'ubc-vpfo-find-a-space-block' ) }>
+					<ToggleControl
+						label={ __( 'Formal', 'ubc-vpfo-find-a-space-block' ) }
+						checked={ formal }
+						onChange={ ( checked ) => setAttributes( { formal: checked } ) }
+					/>
+					<SelectControl
+						label={ __( 'Campus', 'ubc-vpfo-find-a-space-block' )}
+						value={ campus }
+						options={ [
+								{ label: 'Vancouver', value: 'vancouver' },
+								{ label: 'Okanagan', value: 'okanagan' },
+						] }
+						onChange={ ( newCampus ) => setAttributes( { campus: newCampus } ) }
+				/>
+				</PanelBody>
+			</InspectorControls>
+			<div>
+				<p { ...useBlockProps() }>
+					{ __(
+						'Ubc Vpfo Find A Space',
+						'ubc-vpfo-find-a-space'
+					) }
+				</p>
+			</div>
 		</>
 	);
 }
