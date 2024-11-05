@@ -223,8 +223,6 @@ class Airtable_Api {
 		$payload['offset']          = $params['offset'] ?? null;
 		$payload['filterByFormula'] = $this->get_rooms_filter_formula( $params );
 
-		// dd($payload['filterByFormula']);
-
 		$rooms = $this->airtable_get( 'Classrooms', $payload, $params );
 
 		if ( null !== $rooms['records'] ) {
