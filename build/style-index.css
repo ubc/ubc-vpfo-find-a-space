@@ -18942,6 +18942,7 @@ a > .vpfo-lsb-block code {
 }
 .vpfo-lsb-block .vpfo-lsb-single-container {
   position: relative;
+  min-height: 300px;
 }
 .vpfo-lsb-block .vpfo-lsb-container {
   position: relative;
