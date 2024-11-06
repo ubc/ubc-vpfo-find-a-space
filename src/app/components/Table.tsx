@@ -12,7 +12,6 @@ export default function Table(props) {
   const [prevOffsets, setPrevOffsets]       = useState([]);
 
   const containerRef = React.useRef(null);
-  const firstRender  = React.useRef(true);
 
   async function getPage(currentOffset = null) {
     props.setLoading(true);
@@ -96,9 +95,6 @@ export default function Table(props) {
   }, []);
 
   useEffect(() => {
-    if ( firstRender.current === true ) {
-      return;
-    }
     // Reset offsets, and previous offsets
     setNextPageOffset(null);
     setPrevPageOffset(null);
@@ -107,11 +103,7 @@ export default function Table(props) {
     // Fetch a new page, with the new filters via props.
     getPage();
     executeScroll();
-  }, [props.filters, firstRender]);
-
-  useEffect(() => {
-    firstRender.current = false;
-  }, []);
+  }, [props.filters]);
 
   const executeScroll = () => setTimeout(
     () => {

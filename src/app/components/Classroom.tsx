@@ -20,7 +20,7 @@ export default function Classroom(props) {
       ...context.config,
       slug: slug,
     };
-    console.log(payload);
+    // console.log(payload);
     const res = await getClassroom(payload);
     const html = res?.data?.html;
 

@@ -6,6 +6,7 @@ import Filters from './components/Filters'
 import Classroom from './components/Classroom'
 import Building from './components/Building'
 import { useSearchParams } from'react-router-dom';
+import _ from 'lodash';
 
 export default function App() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -62,10 +63,24 @@ export default function App() {
    * When the query state changes, also update the application state.
    */
   useEffect(() => {
-    // console.log(searchParams);
-    setFilters(getFilterStateFromQuery());
-    setClassroom(getClassroomStateFromQuery());
-    setBuilding(getBuildingStateFromQuery());
+    const queryFilters   = getFilterStateFromQuery();
+    const queryClassroom = getClassroomStateFromQuery();
+    const queryBuilding  = getBuildingStateFromQuery();
+
+    if ( false === _.isEqual(filters, queryFilters) ) {
+      // console.log('setting filters');
+      setFilters(queryFilters);
+    }
+
+    if ( false === _.isEqual(classroom, queryClassroom) ) {
+      // console.log('setting classroom');
+      setClassroom(queryClassroom);
+    }
+
+    if ( false === _.isEqual(building, queryBuilding) ) {
+      // console.log('setting building');
+      setBuilding(queryBuilding);
+    }
   }, [searchParams]);
 
   const getFilterStateFromQuery = () => {
@@ -154,41 +169,50 @@ export default function App() {
     loading,
   })
 
+  let pageState = 'table';
+  if ( classroom !== '' ) {
+    pageState = 'classroom';
+  } else if ( classroom === '' && building !== '' ) {
+    pageState = 'building';
+  }
+
+  let classroomClass = pageState === 'classroom'? '' : 'd-none';
+  let buildingClass = pageState === 'building'? '' : 'd-none';
+  let tableClass = pageState === 'table' ? 'vpfo-lsb-container' : 'vpfo-lsb-container d-none';
+
   return (<>
 
     {/* Render classroom if classroom is set. */}
-    { classroom !== '' && 
+    <div className={classroomClass}>
       <Classroom
         classroom={classroom}
         clearClassroom={handleClearClassroom}
       />
-    }
+    </div>
 
     {/* Render building if building is set, and classroom is not set */}
-    { classroom === '' && building !== '' &&
+    <div className={buildingClass}>
       <Building
         building={building}
         clearBuilding={handleClearBuilding}
       />
-    }
+    </div>
 
     {/* Otherwise, render filters and table. */}
-    { classroom === '' && building === '' &&
-      <div className="vpfo-lsb-container">
-        <Filters
-          filters={filters}
-          loading={loading}
-          onSubmitFilters={handleSubmitFilters}
-          setLoading={setLoading}
-        />
-        <Table
-          filters={filters}
-          loading={loading}
-          setLoading={setLoading}
-          clearFilters={handleClearFilters}
-          showClassroom={handleShowClassroom}
-        />
-      </div>
-    }
+    <div className={tableClass}>
+      <Filters
+        filters={filters}
+        loading={loading}
+        onSubmitFilters={handleSubmitFilters}
+        setLoading={setLoading}
+      />
+      <Table
+        filters={filters}
+        loading={loading}
+        setLoading={setLoading}
+        clearFilters={handleClearFilters}
+        showClassroom={handleShowClassroom}
+      />
+    </div>
   </>);
 }

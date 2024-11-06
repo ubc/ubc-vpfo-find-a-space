@@ -21,5 +21,5 @@ export function StateProvider({ children, config }) {
 }
 
 function stateReducer(state, action) {
-  console.log(state, action)
+  // console.log(state, action)
 }

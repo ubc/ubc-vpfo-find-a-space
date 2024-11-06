@@ -16,14 +16,14 @@ export default function ClassroomCard(props) {
     let thumbProps = {} as any;
 
     if (thumb && thumb['url'] ) {
-      if ( thumb['url'] ) {
-        thumbProps.src = thumb['url'];
+      if ( thumb.thumbnails.large.url ) {
+        thumbProps.src = thumb.thumbnails.large.url;
       }
-      if ( thumb['width'] ) {
-        thumbProps.width = thumb['width'];
+      if (thumb.thumbnails.large.width ) {
+        thumbProps.width = thumb.thumbnails.large.width;
       }
-      if ( thumb['height'] ) {
-        thumbProps.height = thumb['height'];
+      if ( thumb.thumbnails.large.height ) {
+        thumbProps.height = thumb.thumbnails.large.height;
       }
       if ( room['Title'] ) {
         thumbProps.alt = room['Title'];
