@@ -89,10 +89,10 @@ export default function Table(props) {
     executeScroll();
   }
 
-  useEffect(() => {
-    // Initial load
-    getPage();
-  }, []);
+  // useEffect(() => {
+  //   // Initial load
+  //   getPage();
+  // }, []);
 
   useEffect(() => {
     // Reset offsets, and previous offsets
@@ -102,7 +102,7 @@ export default function Table(props) {
 
     // Fetch a new page, with the new filters via props.
     getPage();
-    executeScroll();
+    // executeScroll();
   }, [props.filters]);
 
   const executeScroll = () => setTimeout(

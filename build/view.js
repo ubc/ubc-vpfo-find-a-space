@@ -8735,10 +8735,12 @@ function Table(props) {
     }
     executeScroll();
   }
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    // Initial load
-    getPage();
-  }, []);
+
+  // useEffect(() => {
+  //   // Initial load
+  //   getPage();
+  // }, []);
+
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     // Reset offsets, and previous offsets
     setNextPageOffset(null);
@@ -8747,7 +8749,7 @@ function Table(props) {
 
     // Fetch a new page, with the new filters via props.
     getPage();
-    executeScroll();
+    // executeScroll();
   }, [props.filters]);
   const executeScroll = () => setTimeout(() => {
     if (containerRef && containerRef.current) {
