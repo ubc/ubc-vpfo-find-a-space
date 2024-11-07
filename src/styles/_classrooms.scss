@@ -1,0 +1,325 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+// Glider.js css
+@import "~glider-js/glider.css";
+
+// Accordion css
+@import "~accordion-js/dist/accordion.css";
+
+.vpfo-spaces-page {
+	.classroom-title {
+		.building-title {
+			color: $ubc-brand-blue;
+			font-size: 1.125rem;
+			line-height: 1.4444;
+		}
+
+		.workday-room-code {
+			font-weight: 600;
+			font-size: 0.875rem;
+			line-height: 1.57143;
+		}
+	}
+
+	.glider, .glider-thumbnails {
+		opacity: 0;
+		transition: opacity 0.3s ease-in;
+		height: 0;
+		overflow: hidden;
+	}
+
+	.glider-slide {
+		width: 100%;
+		aspect-ratio: 3/2;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	.glider-thumbnails {
+		left: 0;
+		bottom: 0;
+		gap: 0 0.5rem;
+		background: rgba($utility-black, 0.5);
+
+		@include media-breakpoint-up(md) {
+			gap: 0 1.25rem;
+		}
+
+		@include media-breakpoint-up(lg) {
+			gap: 0 1.875rem;
+		}
+
+		.glider-thumbnail {
+			width: 15%;
+			aspect-ratio: 3/2;
+			cursor: pointer;
+			border: 1px solid transparent;
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			&.thumbs-7 {
+				width: 14.28571%;
+			}
+
+			&.thumbs-8 {
+				width: 12.5%;
+			}
+
+			&.thumbs-9 {
+				width: 11.11111%;
+			}
+
+			&.thumbs-10 {
+				width: 10%;
+			}
+
+			&.active {
+				border-color: $learning-spaces-blue-light !important;
+
+				&:focus-visible {
+					border-color: $utility-white !important;
+				}
+			}
+
+			&:hover, &:active, &:focus {
+				outline: none;
+				border-color: $utility-white;
+			}
+		}
+	}
+
+	.glider-prev, .glider-next {
+		color: $utility-white;
+		top: calc(50% - 0.625rem);
+		font-size: 1.25rem;
+
+		@include media-breakpoint-up(md) {
+			font-size: 2rem;
+			top: calc(50% - 1rem);
+		}
+
+		&:focus-visible {
+			box-shadow: inset 0 0 0 1px $utility-white;
+		}
+
+		&.disabled {
+			cursor: not-allowed;
+			opacity: 0.5;
+		}
+	}
+
+	.glider-prev {
+		left: 0.5rem;
+
+		@include media-breakpoint-up(md) {
+			left: 1rem;
+		}
+	}
+
+	.glider-next {
+		right: 0.5rem;
+
+		@include media-breakpoint-up(md) {
+			right: 1rem;
+		}
+	}
+
+	.glider-dots {
+		bottom: 0;
+		left: 0;
+		gap: 0 1rem;
+
+		.glider-dot {
+			border-radius: 50%;
+			background: rgba($utility-white, 0.5);
+
+			&.active {
+				background: $learning-spaces-blue-light;
+
+				&:hover, &:active, &:focus {
+					background: $learning-spaces-blue-light;
+				}
+			}
+
+			&:hover, &:active, &:focus {
+				outline: none;
+				background: $utility-white;
+			}
+		}
+	}
+
+	.classroom-info {
+		font-size: 1rem;
+
+		@include vpfo-box-shadow;
+
+		&:after {
+			content: '';
+			display: block;
+			width: 100%;
+			height: 1rem;
+			background: $ubc-blue;
+		}
+
+		h2 {
+			@include h2-info;
+		}
+
+		p {
+			margin: 0;
+		}
+
+		div[class^="classroom-"] {
+			&:not(:first-child) {
+				margin-top: 1rem;
+			}
+		}
+
+		.classroom-resources-links {
+			gap: 1.25rem;
+
+			@include media-breakpoint-up(lg) {
+				gap: 1rem;
+			}
+
+			.btn-wrapper {
+				@include media-breakpoint-up(sm) {
+					width: 33%;
+				}
+
+				@include media-breakpoint-up(lg) {
+					width: calc(50% - 0.5rem);
+				}
+			}
+		}
+	}
+
+	.classroom-layout {
+		border-bottom: 1px solid $utility-light-grey;
+	}
+
+	.accordion {
+		margin: unset;
+
+		&:not(:first-child) {
+			margin-top: 1rem;
+		}
+	}
+
+	.ac {
+		margin: unset;
+		border: 1px solid $ubc-brand-blue;
+		background-color: $ubc-brand-blue;
+
+		.ac-trigger {
+			font: unset;
+			color: $utility-white;
+			font-size: 1rem;
+			font-weight: 600;
+			line-height: 1.5;
+			text-transform: uppercase;
+			padding: 0.5rem 3rem 0.5rem 1rem;
+
+			&::after {
+				font-family: $font-fontawesome;
+				content: '\f078';
+				font-weight: 700;
+				right: 1rem;
+			}
+
+			&:focus-visible {
+				box-shadow: 0 0 0 3px $utility-white, 0 0 0 5px $ubc-blue;
+				outline: none;
+			}
+		}
+
+		.ac-panel {
+			background: $utility-white;
+		}
+
+		.ac-panel-inner {
+			padding: 1rem;
+
+			.classroom-layout-type, .classroom-furniture, .classroom-accessibility, .classroom-features, .classroom-av {
+				&:not(:first-child) {
+					margin-top: 1rem;
+				}
+			}
+
+			h3 {
+				font-weight: 500;
+				font-size: 1rem;
+				line-height: 1.5;
+			}
+
+			h4 {
+				font-weight: 600;
+				font-size: 0.875rem;
+				margin-bottom: 0.375rem;
+			}
+
+			ul {
+				margin: unset;
+				padding-left: 1.5rem;
+			}
+
+			.classroom-av-inner {
+				gap: 1rem;
+
+				@include media-breakpoint-up(sm) {
+					div[class^="classroom-"] {
+						width: calc(50% - 0.5rem);
+					}
+				}
+			}
+		}
+
+		&.is-active > .ac-header .ac-trigger::after {
+			content: '\f077';
+		}
+	}
+	
+	.classroom-book-space {
+		@include vpfo-box-shadow;
+
+		&:after {
+			content: '';
+			display: block;
+			width: 100%;
+			height: 1rem;
+			background: $ubc-blue;
+		}
+
+		h2 {
+			font-size: 1.5rem;
+		}
+
+		p {
+			font-size: 1rem;
+		}
+	}
+
+	.classroom-map {
+		aspect-ratio: 3/2;
+
+		@include media-breakpoint-up(lg) {
+			aspect-ratio: 7/3;
+		}
+	}
+
+	.classroom-footer {
+		p {
+			font-size: 1rem;
+		}
+	}
+}

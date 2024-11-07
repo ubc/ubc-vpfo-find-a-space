@@ -52,7 +52,7 @@ class Airtable_Api {
 					'Invalid Airtable response ' .
 					wp_json_encode(
 						array(
-							'formula'  => $payload['filterByFormula'],
+							'formula'  => $payload['filterByFormula'] ?? null,
 							'error'    => $response['error'],
 							'params'   => $params,
 							'response' => $response,
@@ -89,7 +89,8 @@ class Airtable_Api {
 
 		if ( $params['should_cache'] ) {
 			$cache_key = sprintf( '%s_%s_%s', $campus, $func, md5( wp_json_encode( $params ) ) );
-			$records   = get_transient( $cache_key );
+			// delete_transient( $cache_key );
+			$records = get_transient( $cache_key );
 
 			if ( $records ) {
 				return $records;
@@ -120,12 +121,16 @@ class Airtable_Api {
 
 	public function get_accessibility( array $params ) {
 		$payload           = array();
+		$formula_parts     = array();
 		$payload['fields'] = array(
 			'Name',
 			'Description',
 			'Formal Count',
 			'Informal Count',
 		);
+
+		$formula_parts[]            = '{Hide from Filter Drop Down} = 0';
+		$payload['filterByFormula'] = implode( 'AND ', $formula_parts );
 
 		return $this->filter_empty_options(
 			$this->airtable_get( 'Accessibility', $payload, $params ),
@@ -179,11 +184,15 @@ class Airtable_Api {
 
 	public function get_shared_amenities( array $params ) {
 		$payload           = array();
+		$formula_parts     = array();
 		$payload['fields'] = array(
 			'Name',
 			'Category',
 			'Description',
 		);
+
+		$formula_parts[]            = '{Hide from Filter Drop Down} = 0';
+		$payload['filterByFormula'] = implode( 'AND ', $formula_parts );
 
 		return $this->airtable_get( 'Amenities', $payload, $params );
 	}

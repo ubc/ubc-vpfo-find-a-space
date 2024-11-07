@@ -415,7 +415,7 @@ export default function Filters(props) {
 
         <form onSubmit={submitFilters} className="vpfo-lsb-filters-container">
 
-          <Search setLoading={props.setLoading} />
+          <Search setLoading={props.setLoading} showClassroom={props.showClassroom} />
 
           { isFormal === true && renderFormalFilters() }
           { isFormal === false && renderInformalFilters() }

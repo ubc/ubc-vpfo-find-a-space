@@ -1,5 +1,6 @@
 @import 'variables';
 @import 'mixins';
+@import 'global';
 
 @import 'filters';
 @import 'container';
@@ -8,6 +9,9 @@
 @import 'loader';
 
 @import 'classroom-card';
+
+@import 'classrooms';
+@import 'buildings';
 
 & {
 	-webkit-font-smoothing: antialiased;

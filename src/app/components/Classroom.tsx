@@ -3,6 +3,7 @@ import { StateContext } from '../StateProvider';
 import _ from 'lodash';
 import { getClassroom } from '../services/api';
 import instantiateSlider from '../services/slider';
+import instantiateAccordions from '../services/accordion';
 
 export default function Classroom(props) {
   const context = React.useContext(StateContext);
@@ -12,6 +13,7 @@ export default function Classroom(props) {
   useEffect(() => {
     if ( classroomHtml ) {
       instantiateSlider();
+      instantiateAccordions();
     }
   }, [classroomHtml])
 

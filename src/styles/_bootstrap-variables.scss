@@ -37,3 +37,11 @@ $spacers: map-merge(
     "33": 8rem
   )
 );
+
+$container-max-widths: map-merge(
+  $container-max-widths,
+  (
+    "xl": 1170px,
+    "xxl": 1170px
+  )
+);

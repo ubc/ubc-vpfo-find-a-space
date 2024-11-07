@@ -157,6 +157,23 @@ class Find_A_Space_Ajax_Handler {
 			return null;
 		}
 
+		$html = $elements[0];
+
+		$remove_element_selectors = array(
+			// ".//div[@id='classroom-list']",
+			"//div[contains(@class, 'classroom-list-nav')]",
+		);
+
+		foreach ( $remove_element_selectors as $selector ) {
+			$inner_elements = $xpath->query( $selector, $html );
+
+			if ( $inner_elements->length > 0 ) {
+				// Remove the inner element with ID 'classroom-list'
+				$el = $inner_elements[0];
+				$el->parentNode->removeChild( $el );
+			}
+		}
+
 		return $dom->saveHTML( $elements[0] );
 	}
 

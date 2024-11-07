@@ -68,7 +68,13 @@ export default function Search(props) {
           inputId="vpfo-lsb-search-input"
           placeholder="Search"
           loadingMessage={() => 'Loading...'}
-          onChange={(selected) =>  window.open(selected.value, '_blank')}
+          onChange={(selected) => {
+            const url = selected.value;
+            const slug = selected.value.substring(selected.value.lastIndexOf('/') + 1);
+            if ( slug ) {
+              props.showClassroom(slug);
+            }
+          }}
         />
       </div>
     </div>
