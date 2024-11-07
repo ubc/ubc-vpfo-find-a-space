@@ -224,7 +224,7 @@ class Airtable_Api {
 			'Image Gallery',
 			'Capacity',
 			'Slug',
-			'Filter_RoomLayoutType',
+			'Filter_Room_Layout_Type',
 			'Filter_Furniture',
 		);
 

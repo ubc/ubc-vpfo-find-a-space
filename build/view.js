@@ -8095,10 +8095,10 @@ function ClassroomCard(props) {
     });
   };
   const renderRoomMeta = () => {
-    var _room$Capacity, _room$Filter_RoomLayo, _room$Filter_Furnitur;
+    var _room$Capacity, _room$Filter_Room_Lay, _room$Filter_Furnitur;
     const room = props.room;
     const capacity = (_room$Capacity = room['Capacity']) !== null && _room$Capacity !== void 0 ? _room$Capacity : null;
-    const layoutType = (_room$Filter_RoomLayo = room['Filter_RoomLayoutType']) !== null && _room$Filter_RoomLayo !== void 0 ? _room$Filter_RoomLayo : null;
+    const layoutType = (_room$Filter_Room_Lay = room['Filter_Room_Layout_Type']) !== null && _room$Filter_Room_Lay !== void 0 ? _room$Filter_Room_Lay : null;
     const furniture = (_room$Filter_Furnitur = room['Filter_Furniture']) !== null && _room$Filter_Furnitur !== void 0 ? _room$Filter_Furnitur : null;
     let renderLayout = '';
     if (layoutType && furniture) {
@@ -8717,7 +8717,7 @@ function Table(props) {
         'Room Link': room.fields['Room Link'],
         'Image Gallery': room.fields['Image Gallery'],
         'Filter_Furniture': room.fields['Filter_Furniture'],
-        'Filter_RoomLayoutType': room.fields['Filter_RoomLayoutType']
+        'Filter_Room_Layout_Type': room.fields['Filter_Room_Layout_Type']
       })));
     }
     if (res?.data === null) {

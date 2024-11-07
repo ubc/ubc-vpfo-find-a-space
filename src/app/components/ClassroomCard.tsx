@@ -61,7 +61,7 @@ export default function ClassroomCard(props) {
   const renderRoomMeta = () => {
     const room = props.room;
     const capacity = room['Capacity'] ?? null;
-    const layoutType = room['Filter_RoomLayoutType'] ?? null;
+    const layoutType = room['Filter_Room_Layout_Type'] ?? null;
     const furniture = room['Filter_Furniture'] ?? null;
 
     let renderLayout = '' as null|string;
