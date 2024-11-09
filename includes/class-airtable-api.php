@@ -225,7 +225,9 @@ class Airtable_Api {
 			'Capacity',
 			'Slug',
 			'Filter_Room_Layout_Type',
+			'Formatted_Room_Layout_Type',
 			'Filter_Furniture',
+			'Formatted_Furniture',
 		);
 
 		$payload['pageSize']        = self::ROOMS_PER_PAGE;

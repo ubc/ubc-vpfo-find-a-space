@@ -2,109 +2,109 @@ import React, { useState, useEffect } from 'react';
 import { StateContext } from '../StateProvider';
 
 export default function ClassroomCard(props) {
-  const context = React.useContext(StateContext);
+	const context = React.useContext(StateContext);
 
-  const room = props.room;
+	const room = props.room;
 
-  const renderImage = () => {
-    const hasThumb = typeof room['Image Gallery'] !== 'undefined' && room['Image Gallery'].length > 0;
-    if ( ! hasThumb ) {
-      return <div className="classroom-thumbnail no-image"></div>
-    }
+	const renderImage = () => {
+		const hasThumb = typeof room['Image Gallery'] !== 'undefined' && room['Image Gallery'].length > 0;
+		if ( ! hasThumb ) {
+			return <div className="classroom-thumbnail no-image"></div>
+		}
 
-    const thumb = room['Image Gallery'][0] ?? null;
-    let thumbProps = {} as any;
+		const thumb = room['Image Gallery'][0] ?? null;
+		let thumbProps = {} as any;
 
-    if (thumb && thumb['url'] ) {
-      if ( thumb.thumbnails.large.url ) {
-        thumbProps.src = thumb.thumbnails.large.url;
-      }
-      if (thumb.thumbnails.large.width ) {
-        thumbProps.width = thumb.thumbnails.large.width;
-      }
-      if ( thumb.thumbnails.large.height ) {
-        thumbProps.height = thumb.thumbnails.large.height;
-      }
-      if ( room['Title'] ) {
-        thumbProps.alt = room['Title'];
-      }
-    }
-    
-    return <div className="classroom-thumbnail">
-      <img
-        key={ thumbProps.src }
-        src={ thumbProps.src }
-        alt={ thumbProps.alt }
-        width={ thumbProps.width }
-        height={ thumbProps.height }
-      />
-    </div>
-  }
+		if (thumb && thumb['url'] ) {
+			if ( thumb.thumbnails.large.url ) {
+				thumbProps.src = thumb.thumbnails.large.url;
+			}
+			if (thumb.thumbnails.large.width ) {
+				thumbProps.width = thumb.thumbnails.large.width;
+			}
+			if ( thumb.thumbnails.large.height ) {
+				thumbProps.height = thumb.thumbnails.large.height;
+			}
+			if ( room['Title'] ) {
+				thumbProps.alt = room['Title'];
+			}
+		}
+		
+		return <div className="classroom-thumbnail">
+			<img
+				key={ thumbProps.src }
+				src={ thumbProps.src }
+				alt={ thumbProps.alt }
+				width={ thumbProps.width }
+				height={ thumbProps.height }
+			/>
+		</div>
+	}
 
-  const renderRoomInformation = () => {
-    const room = props.room;
+	const renderRoomInformation = () => {
+		const room = props.room;
 
-    return (
-      <div className="d-flex align-items-start justify-content-between mb-5">
-        <div>
-          <h2 className="mb-0 fw-bold text-uppercase">{ room['Title'] }</h2>
-          <div className="classroom-building-name fw-bold text-uppercase mt-2">{ room['Building Name'] }</div>
-        </div>
-        <a
-          href={ room['Room Link'] }
-          target="_blank"
-          className="btn btn-secondary ms-5 text-nowrap vpfo-classroom-link">View Space</a>
-      </div>
-    )
-  }
+		return (
+			<div className="d-flex align-items-start justify-content-between mb-5">
+				<div>
+					<h2 className="mb-0 fw-bold text-uppercase">{ room['Title'] }</h2>
+					<div className="classroom-building-name fw-bold text-uppercase mt-2">{ room['Building Name'] }</div>
+				</div>
+				<a
+					href={ room['Room Link'] }
+					target="_blank"
+					className="btn btn-secondary ms-5 text-nowrap vpfo-classroom-link">View Space</a>
+			</div>
+		)
+	}
 
-  const renderRoomMeta = () => {
-    const room = props.room;
-    const capacity = room['Capacity'] ?? null;
-    const layoutType = room['Filter_Room_Layout_Type'] ?? null;
-    const furniture = room['Filter_Furniture'] ?? null;
+	const renderRoomMeta = () => {
+		const room = props.room;
+		const capacity = room['Capacity'] ?? null;
+		const layoutType = room['Formatted_Room_Layout_Type'] ?? null;
+		const furniture = room['Formatted_Furniture'] ?? null;
 
-    let renderLayout = '' as null|string;
+		let renderLayout = '' as null|string;
 
-    if ( layoutType && furniture ) {
-      renderLayout = layoutType + '; ' + furniture;
-    } else if ( layoutType ) {
-      renderLayout = layoutType;
-    } else if ( furniture ) {
-      renderLayout = furniture;
-    } else {
-      renderLayout = null;
-    }
+		if ( layoutType && furniture ) {
+			renderLayout = furniture + '; ' + layoutType;
+		} else if ( layoutType ) {
+			renderLayout = layoutType;
+		} else if ( furniture ) {
+			renderLayout = furniture;
+		} else {
+			renderLayout = null;
+		}
 
-    return (
-      <div className="d-flex align-items-start">
-        { capacity !== null && 
-          <dl>
-            <dt>Capacity</dt>
-            <dd>{ capacity }</dd>
-          </dl>
-        }
-        { renderLayout !== null && 
-          <dl className="ms-9">
-            <dt>Style &amp; Layout</dt>
-            <dd>{ renderLayout }</dd>
-          </dl>
-        }
-      </div>
-    )
-  }
+		return (
+			<div className="d-flex align-items-start">
+				{ capacity !== null && 
+					<dl>
+						<dt>Capacity</dt>
+						<dd>{ capacity }</dd>
+					</dl>
+				}
+				{ renderLayout !== null && 
+					<dl className="ms-9">
+						<dt>Style &amp; Layout</dt>
+						<dd>{ renderLayout }</dd>
+					</dl>
+				}
+			</div>
+		)
+	}
 
-  return <>
-    <div key={props.idx} className="classroom-card d-flex flex-column flex-md-row pt-5 pt-md-0 ps-md-5 position-relative">
-      <div className="accent position-absolute"></div>
+	return <>
+		<div key={props.idx} className="classroom-card d-flex flex-column flex-md-row pt-5 pt-md-0 ps-md-5 position-relative">
+			<div className="accent position-absolute"></div>
 
-      { renderImage() }
+			{ renderImage() }
 
-      <div className="classroom-details p-5 ps-md-0 ms-md-9 flex-grow-1">
-        { renderRoomInformation() }
+			<div className="classroom-details p-5 ps-md-0 ms-md-9 flex-grow-1">
+				{ renderRoomInformation() }
 
-        { renderRoomMeta() }
-      </div>
-    </div>
-  </>
+				{ renderRoomMeta() }
+			</div>
+		</div>
+	</>
 }
