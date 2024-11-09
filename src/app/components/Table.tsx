@@ -31,13 +31,17 @@ export default function Table(props) {
 
     if (res?.data?.records) {
       setRooms(res.data.records.map(room => ({
-        'Title'                  : room.fields['Title'],
-        'Room Number'            : room.fields['Room Number'],
-        'Capacity'               : room.fields['Capacity'],
-        'Room Link'              : room.fields['Room Link'],
-        'Image Gallery'          : room.fields['Image Gallery'],
-        'Filter_Furniture'       : room.fields['Filter_Furniture'],
-        'Filter_Room_Layout_Type': room.fields['Filter_Room_Layout_Type'],
+        'Title'                     : room.fields['Title'],
+        'Room Number'               : room.fields['Room Number'],
+        'Building Name'             : room.fields['Building Name'],
+        'Building Code'             : room.fields['Building Code'],
+        'Capacity'                  : room.fields['Capacity'],
+        'Room Link'                 : room.fields['Room Link'],
+        'Image Gallery'             : room.fields['Image Gallery'],
+        'Filter_Furniture'          : room.fields['Filter_Furniture'],
+        'Formatted_Furniture'       : room.fields['Formatted_Furniture'],
+        'Filter_Room_Layout_Type'   : room.fields['Filter_Room_Layout_Type'],
+        'Formatted_Room_Layout_Type': room.fields['Formatted_Room_Layout_Type'],
       })));
     }
 
