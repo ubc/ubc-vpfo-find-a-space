@@ -132,7 +132,7 @@ export default function Table(props) {
       }
     });
 
-    ['buildingFilter', 'furnitureFilter'].forEach(key => {
+    ['buildingFilter', 'furnitureFilter', 'layoutFilter'].forEach(key => {
       if ( ! _.isEmpty(props.filters[key] ) ) {
         // console.log(props.filters[key]);
         filters.push(props.filters[key].label);

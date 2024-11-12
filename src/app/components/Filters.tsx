@@ -53,6 +53,9 @@ export default function Filters(props) {
   // Furniture Options
   const [furnitureOptions, setFurnitureOptions] = useState<any[]>([]);
 
+  // Layout Options
+  const [layoutOptions, setLayoutOptions] = useState<any[]>([]);
+
   // Furniture Options
   const [ISAmenitiesOptions, setISAmenitiesOptions] = useState<any[]>([]);
 
@@ -77,6 +80,7 @@ export default function Filters(props) {
   const [accessibilityFilter, setAccessibilityFilter] = useState<any[]>(getInitialFilterState('accessibilityFilter') ?? []);
   const [buildingFilter, setBuildingFilter] = useState(getInitialFilterState('buildingFilter') ?? {});
   const [furnitureFilter, setFurnitureFilter] = useState<any[]>(getInitialFilterState('furnitureFilter') ?? []);
+  const [layoutFilter, setLayoutFilter] = useState<any[]>(getInitialFilterState('layoutFilter') ?? []);
   const [capacityFilter, setCapacityFilter] = useState<null|number>(getInitialFilterState('capacityFilter') ?? '');
   const [ISAmenitiesFilter, setISAmenitiesFilter] = useState<any[]>(getInitialFilterState('ISAmenitiesFilter') ?? []);
 
@@ -156,14 +160,14 @@ export default function Filters(props) {
   const setupLayoutOptions = (meta) => {
     let options = [];
 
-    options = meta.furniture.records.map(record => {
+    options = meta.classroom_layouts.records.map(record => {
       return {
         label: record.fields.Name,
         value: record.fields.Name,
       }
     })
 
-    setFurnitureOptions(options);
+    setLayoutOptions(options);
   }
 
   const setupISAmenitiesOptions = (meta) => {
@@ -215,8 +219,9 @@ export default function Filters(props) {
       // Ensure our filter states are empty.
       setAudioVisualFilter([]);
       setAccessibilityFilter([]);
-      setBuildingFilter({});
+      setBuildingFilter([]);
       setFurnitureFilter([]);
+      setLayoutFilter([]);
       setCapacityFilter('');
       setISAmenitiesFilter([]);
     }
@@ -225,13 +230,14 @@ export default function Filters(props) {
   const submitFilters = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // console.log("Filters:", { audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, capacityFilter });
-    props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, capacityFilter });
+    props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, layoutFilter, capacityFilter });
   }
 
   const renderFormalFilters = () => {
     return <>
       <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
       { renderFurnitureSelect() }
+      { renderLayoutSelect() }
       { renderCapacityInput() }
       { renderBuildingSelect() }
       { renderAccessibilitySelect() }
@@ -243,6 +249,7 @@ export default function Filters(props) {
     return <>
       <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
       { renderFurnitureSelect() }
+      { renderLayoutSelect() }
       { renderCapacityInput() }
       { renderBuildingSelect() }
       { renderAccessibilitySelect() }
@@ -273,7 +280,7 @@ export default function Filters(props) {
     return (
       <div className="select-group">
         <label id="vpfo-lsb-furniture" htmlFor="vpfo-lsb-furniture-input">
-          Style & Layout
+          Style
         </label>
         <Select 
           options={furnitureOptions}
@@ -284,6 +291,26 @@ export default function Filters(props) {
           components={animatedComponents}
           inputId="vpfo-lsb-furniture-input"
           onChange={(selected) => setFurnitureFilter(selected)}
+        />
+      </div>
+    )
+  }
+
+  const renderLayoutSelect = () => {
+    return (
+      <div className="select-group">
+        <label id="vpfo-lsb-layout" htmlFor="vpfo-lsb-layout-input">
+          Layout
+        </label>
+        <Select 
+          options={layoutOptions}
+          value={layoutFilter}
+          name="vpfo-lsb-layout"
+          isClearable
+          styles={selectStyles}
+          components={animatedComponents}
+          inputId="vpfo-lsb-layout-input"
+          onChange={(selected) => setLayoutFilter(selected)}
         />
       </div>
     )

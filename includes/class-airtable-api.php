@@ -359,6 +359,7 @@ class Airtable_Api {
 		$building_filter           = $filters['buildingFilter'] ?? array();
 		$furniture_filter          = $filters['furnitureFilter'] ?? array();
 		$informal_amenities_filter = $filters['informalAmenitiesFilter'] ?? array();
+		$layout_filter             = $filters['layoutFilter'] ?? array();
 
 		if ( $capacity_filter ) {
 			$formula_parts[] = "{Capacity} >= $capacity_filter";
@@ -393,6 +394,13 @@ class Airtable_Api {
 			$value = sanitize_text_field( $furniture_filter['value'][0] ?? '' );
 			if ( $value ) {
 				$formula_parts[] = "FIND('$value', {Filter_Furniture})";
+			}
+		}
+
+		if ( ! empty( $layout_filter ) ) {
+			$value = sanitize_text_field( $layout_filter['value'][0] ?? '' );
+			if ( $value ) {
+				$formula_parts[] = "FIND('$value', {Filter_Room_Layout_Type})";
 			}
 		}
 

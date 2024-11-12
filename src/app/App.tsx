@@ -68,17 +68,17 @@ export default function App() {
 		const queryBuilding  = getBuildingStateFromQuery();
 
 		if ( false === _.isEqual(filters, queryFilters) ) {
-			// console.log('setting filters');
+			console.log('setting filters');
 			setFilters(queryFilters);
 		}
 
 		if ( false === _.isEqual(classroom, queryClassroom) ) {
-			// console.log('setting classroom');
+			console.log('setting classroom');
 			setClassroom(queryClassroom);
 		}
 
 		if ( false === _.isEqual(building, queryBuilding) ) {
-			// console.log('setting building');
+			console.log('setting building');
 			setBuilding(queryBuilding);
 		}
 	}, [searchParams]);
@@ -131,26 +131,29 @@ export default function App() {
 	const [loading, setLoading] = useState(false);
 
 	const handleShowClassroom = (newClassroom) => {
-		const filterString = encodeURIComponent(newClassroom);
-		setSearchParams({...searchParams, classroom: filterString });
+    searchParams.set('classroom', encodeURIComponent(newClassroom));
+		setSearchParams(searchParams);
 	}
 
 	const handleShowBuilding = (newBuilding) => {
-		const filterString = encodeURIComponent(newBuilding);
-		setSearchParams({...searchParams, building: filterString });
+    searchParams.set('building', encodeURIComponent(newBuilding));
+		setSearchParams(searchParams);
 	}
 	
 	const handleClearBuilding = () => {
-		setSearchParams({...searchParams, building: '' });
+    searchParams.set('building', '');
+		setSearchParams(searchParams);
 	}
 
 	const handleClearClassroom = () => {
-		setSearchParams({...searchParams, classroom: '' });
+		searchParams.set('classroom', '');
+		setSearchParams(searchParams);
 	}
 
 	const setFilterQueryState = (newFilters) => {
 		const filterString = encodeURIComponent(JSON.stringify(newFilters));
-		setSearchParams({...searchParams, filters: filterString });
+    searchParams.set('filters', filterString);
+		setSearchParams(searchParams);
 	}
 
 	const handleSubmitFilters = (newFilters) => {
@@ -160,6 +163,7 @@ export default function App() {
 	const handleClearFilters = () => {
 		setFilterQueryState({});
 	}
+
 	// TODO - remove console logging when ready for production
 	console.log({
 		filters,
