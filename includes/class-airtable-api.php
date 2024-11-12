@@ -121,8 +121,7 @@ class Airtable_Api {
 
 		if ( $params['should_cache'] ?? false ) {
 			$cache_key = sprintf( '%s_%s_%s', $campus, $func, md5( wp_json_encode( $params ) ) );
-			delete_transient( $cache_key );
-			$records = get_transient( $cache_key );
+			$records   = get_transient( $cache_key );
 
 			if ( $records ) {
 				return $records;
@@ -236,14 +235,33 @@ class Airtable_Api {
 		$payload['fields'] = array(
 			'Building Code',
 			'Building Name',
+			'Building Name (override)',
 			'Formal Count',
 			'Informal Count',
 		);
 
-		return $this->filter_empty_options(
+		$buildings = $this->filter_empty_options(
 			$this->airtable_get( 'Buildings', $payload, $params ),
 			$params
 		);
+
+		if ( null !== $buildings['records'] ) {
+			$buildings['records'] = array_map(
+				function ( $record ) {
+					$fields = (array) $record->fields;
+					if ( ! empty( $fields['Building Name (override)'] ) ) {
+						$fields['Building Name'] = $fields['Building Name (override)'];
+					}
+
+					$record->fields = $fields;
+
+					return $record;
+				},
+				$buildings['records']
+			);
+		}
+
+		return $buildings;
 	}
 
 	public function get_rooms( array $params ) {
@@ -257,6 +275,7 @@ class Airtable_Api {
 			'Image Gallery',
 			'Capacity',
 			'Slug',
+			'Building Slug',
 			'Filter_Room_Layout_Type',
 			'Formatted_Room_Layout_Type',
 			'Filter_Furniture',
@@ -274,6 +293,12 @@ class Airtable_Api {
 				function ( $record ) {
 					$fields              = (array) $record->fields;
 					$fields['Room Link'] = sprintf( '%s/classrooms/%s', get_site_url(), $fields['Slug'] );
+
+					if ( ! empty( $fields['Building Slug'] ) ) {
+						$fields['Building Link'] = sprintf( '%s/buildings/%s', get_site_url(), $fields['Building Slug'][0] );
+					} else {
+						$fields['Building Link'] = '';
+					}
 
 					$record->fields = $fields;
 

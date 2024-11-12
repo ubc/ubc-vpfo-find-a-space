@@ -48,12 +48,19 @@ export default function ClassroomCard(props) {
 			<div className="d-flex align-items-start justify-content-between mb-5">
 				<div>
 					<h2 className="mb-0 fw-bold text-uppercase">{ room['Title'] }</h2>
-					<div className="classroom-building-name fw-bold text-uppercase mt-2">{ room['Building Name'] }</div>
+          <a
+            href={ room['Building Link'] }
+            target="_blank"
+            className="classroom-building-name fw-bold text-uppercase mt-2 vpfo-building-link">
+              { room['Building Name'] }
+          </a>
 				</div>
 				<a
 					href={ room['Room Link'] }
 					target="_blank"
-					className="btn btn-secondary ms-5 text-nowrap vpfo-classroom-link">View Space</a>
+					className="btn btn-secondary ms-5 text-nowrap vpfo-classroom-link">
+            View Space
+        </a>
 			</div>
 		)
 	}

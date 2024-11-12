@@ -37,6 +37,7 @@ export default function Table(props) {
         'Building Code'             : room.fields['Building Code'],
         'Capacity'                  : room.fields['Capacity'],
         'Room Link'                 : room.fields['Room Link'],
+        'Building Link'             : room.fields['Building Link'],
         'Image Gallery'             : room.fields['Image Gallery'],
         'Filter_Furniture'          : room.fields['Filter_Furniture'],
         'Formatted_Furniture'       : room.fields['Formatted_Furniture'],
