@@ -67,18 +67,21 @@ export default function App() {
 		const queryClassroom = getClassroomStateFromQuery();
 		const queryBuilding  = getBuildingStateFromQuery();
 
+    // console.log('searchParams state updated');
+    // console.log({ queryFilters, queryClassroom, queryBuilding });
+
 		if ( false === _.isEqual(filters, queryFilters) ) {
-			console.log('setting filters');
+			// console.log('setting filters', filters, queryFilters);
 			setFilters(queryFilters);
 		}
 
 		if ( false === _.isEqual(classroom, queryClassroom) ) {
-			console.log('setting classroom');
+			// console.log('setting classroom', queryClassroom);
 			setClassroom(queryClassroom);
 		}
 
 		if ( false === _.isEqual(building, queryBuilding) ) {
-			console.log('setting building');
+			// console.log('setting building', queryBuilding);
 			setBuilding(queryBuilding);
 		}
 	}, [searchParams]);
@@ -125,13 +128,18 @@ export default function App() {
 		}
 	}
 
-	const [filters, setFilters] = useState(getFilterStateFromQuery());
-	const [classroom, setClassroom] = useState(getClassroomStateFromQuery());
-	const [building, setBuilding] = useState(getBuildingStateFromQuery());
+	const [filters, setFilters] = useState(getFilterStateFromQuery);
+	const [classroom, setClassroom] = useState(getClassroomStateFromQuery);
+	const [building, setBuilding] = useState(getBuildingStateFromQuery);
 	const [loading, setLoading] = useState(false);
 
 	const handleShowClassroom = (newClassroom) => {
     searchParams.set('classroom', encodeURIComponent(newClassroom));
+		setSearchParams(searchParams);
+	}
+
+  const handleClearClassroom = () => {
+		searchParams.set('classroom', '');
 		setSearchParams(searchParams);
 	}
 
@@ -142,11 +150,6 @@ export default function App() {
 	
 	const handleClearBuilding = () => {
     searchParams.set('building', '');
-		setSearchParams(searchParams);
-	}
-
-	const handleClearClassroom = () => {
-		searchParams.set('classroom', '');
 		setSearchParams(searchParams);
 	}
 
@@ -165,13 +168,13 @@ export default function App() {
 	}
 
 	// TODO - remove console logging when ready for production
-	console.log({
-		filters,
-		classroom,
-		building,
-		searchParams,
-		loading,
-	})
+	// console.log({
+	// 	filters,
+	// 	classroom,
+	// 	building,
+	// 	searchParams,
+	// 	loading,
+	// })
 
 	let pageState = 'table';
 	if ( classroom !== '' ) {
