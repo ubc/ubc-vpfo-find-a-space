@@ -141,10 +141,21 @@ class Find_A_Space_Ajax_Handler {
 		return wp_send_json( array( 'data' => $data ) );
 	}
 
-	/*
-	The purpose of the approach used in lines 148-182 is that we are trying to pull the content for the virtually generated classroom and building pages and display it dynamically in the Find a Space GB block. We have to manipulate the HTML to get the template to work in the block, so we are scraping the HTML from the virtual page to display in the block so that we don't have to retrieve all of the data again and reformat it all, which saves processing resources. Provided that there is an instance of the Spaces Pages plugin running on the Learning Spaces website, the block will work on any site even without Spaces Pages because we're pulling the URLs directly from the Learning Spaces website.
-	*/
-
+	/**
+	 * We are pulling the content for the virtually generated classroom and building pages and displaying
+	 * it dynamically in the Find a Space GB block. We have to manipulate the HTML to get
+	 * the template to work in the block, so we are scraping the HTML from the virtual page
+	 * to display in the block so that we don't have to retrieve all of the data again and
+	 * reformat it all, which saves processing resources. Provided that there is an instance
+	 * of the Spaces Pages plugin running on the Learning Spaces website, the block will work
+	 * on any site even without Spaces Pages because we're pulling the URLs directly from the
+	 * Learning Spaces website.
+	 *
+	 * @param string $html     The HTML string to parse.
+	 * @param string $selector The CSS selector to target.
+	 *
+	 * @return string|null The HTML content within the specified selector, or null if no match is found.
+	 */
 	private function get_html_in_selector( string $html, string $selector ) {
 		// Load the HTML into DOMDocument
 		libxml_use_internal_errors( true );
