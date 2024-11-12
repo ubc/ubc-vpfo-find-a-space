@@ -77,6 +77,38 @@ class Airtable_Api {
 		return $res;
 	}
 
+	/**
+	 * Iterate over all keys in the Airtable Response and sanitize the
+	 * values for storage as a WordPress Transient.
+	 *
+	 * @param mixed $data The Airtable response data.
+	 * @return mixed The sanitized data.
+	 */
+	public function sanitize_for_transient( $data ) {
+
+		if ( ! is_array( $data ) ) {
+			return $data;
+		}
+
+		foreach ( $data as $key => &$value ) {
+			if ( is_array( $value ) ) {
+				$value = $this->sanitize_for_transient( $value ); // Recursive call for nested arrays
+			} elseif ( is_string( $value ) ) {
+				if ( filter_var( $value, FILTER_VALIDATE_URL ) ) {
+					$value = esc_url_raw( $value );
+				} elseif ( is_numeric( $value ) ) {
+					$value = intval( $value );
+				} else {
+					$value = sanitize_text_field( $value );
+				}
+			} elseif ( is_int( $value ) || is_float( $value ) ) {
+				$value = intval( $value );
+			}
+		}
+
+		return $data;
+	}
+
 	public function get( string $func, array $params = array() ) {
 		$campus = sanitize_text_field( $params['campus'] );
 		if ( ! array_key_exists( $campus, self::$campus_mapping ) ) {
@@ -87,9 +119,9 @@ class Airtable_Api {
 		ksort( $params );
 		$cache_key = null;
 
-		if ( $params['should_cache'] ) {
+		if ( $params['should_cache'] ?? false ) {
 			$cache_key = sprintf( '%s_%s_%s', $campus, $func, md5( wp_json_encode( $params ) ) );
-			// delete_transient( $cache_key );
+			delete_transient( $cache_key );
 			$records = get_transient( $cache_key );
 
 			if ( $records ) {
@@ -100,6 +132,7 @@ class Airtable_Api {
 		$records = call_user_func_array( array( $this, $func ), array( 'params' => $params ) );
 
 		if ( null !== $cache_key ) {
+			$records = $this->sanitize_for_transient( $records );
 			set_transient( $cache_key, $records, self::CACHE_TTL ); // Cache for 1 hour
 		}
 
