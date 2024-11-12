@@ -20,7 +20,9 @@ export default function Table(props) {
       offset: currentOffset,
       filters: props.filters,
     };
+
     let res = null;
+
     try {
       res = await getRooms(payload) as any;
     } catch(err) {

@@ -266,11 +266,12 @@ class Find_A_Space_Ajax_Handler {
 		$filters = $data['filters'] ?? null;
 
 		$params = array(
-			'campus'  => $campus,
-			'formal'  => $formal,
-			'offset'  => $offset,
-			'filters' => $filters,
-			'search'  => $search,
+			'campus'       => $campus,
+			'formal'       => $formal,
+			'offset'       => $offset,
+			'filters'      => $filters,
+			'search'       => $search,
+			'should_cache' => true,
 		);
 
 		$data = $this->airtable_api->get( 'get_rooms', $params );
