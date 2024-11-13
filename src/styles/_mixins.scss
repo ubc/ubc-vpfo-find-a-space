@@ -1,0 +1,75 @@
+// drop shadow treatment
+@mixin vpfo-box-shadow {
+	box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 33, 69, 0.10);
+}
+
+// buttons
+@mixin btn {
+	all: unset;
+	cursor: pointer;
+	display: inline-block;
+	padding: 0.75rem 1rem;
+	border: 1px solid transparent;
+	font-weight: 500;
+	font-size: 0.875rem;
+	line-height: 1;
+	text-transform: uppercase;
+	text-decoration: none;
+	text-align: center;
+
+	&:active {
+		box-shadow: 0px 4px 2px 0px rgba(0, 0, 0, 0.25) inset;
+	}
+
+	i {
+		font-size: 0.75rem;
+		padding-top: 0.125rem;
+	}
+}
+
+@mixin btn-primary {
+	background: $ubc-blue;
+	color: $utility-white;
+
+	&:hover, &:focus, &:focus-within, &:active {
+		background: $ubc-brand-blue;
+	}
+
+	&:focus, &:focus-within {
+		box-shadow: 0 0 0 3px $utility-white, 0 0 0 5px $ubc-blue;
+        outline: none;
+	}
+
+	&.disabled, &[disabled] {
+		background: $utility-grey-inactive;
+		border-color: $ubc-grey-medium;
+		text-transform: none;
+		font-weight: 700;
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+}
+
+@mixin btn-secondary {
+	background: $utility-white;
+	color: $ubc-blue;
+	border-color: $ubc-blue;
+
+	&:hover, &:focus, &:focus-within, &:active {
+		background: $learning-spaces-blue-light;
+	}
+
+	&:focus, &:focus-within {
+		box-shadow: 0 0 0 3px $utility-white, 0 0 0 6px $ubc-blue;
+        outline: none;
+	}
+}
+
+// text styles
+
+@mixin h2-info {
+	font-size: 0.875rem;
+	line-height: 1;
+	font-weight: 700;
+	margin: 0 0 0.5rem 0;
+}

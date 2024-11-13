@@ -1,0 +1,152 @@
+.vpfo-lsb-filters-container {
+  @include vpfo-box-shadow;
+
+  width: 100%;
+  border-top: 16px solid $ubc-blue;
+  background: $utility-white;
+  margin-bottom: 1rem;
+  padding: 16px;
+  padding-bottom: 32px;
+  margin-right: 16px;
+
+  @include media-breakpoint-up(lg) {
+    width: 220px;
+    min-width: 220px;
+
+    height: fit-content;
+    position: sticky;
+    overflow-y: scroll;
+    top: 16px;
+    max-height: 100vh;
+  }
+
+  &.vpfo-lsb-filters-container-loading {
+    display: none;
+    @include media-breakpoint-up(lg) {
+      display: flex;
+    }
+    min-height: 600px;
+    justify-content: center;
+    align-items: center;
+
+    .vpfo-lsb-loading-indicator {
+      width: 100px;
+      height: 100px;
+      border: 10px solid #ddd;
+
+      border-radius: 50%;
+      border-top-color: $ubc-blue;
+      animation: vpfo-loading 1s linear infinite;
+    }
+  
+    @keyframes vpfo-loading {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+
+  .input-group,
+  .select-group {
+    margin-bottom: 1rem;
+
+    label {
+      font-family: $font-whitney;
+      font-weight: 600;
+      color: $ubc-blue;
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+
+  .input-group input {
+    display: block;
+    max-width: 100%;
+    border: 1px solid $ubc-grey-medium-dark;
+    padding: 8px;
+    height: auto;
+    width: 100%;
+  }
+
+  // Styled in Filters.tsx
+  .select-group select {
+  }
+
+  .vpfo-lsb-filter-heading {
+    font-family: $font-whitney;
+    font-weight: 700;
+    color: $ubc-blue;
+    font-size: 14px;
+    line-height: 30px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  
+  // Hide up/down arrows from number input.
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+}
+
+.vpfo-lsb-filters-mobile-toggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: $ubc-blue;
+  color: white;
+  cursor: pointer;
+
+  @include media-breakpoint-up(lg) {
+    display: none;
+  }
+  
+  h5 {
+    text-transform: uppercase;
+    margin: 0;
+    font-weight: 700;
+    font-family: $font-whitney;
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  & + .vpfo-lsb-filters-container {
+    margin-top: 0;
+  }
+
+  &.vpfo-lsb-filters-mobile-toggle-closed {
+    margin-bottom: 16px;
+  }
+
+  &.vpfo-lsb-filters-mobile-toggle-open {
+    margin-bottom: 0;
+  }
+
+  &.vpfo-lsb-filters-mobile-toggle-open + .vpfo-lsb-filters-container {
+    display: block;
+    border-top: none;
+
+    @include media-breakpoint-up(lg) {
+      border-top: 16px solid $ubc-blue;      
+    }
+  }
+
+  &.vpfo-lsb-filters-mobile-toggle-closed + .vpfo-lsb-filters-container {
+    display: none;
+    
+
+    @include media-breakpoint-up(lg) {
+      display: block;
+      
+    }
+  }
+}

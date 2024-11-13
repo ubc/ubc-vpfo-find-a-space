@@ -1,0 +1,36 @@
+@import 'variables';
+@import 'mixins';
+@import 'global';
+
+@import 'filters';
+@import 'container';
+@import 'search';
+@import 'table';
+@import 'loader';
+
+@import 'classroom-card';
+
+@import 'classrooms';
+@import 'buildings';
+
+& {
+	-webkit-font-smoothing: antialiased;
+	font-family: $font-whitney;
+	color: $ubc-blue;
+
+	.btn {
+		@include btn;
+	}
+
+	.btn-primary {
+		@include btn-primary;
+	}
+
+	.btn-secondary {
+		@include btn-secondary;
+	}
+
+	.btn-border-thick {
+		border-width: 0.125rem;
+	}
+}

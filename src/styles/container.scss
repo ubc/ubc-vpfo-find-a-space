@@ -1,0 +1,49 @@
+.vpfo-lsb-single-container {
+  position: relative;
+
+  min-height: 300px;
+}
+
+.vpfo-lsb-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  @include media-breakpoint-up(lg) {
+    flex-direction: row;
+  }
+
+  .vpfo-lsb-filter-slugs {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 16px;
+
+    .vpfo-lsb-filter-slug {
+      padding-left: 8px;
+      padding-right: 8px;
+      background: $utility-light-grey;
+      color: $ubc-blue;
+      font-weight: 500;
+      font-family: $font-whitney;
+      line-height: 22px;
+      font-size: 14px;
+      margin-right: 14px;
+    }
+
+    .vpfo-lsb-filter-clear-all {
+      display: inline-flex;
+      align-items: center;
+      
+      text-transform: uppercase;
+      color: $ubc-brand-blue;
+      font-family: $font-whitney;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      
+      svg {
+        margin-left: 8px;
+      }
+    }
+  }
+}

@@ -1,0 +1,181 @@
+.vpfo-spaces-page {
+	.building-details {
+		@include vpfo-box-shadow;
+
+		&:after {
+			content: '';
+			display: block;
+			width: 100%;
+			height: 1rem;
+			background: $ubc-blue;
+		}
+
+		.building-info {
+			font-size: 1rem;
+
+			h2 {
+				@include h2-info;
+			}
+
+			p {
+				margin: 0;
+			}
+
+			div[class^="building-"] {
+				&:not(:first-child) {
+					margin-top: 1rem;
+				}
+			}
+
+			.building-notes {
+				p:not(:last-child) {
+					margin-bottom: 1.5rem;
+				}
+			}
+
+			.building-resources {
+				font-weight: 500;
+
+				a {
+					text-decoration: none;
+					color: $ubc-brand-blue;
+
+					&:hover, &:focus, &:active {
+						p {
+							text-decoration: underline;
+						}
+					}
+				}
+
+				.building-amenities {
+					margin-top: 1rem;
+				}
+			}
+		}
+	}
+
+	.building-map {
+		aspect-ratio: 1/1;
+
+		@include media-breakpoint-up(lg) {
+			aspect-ratio: 4/3;
+		}
+	}
+
+	.building-image {
+		width: 100%;
+		aspect-ratio: 1/1;
+
+		@include media-breakpoint-up(lg) {
+			aspect-ratio: 16/9;
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	.building-classrooms {
+		h2 {
+			font-size: 1.125rem;
+			font-weight: 600;
+			line-height: 1.66667;
+		}
+	}
+
+	.classroom-card {
+		@include vpfo-box-shadow;
+		border: 1px solid transparent;
+		transition: border-color 0.2s ease-in-out;
+
+		&:not(:first-child) {
+			margin-top: 1rem;
+		}
+
+		.accent {
+			background-color: $learning-spaces-blue-light;
+			width: 100%;
+			height: 1rem;
+			top: 0;
+			left: 0;
+			transition: background-color 0.2s ease-in-out;
+
+			@include media-breakpoint-up(md) {
+				height: 100%;
+				width: 1rem;
+			}
+		}
+
+		.classroom-thumbnail {
+			width: 100%;
+			aspect-ratio: 2/1;
+
+			@include media-breakpoint-up(md) {
+				width: 13.75rem;
+				aspect-ratio: 3/2;
+			}
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+
+			&.no-image {
+				aspect-ratio: unset;
+
+				@include media-breakpoint-up(md) {
+					width: 13.75rem;
+					aspect-ratio: 3/2;
+					background: $learning-spaces-blue-light;
+				}
+			}
+		}
+
+		h2 {
+			line-height: 1.125;
+		}
+
+		.classroom-building-name {
+			color: $ubc-brand-blue;
+			line-height: 1;
+		}
+
+		dl {
+			margin: 0;
+
+			dt {
+				font-weight: 500;
+				text-transform: uppercase;
+				margin: 0;
+				line-height: 1.875rem;
+
+				@include media-breakpoint-up(md) {
+					font-size: 0.75rem;
+					line-height: 1.25rem;
+				}
+			}
+
+			dd {
+				font-size: 1rem;
+				margin: 0;
+
+				@include media-breakpoint-up(md) {
+					font-size: 0.875rem;
+				}
+			}
+		}
+
+		&:hover, &:active, &:focus, &:focus-within {
+			border-color: $ubc-brand-blue;
+			transition: border-color 0.2s ease-in-out;
+
+			.accent {
+				background-color: $ubc-brand-blue;
+				transition: background-color 0.2s ease-in-out;
+			}
+		}
+	}
+}
