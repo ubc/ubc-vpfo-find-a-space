@@ -290,6 +290,7 @@ export default function Filters(props) {
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-furniture-input"
+          blurInputOnSelect
           onChange={(selected) => setFurnitureFilter(selected)}
         />
       </div>
@@ -310,6 +311,7 @@ export default function Filters(props) {
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-layout-input"
+          blurInputOnSelect
           onChange={(selected) => setLayoutFilter(selected)}
         />
       </div>
@@ -351,6 +353,7 @@ export default function Filters(props) {
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-building-input"
+          blurInputOnSelect
           onChange={(selected) => setBuildingFilter(selected)}
         />
       </div>

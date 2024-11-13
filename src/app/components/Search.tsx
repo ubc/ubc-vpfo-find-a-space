@@ -68,6 +68,7 @@ export default function Search(props) {
           inputId="vpfo-lsb-search-input"
           placeholder="Search"
           loadingMessage={() => 'Loading...'}
+          blurInputOnSelect
           onChange={(selected) => {
             const url = selected.value;
             const slug = selected.value.substring(selected.value.lastIndexOf('/') + 1);
