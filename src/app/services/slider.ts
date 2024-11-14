@@ -16,6 +16,7 @@ export default function instantiateSlider() {
       slidesToScroll: 1,
       draggable: false,
       dots: document.querySelector( '.glider-dots' ),
+      rewind: true,
       arrows: {
         prev: document.querySelector( '.glider-prev' ),
         next: document.querySelector( '.glider-next' )
