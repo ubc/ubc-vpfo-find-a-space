@@ -145,6 +145,13 @@ class Airtable_Api {
 			'Description',
 		);
 
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
+		);
+
 		return $this->filter_empty_options(
 			$this->airtable_get( 'Informal Spaces Amenities', $payload, $params ),
 			$params
@@ -159,6 +166,13 @@ class Airtable_Api {
 			'Description',
 			'Formal Count',
 			'Informal Count',
+		);
+
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
 		);
 
 		$formula_parts[]            = '{Hide from Filter Drop Down} = 0';
@@ -179,6 +193,13 @@ class Airtable_Api {
 			'Informal Count',
 		);
 
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
+		);
+
 		return $this->filter_empty_options(
 			$this->airtable_get( 'Classroom Layout', $payload, $params ),
 			$params
@@ -192,6 +213,13 @@ class Airtable_Api {
 			'Description',
 			'Formal Count',
 			'Informal Count',
+		);
+
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
 		);
 
 		return $this->filter_empty_options(
@@ -223,6 +251,13 @@ class Airtable_Api {
 			'Description',
 		);
 
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
+		);
+
 		$formula_parts[]            = '{Hide from Filter Drop Down} = 0';
 		$payload['filterByFormula'] = implode( 'AND ', $formula_parts );
 
@@ -238,6 +273,13 @@ class Airtable_Api {
 			'Building Name (override)',
 			'Formal Count',
 			'Informal Count',
+		);
+
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Building Name',
+				'direction' => 'asc',
+			),
 		);
 
 		$buildings = $this->filter_empty_options(
