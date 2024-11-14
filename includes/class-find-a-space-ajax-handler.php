@@ -101,20 +101,20 @@ class Find_A_Space_Ajax_Handler {
 			'should_cache' => true,
 		);
 
-		$shared_amenities   = $this->airtable_api->get( 'get_shared_amenities', $params );
-		$resources          = $this->airtable_api->get( 'get_resources', $params );
-		$informal_amenities = $this->airtable_api->get( 'get_informal_amenities', $params );
-		$accessibility      = $this->airtable_api->get( 'get_accessibility', $params );
-		$classroom_layouts  = $this->airtable_api->get( 'get_classroom_layouts', $params );
-		$furniture          = $this->airtable_api->get( 'get_furniture', $params );
+		$shared_amenities    = $this->airtable_api->get( 'get_shared_amenities', $params );
+		$other_room_features = $this->airtable_api->get( 'get_other_room_features', $params );
+		$informal_amenities  = $this->airtable_api->get( 'get_informal_amenities', $params );
+		$accessibility       = $this->airtable_api->get( 'get_accessibility', $params );
+		$classroom_layouts   = $this->airtable_api->get( 'get_classroom_layouts', $params );
+		$furniture           = $this->airtable_api->get( 'get_furniture', $params );
 
 		$payload = array(
-			'shared_amenities'   => $shared_amenities,
-			'resources'          => $resources,
-			'informal_amenities' => $informal_amenities,
-			'accessibility'      => $accessibility,
-			'classroom_layouts'  => $classroom_layouts,
-			'furniture'          => $furniture,
+			'shared_amenities'    => $shared_amenities,
+			'other_room_features' => $other_room_features,
+			'informal_amenities'  => $informal_amenities,
+			'accessibility'       => $accessibility,
+			'classroom_layouts'   => $classroom_layouts,
+			'furniture'           => $furniture,
 		);
 
 		return wp_send_json( array( 'data' => $payload ) );

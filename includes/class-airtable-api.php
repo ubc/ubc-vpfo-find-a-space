@@ -176,7 +176,7 @@ class Airtable_Api {
 		);
 
 		$formula_parts[]            = '{Hide from Filter Drop Down} = 0';
-		$payload['filterByFormula'] = implode( 'AND ', $formula_parts );
+		$payload['filterByFormula'] = 'AND(' . implode( ', ', $formula_parts ) . ')';
 
 		return $this->filter_empty_options(
 			$this->airtable_get( 'Accessibility', $payload, $params ),
@@ -228,18 +228,27 @@ class Airtable_Api {
 		);
 	}
 
-	public function get_resources( array $params ) {
+	public function get_other_room_features( array $params ) {
 		$payload           = array();
+		$formula_parts     = array();
 		$payload['fields'] = array(
-			'File Name',
-			'Attachment',
+			'Name',
 			'Category',
+			'Description',
 		);
 
-		return $this->filter_empty_options(
-			$this->airtable_get( 'All Resources', $payload, $params ),
-			$params
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
 		);
+
+		$formula_parts[]            = '{Hide from Filter Drop Down} = 0';
+		$formula_parts[]            = '{Category} = "Other Room Features"';
+		$payload['filterByFormula'] = 'AND(' . implode( ', ', $formula_parts ) . ')';
+
+		return $this->airtable_get( 'Amenities', $payload, $params );
 	}
 
 	public function get_shared_amenities( array $params ) {
@@ -259,7 +268,8 @@ class Airtable_Api {
 		);
 
 		$formula_parts[]            = '{Hide from Filter Drop Down} = 0';
-		$payload['filterByFormula'] = implode( 'AND ', $formula_parts );
+		$formula_parts[]            = '{Category} != "Other Room Features"';
+		$payload['filterByFormula'] = 'AND(' . implode( ', ', $formula_parts ) . ')';
 
 		return $this->airtable_get( 'Amenities', $payload, $params );
 	}
@@ -395,13 +405,14 @@ class Airtable_Api {
 			return 'AND(' . implode( ', ', $formula_parts ) . ')';
 		}
 
-		$capacity_filter           = isset( $filters['capacityFilter'] ) ? (int) $filters['capacityFilter'] : null;
-		$audiovideo_filter         = $filters['audioVisualFilter'] ?? array();
-		$accessibility_filter      = $filters['accessibilityFilter'] ?? array();
-		$building_filter           = $filters['buildingFilter'] ?? array();
-		$furniture_filter          = $filters['furnitureFilter'] ?? array();
-		$informal_amenities_filter = $filters['informalAmenitiesFilter'] ?? array();
-		$layout_filter             = $filters['layoutFilter'] ?? array();
+		$capacity_filter            = isset( $filters['capacityFilter'] ) ? (int) $filters['capacityFilter'] : null;
+		$audiovideo_filter          = $filters['audioVisualFilter'] ?? array();
+		$accessibility_filter       = $filters['accessibilityFilter'] ?? array();
+		$building_filter            = $filters['buildingFilter'] ?? array();
+		$furniture_filter           = $filters['furnitureFilter'] ?? array();
+		$informal_amenities_filter  = $filters['informalAmenitiesFilter'] ?? array();
+		$layout_filter              = $filters['layoutFilter'] ?? array();
+		$other_room_features_filter = $filters['otherRoomFeaturesFilter'] ?? array();
 
 		if ( $capacity_filter ) {
 			$formula_parts[] = "{Capacity} >= $capacity_filter";
@@ -418,6 +429,15 @@ class Airtable_Api {
 
 		if ( ! empty( $audiovideo_filter ) ) {
 			foreach ( $audiovideo_filter as $filter ) {
+				$value = sanitize_text_field( $filter['value'] ?? '' );
+				if ( $value ) {
+					$formula_parts[] = "FIND('$value', {Filter_Amenities})";
+				}
+			}
+		}
+
+		if ( ! empty( $other_room_features_filter ) ) {
+			foreach ( $other_room_features_filter as $filter ) {
 				$value = sanitize_text_field( $filter['value'] ?? '' );
 				if ( $value ) {
 					$formula_parts[] = "FIND('$value', {Filter_Amenities})";

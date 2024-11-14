@@ -41,11 +41,11 @@ export default function Filters(props) {
   // A/V select options, which are grouped by Category.
   const [audioVisualOptions, setAudioVisualOptions] = useState<any[]>([]);
 
+  // Other Room Feature options
+  const [otherRoomFeatureOptions, setOtherRoomFeatureOptions] = useState<any[]>([]);
+
   // Accessibility select options.
   const [accessibilityOptions, setAccessibilityOptions] = useState<any[]>([]);
-
-  // Buildings
-  const [buildings, setBuildings] = useState<any[]>([]);
 
   // Buildings Options
   const [buildingOptions, setBuildingOptions] = useState<any[]>([]);
@@ -77,6 +77,7 @@ export default function Filters(props) {
    * Form States
   */
   const [audioVisualFilter, setAudioVisualFilter] = useState<any[]>(getInitialFilterState('audioVisualFilter') ?? []);
+  const [otherRoomFeaturesFilter, setOtherRoomFeaturesFilter] = useState<any[]>(getInitialFilterState('otherRoomFeatures') ?? []);
   const [accessibilityFilter, setAccessibilityFilter] = useState<any[]>(getInitialFilterState('accessibilityFilter') ?? []);
   const [buildingFilter, setBuildingFilter] = useState(getInitialFilterState('buildingFilter') ?? {});
   const [furnitureFilter, setFurnitureFilter] = useState<any[]>(getInitialFilterState('furnitureFilter') ?? []);
@@ -105,8 +106,6 @@ export default function Filters(props) {
     // console.log(buildings);
 
     const data = buildings?.data?.data?.records || {};
-    
-    setBuildings(data);
 
     // Buildings filter.
     setupBuildingOptions(data);
@@ -129,6 +128,19 @@ export default function Filters(props) {
     }
 
     setAudioVisualOptions(options);
+  }
+
+  const setupOtherRoomFeaturesOptions = (meta) => {
+    let options: any[] = [];
+
+    options = meta.other_room_features.records.map(record => {
+      return {
+        label: record.fields.Name,
+        value: record.fields.Name,
+      }
+    })
+
+    setOtherRoomFeatureOptions(options);
   }
 
   const setupAccessibilityOptions = (meta) => {
@@ -207,6 +219,9 @@ export default function Filters(props) {
 
     // Informal Spaces Amenities filter.
     setupISAmenitiesOptions(data);
+
+    // Other room features filter.
+    setupOtherRoomFeaturesOptions(data);
   }
 
   useEffect(() => {
@@ -218,6 +233,7 @@ export default function Filters(props) {
     if ( _.isEmpty(props.filters) ) {
       // Ensure our filter states are empty.
       setAudioVisualFilter([]);
+      setOtherRoomFeaturesFilter([]);
       setAccessibilityFilter([]);
       setBuildingFilter([]);
       setFurnitureFilter([]);
@@ -230,7 +246,7 @@ export default function Filters(props) {
   const submitFilters = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // console.log("Filters:", { audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, capacityFilter });
-    props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, layoutFilter, capacityFilter });
+    props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, layoutFilter, capacityFilter, otherRoomFeaturesFilter });
   }
 
   const renderFormalFilters = () => {
@@ -242,6 +258,7 @@ export default function Filters(props) {
       { renderBuildingSelect() }
       { renderAccessibilitySelect() }
       { renderAudioVideoSelect() }
+      { renderOtherRoomFeaturesSelect() }
     </>
   }
 
@@ -397,6 +414,27 @@ export default function Filters(props) {
           components={animatedComponents}
           inputId="vpfo-lsb-audio-visual-input"
           onChange={(selected) => setAudioVisualFilter(selected)}
+        />
+      </div>
+    )
+  }
+
+  const renderOtherRoomFeaturesSelect = () => {
+    return (
+      <div className="select-group">
+        <label id="vpfo-lsb-other-room-features" htmlFor="vpfo-lsb-other-room-features-input">
+          Other Room Features
+        </label>
+        <Select 
+          options={otherRoomFeatureOptions}
+          value={otherRoomFeaturesFilter}
+          isMulti
+          isClearable
+          styles={selectStyles}
+          name="vpfo-lsb-other-room-features"
+          components={animatedComponents}
+          inputId="vpfo-lsb-other-room-features-input"
+          onChange={(selected) => setOtherRoomFeaturesFilter(selected)}
         />
       </div>
     )
