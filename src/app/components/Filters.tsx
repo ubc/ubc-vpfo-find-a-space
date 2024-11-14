@@ -77,7 +77,7 @@ export default function Filters(props) {
    * Form States
   */
   const [audioVisualFilter, setAudioVisualFilter] = useState<any[]>(getInitialFilterState('audioVisualFilter') ?? []);
-  const [otherRoomFeaturesFilter, setOtherRoomFeaturesFilter] = useState<any[]>(getInitialFilterState('otherRoomFeatures') ?? []);
+  const [otherRoomFeaturesFilter, setOtherRoomFeaturesFilter] = useState<any[]>(getInitialFilterState('otherRoomFeaturesFilter') ?? []);
   const [accessibilityFilter, setAccessibilityFilter] = useState<any[]>(getInitialFilterState('accessibilityFilter') ?? []);
   const [buildingFilter, setBuildingFilter] = useState(getInitialFilterState('buildingFilter') ?? {});
   const [furnitureFilter, setFurnitureFilter] = useState<any[]>(getInitialFilterState('furnitureFilter') ?? []);
