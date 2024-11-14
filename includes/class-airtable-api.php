@@ -360,6 +360,18 @@ class Airtable_Api {
 			);
 		}
 
+		// Sort the rooms by levenshein distance to improve search results.
+		if ( null !== $rooms['records'] && ! empty( $params['search'] ) ) {
+			$search = sanitize_text_field( $params['search'] );
+
+			usort(
+				$rooms['records'],
+				function ( $a, $b ) use ( $search ) {
+					return levenshtein( $search, strtolower( $a->fields['Title'] ) ) - levenshtein( $search, strtolower( $b->fields['Title'] ) );
+				}
+			);
+		}
+
 		return $rooms;
 	}
 
