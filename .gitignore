@@ -29,7 +29,5 @@ node_modules/
 # dotenv environment variables file
 .env
 
-/vendor/
-
 # codesniffer results file
 codescan.txt
