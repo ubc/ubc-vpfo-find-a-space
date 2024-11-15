@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "create-block/ubc-vpfo-find-a-space",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"title": "Ubc Vpfo Find A Space",
 	"category": "widgets",
 	"icon": "smiley",
