@@ -320,8 +320,9 @@ class Airtable_Api {
 		$payload = array();
 
 		$payload['fields'] = array(
-			'Title',
-			'Building Name',
+			'Name',
+			'Buildings - Building Name',
+			'Buildings - Building Name (override)',
 			'Building Code',
 			'Room Number',
 			'Image Gallery',
