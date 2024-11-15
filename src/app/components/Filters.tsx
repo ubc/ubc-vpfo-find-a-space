@@ -102,6 +102,7 @@ export default function Filters(props) {
     let payload = {
       ...context.config,
     }
+
     const buildings = await getBuildings(payload);
     // console.log(buildings);
 
