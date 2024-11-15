@@ -33,9 +33,10 @@ export default function Table(props) {
 
     if (res?.data?.records) {
       setRooms(res.data.records.map(room => ({
-        'Title'                     : room.fields['Title'],
+        'Name'                      : room.fields['Name'],
         'Room Number'               : room.fields['Room Number'],
-        'Building Name'             : room.fields['Building Name'],
+        'Building Name Original'    : room.fields['Buildings - Building Name'],
+        'Building Name Override'    : room.fields['Buildings - Building Name (override)'],
         'Building Code'             : room.fields['Building Code'],
         'Capacity'                  : room.fields['Capacity'],
         'Room Link'                 : room.fields['Room Link'],

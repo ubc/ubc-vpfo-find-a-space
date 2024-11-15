@@ -25,8 +25,8 @@ export default function ClassroomCard(props) {
 			if ( thumb.thumbnails.large.height ) {
 				thumbProps.height = thumb.thumbnails.large.height;
 			}
-			if ( room['Title'] ) {
-				thumbProps.alt = room['Title'];
+			if ( room['Name'] ) {
+				thumbProps.alt = room['Name'];
 			}
 		}
 		
@@ -43,16 +43,19 @@ export default function ClassroomCard(props) {
 
 	const renderRoomInformation = () => {
 		const room = props.room;
+		const roomBuildingNameOriginal = room['Building Name Original'] ? room['Building Name Original'][0] : null;
+		const roomBuildingNameOverride = room['Building Name Override'] ? room['Building Name Override'][0] : null;
+		const roomBuildingName = roomBuildingNameOverride ?? roomBuildingNameOriginal;
 
 		return (
 			<div className="d-flex align-items-start justify-content-between mb-5">
 				<div>
-					<h2 className="mb-0 fw-bold text-uppercase">{ room['Title'] }</h2>
+					<h2 className="mb-0 fw-bold text-uppercase">{ room['Name'] }</h2>
           <a
             href={ room['Building Link'] }
             target="_blank"
             className="classroom-building-name fw-bold text-uppercase mt-2 vpfo-building-link">
-              { room['Building Name'] }
+              { roomBuildingName }
           </a>
 				</div>
 				<a
