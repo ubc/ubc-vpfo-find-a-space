@@ -33,7 +33,7 @@ export default function Filters(props) {
   const context = React.useContext(StateContext);
   const isFormal = context.config.formal;
 
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(true);
 
   // Meta, which contains Amenities, Resources, and Informal Amenities data.
   const [meta, setMeta] = useState(null);
