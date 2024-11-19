@@ -368,7 +368,7 @@ class Airtable_Api {
 			usort(
 				$rooms['records'],
 				function ( $a, $b ) use ( $search ) {
-					return levenshtein( $search, strtolower( $a->fields['Title'] ) ) - levenshtein( $search, strtolower( $b->fields['Title'] ) );
+					return levenshtein( $search, strtolower( $a->fields['Name'] ) ) - levenshtein( $search, strtolower( $b->fields['Name'] ) );
 				}
 			);
 		}

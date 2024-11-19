@@ -39,7 +39,7 @@ export default function Search(props) {
 
     if (res?.data?.records) {
       options = res.data.records.map(room => ({
-        label: room.fields.Title,
+        label: room.fields.Name,
         value: room.fields['Room Link']
       }));
     } else {
