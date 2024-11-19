@@ -26,7 +26,7 @@ export default function Search(props) {
       callback: (options: any[]) => void
     ) => {
     // console.log('Fetching options...', { search });
-    if ( search.length < 3 ) return [];
+    if ( search.length < 2 ) return [];
 
     const payload = {
       ...context.config,
@@ -63,12 +63,12 @@ export default function Search(props) {
           loadOptions={getSelectOptions}
           name="vpfo-lsb-search"
           styles={selectStyles}
-          components={animatedComponents}
           noOptionsMessage={() => 'Start typing to search'}
           inputId="vpfo-lsb-search-input"
           placeholder="Search"
           loadingMessage={() => 'Loading...'}
           blurInputOnSelect
+          components={{ ...animatedComponents, DropdownIndicator:() => null, IndicatorSeparator:() => null }}
           onChange={(selected) => {
             const url = selected.value;
             const slug = selected.value.substring(selected.value.lastIndexOf('/') + 1);
