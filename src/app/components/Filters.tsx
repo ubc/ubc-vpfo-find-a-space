@@ -266,11 +266,11 @@ export default function Filters(props) {
   const renderInformalFilters = () => {
     return <>
       <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
-      { renderFurnitureSelect() }
-      { renderLayoutSelect() }
+      {/* { renderFurnitureSelect() } */}
+      {/* { renderLayoutSelect() } */}
       { renderCapacityInput() }
       { renderBuildingSelect() }
-      { renderAccessibilitySelect() }
+      {/* { renderAccessibilitySelect() } */}
       { renderISAmenitiesSelect() }
     </>
   }
