@@ -3,6 +3,27 @@ import { StateContext } from '../StateProvider';
 import { getRooms } from '../services/api';
 import ClassroomCard from './ClassroomCard';
 import _ from 'lodash';
+import Select from 'react-select'
+import makeAnimated from 'react-select/animated';
+
+const animatedComponents = makeAnimated();
+const selectStyles = {
+  control: (baseStyles, state) => ({
+    ...baseStyles,
+    borderColor: '#5E869F',
+    borderRadius: '0px',
+    ":hover": {
+      borderColor: '#5E869F',
+    },
+  }),
+}
+
+const sortByOptions = [
+  { label: '(A-Z) Alphabetically', value: 'alpha_asc' },
+  { label: '(Z-A) Alphabetically', value: 'alpha_desc' },
+  { label: 'Capacity', value: 'capacity_desc' },
+  { label: 'Building Code', value: 'code_asc' },
+]
 
 export default function Table(props) {
   const context                             = React.useContext(StateContext);
@@ -10,6 +31,7 @@ export default function Table(props) {
   const [nextPageOffset, setNextPageOffset] = useState(null);
   const [prevPageOffset, setPrevPageOffset] = useState(null);
   const [prevOffsets, setPrevOffsets]       = useState([]);
+  const [sortBy, setSortBy]                 = useState(sortByOptions[0]);
 
   const containerRef = React.useRef(null);
 
@@ -19,6 +41,7 @@ export default function Table(props) {
       ...context.config,
       offset: currentOffset,
       filters: props.filters,
+      sortBy: sortBy?.value || 'alpha_asc',
     };
 
     let res = null;
@@ -97,11 +120,6 @@ export default function Table(props) {
     executeScroll();
   }
 
-  // useEffect(() => {
-  //   // Initial load
-  //   getPage();
-  // }, []);
-
   useEffect(() => {
     // Reset offsets, and previous offsets
     setNextPageOffset(null);
@@ -110,8 +128,17 @@ export default function Table(props) {
 
     // Fetch a new page, with the new filters via props.
     getPage();
-    // executeScroll();
-  }, [props.filters]);
+  }, [props.filters, sortBy]);
+
+  // useEffect(() => {
+  //   // Reset offsets, and previous offsets
+  //   setNextPageOffset(null);
+  //   setPrevPageOffset(null);
+  //   setPrevOffsets([]);
+
+  //   // Fetch a new page, with the new filters via props.
+  //   getPage();
+  // }, [sortBy]);
 
   const executeScroll = () => setTimeout(
     () => {
@@ -161,7 +188,7 @@ export default function Table(props) {
       {getCurrentFilters().map((filter) => {
         return <div key={filter} className="vpfo-lsb-filter-slug">{filter}</div>;
       })}
-      <a role="button" tabindex="0" className="vpfo-lsb-filter-clear-all" onClick={clearFilters}>
+      <a role="button" tabIndex={0} className="vpfo-lsb-filter-clear-all btn btn-secondary" onClick={clearFilters}>
         Clear filters
         <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M9.70615 2.06895C10.0968 1.67832 10.0968 1.04395 9.70615 0.65332C9.31553 0.262695 8.68115 0.262695 8.29053 0.65332L4.9999 3.94707L1.70615 0.656445C1.31553 0.26582 0.681152 0.26582 0.290527 0.656445C-0.100098 1.04707 -0.100098 1.68145 0.290527 2.07207L3.58428 5.3627L0.293652 8.65645C-0.0969726 9.04707 -0.0969726 9.68145 0.293652 10.0721C0.684277 10.4627 1.31865 10.4627 1.70928 10.0721L4.9999 6.77832L8.29365 10.0689C8.68428 10.4596 9.31865 10.4596 9.70928 10.0689C10.0999 9.67832 10.0999 9.04395 9.70928 8.65332L6.41553 5.3627L9.70615 2.06895Z" fill="#005DA6"/>
@@ -175,11 +202,29 @@ export default function Table(props) {
       { props.loading &&
         <div className="vpfo-lsb-loading-scrim"><div className="vpfo-lsb-loading-indicator"></div></div>
       }
-      { hasActiveFilter() &&
+      <div className="vpfo-lsb-table-top-bar">
         <div className="vpfo-lsb-current-filters">
-          { renderActiveFilters() }
+          { hasActiveFilter() && renderActiveFilters() }
         </div>
-      }
+        <div className="vpfo-lsb-sort">
+          <div className="select-group">
+            <label id="vpfo-lsb-sort" htmlFor="vpfo-lsb-sort-input">
+              Sort Results
+            </label>
+            <div style={{width: 200}}>
+              <Select 
+                options={sortByOptions}
+                value={sortBy}
+                styles={selectStyles}
+                name="vpfo-lsb-sort"
+                components={animatedComponents}
+                inputId="vpfo-lsb-sort-input"
+                onChange={(selected) => setSortBy(selected)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="vpfo-lsb-table">
 
         { rooms.length === 0 && props.loading === false && <>

@@ -121,6 +121,7 @@ class Airtable_Api {
 
 		if ( $params['should_cache'] ?? false ) {
 			$cache_key = sprintf( '%s_%s_%s', $campus, $func, md5( wp_json_encode( $params ) ) );
+			delete_transient( $cache_key ); // Delete the cache if it exists.
 			$records   = get_transient( $cache_key );
 
 			if ( $records ) {
@@ -320,6 +321,7 @@ class Airtable_Api {
 		$payload = array();
 
 		$payload['fields'] = array(
+			'Title',
 			'Name',
 			'Buildings - Building Name',
 			'Buildings - Building Name (override)',
@@ -339,10 +341,33 @@ class Airtable_Api {
 		$payload['offset']          = $params['offset'] ?? null;
 		$payload['filterByFormula'] = $this->get_rooms_filter_formula( $params );
 
+		// Defaults for sorting on Airtable Classrooms
+		$sort_direction = 'asc';
+		$sort_field     = 'Title';
+
+		// Modify sorting based on the provided sort parameter
+		switch ( $params['sort_by'] ) {
+			case 'alpha_asc':
+				// No change
+				break;
+			case 'alpha_desc':
+				$sort_direction = 'desc';
+				break;
+			case 'capacity_desc':
+				$sort_field     = 'Capacity';
+				$sort_direction = 'desc';
+				// No change
+				break;
+			case 'code_asc':
+				$sort_field = 'Name';
+				// No change
+				break;
+		}
+
 		$payload['sort'] = array(
 			array(
-				'field'     => 'Name',
-				'direction' => 'asc',
+				'field'     => $sort_field,
+				'direction' => $sort_direction,
 			),
 		);
 
@@ -504,7 +529,7 @@ class Airtable_Api {
 			foreach ( $search_parts as $part ) {
 				$part = strtolower( trim( $part ) );
 
-				$search_formula_parts[] = "FIND('$part', LOWER({Title}))";
+				$search_formula_parts[] = "FIND('$part', LOWER({Name}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Building Name}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Building Code}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Room Number}))";

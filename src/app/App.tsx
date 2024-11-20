@@ -212,6 +212,7 @@ export default function App() {
 				loading={loading}
 				onSubmitFilters={handleSubmitFilters}
 				setLoading={setLoading}
+        clearFilters={handleClearFilters}
 				showClassroom={handleShowClassroom}
 			/>
 			<Table

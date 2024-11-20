@@ -263,7 +263,19 @@ class Find_A_Space_Ajax_Handler {
 		$offset  = sanitize_text_field( $data['offset'] ?? null );
 		$search  = sanitize_text_field( $data['search'] ?? null );
 		$formal  = rest_sanitize_boolean( $data['formal'] ?? null );
+		$sort_by = sanitize_text_field( $data['sortBy'] ?? null );
 		$filters = $data['filters'] ?? null;
+
+		$allowed_sort_by = array(
+			'alpha_asc',
+			'alpha_desc',
+			'capacity_desc',
+			'code_asc',
+		);
+
+		if ( ! in_array( $sort_by, $allowed_sort_by, true ) ) {
+			$sort_by = 'alpha_asc';
+		}
 
 		$params = array(
 			'campus'       => $campus,
@@ -272,6 +284,7 @@ class Find_A_Space_Ajax_Handler {
 			'filters'      => $filters,
 			'search'       => $search,
 			'should_cache' => true,
+			'sort_by'      => $sort_by,
 		);
 
 		$data = $this->airtable_api->get( 'get_rooms', $params );
