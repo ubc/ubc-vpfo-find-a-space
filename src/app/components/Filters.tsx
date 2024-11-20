@@ -253,10 +253,10 @@ export default function Filters(props) {
   const renderFormalFilters = () => {
     return <>
       <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
+      { renderBuildingSelect() }
+      { renderCapacityInput() }
       { renderFurnitureSelect() }
       { renderLayoutSelect() }
-      { renderCapacityInput() }
-      { renderBuildingSelect() }
       { renderAccessibilitySelect() }
       { renderAudioVideoSelect() }
       { renderOtherRoomFeaturesSelect() }
@@ -268,8 +268,8 @@ export default function Filters(props) {
       <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
       {/* { renderFurnitureSelect() } */}
       {/* { renderLayoutSelect() } */}
-      { renderCapacityInput() }
       { renderBuildingSelect() }
+      { renderCapacityInput() }
       {/* { renderAccessibilitySelect() } */}
       { renderISAmenitiesSelect() }
     </>
