@@ -249,7 +249,10 @@ class Airtable_Api {
 		$formula_parts[]            = '{Category} = "Other Room Features"';
 		$payload['filterByFormula'] = 'AND(' . implode( ', ', $formula_parts ) . ')';
 
-		return $this->airtable_get( 'Amenities', $payload, $params );
+		return $this->filter_empty_options(
+			$this->airtable_get( 'Amenities', $payload, $params ),
+			$params
+		);
 	}
 
 	public function get_shared_amenities( array $params ) {
@@ -272,7 +275,10 @@ class Airtable_Api {
 		$formula_parts[]            = '{Category} != "Other Room Features"';
 		$payload['filterByFormula'] = 'AND(' . implode( ', ', $formula_parts ) . ')';
 
-		return $this->airtable_get( 'Amenities', $payload, $params );
+		return $this->filter_empty_options(
+			$this->airtable_get( 'Amenities', $payload, $params ),
+			$params
+		);
 	}
 
 	public function get_buildings( array $params ) {
