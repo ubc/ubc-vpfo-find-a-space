@@ -184,8 +184,8 @@ export default function App() {
 	}
 
 	let classroomClass = pageState === 'classroom'? '' : 'd-none';
-	let buildingClass = pageState === 'building'? '' : 'd-none';
-	let tableClass = pageState === 'table' ? 'vpfo-lsb-container' : 'vpfo-lsb-container d-none';
+	let buildingClass  = pageState === 'building'? '' : 'd-none';
+	let tableClass     = pageState === 'table' ? 'vpfo-lsb-container' : 'vpfo-lsb-container d-none';
 
 	return (<>
 

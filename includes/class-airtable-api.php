@@ -455,7 +455,7 @@ class Airtable_Api {
 		$accessibility_filter       = $filters['accessibilityFilter'] ?? array();
 		$building_filter            = $filters['buildingFilter'] ?? array();
 		$furniture_filter           = $filters['furnitureFilter'] ?? array();
-		$informal_amenities_filter  = $filters['informalAmenitiesFilter'] ?? array();
+		$informal_amenities_filter  = $filters['ISAmenitiesFilter'] ?? array();
 		$layout_filter              = $filters['layoutFilter'] ?? array();
 		$other_room_features_filter = $filters['otherRoomFeaturesFilter'] ?? array();
 

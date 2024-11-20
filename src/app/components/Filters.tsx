@@ -247,7 +247,7 @@ export default function Filters(props) {
   const submitFilters = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // console.log("Filters:", { audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, capacityFilter });
-    props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, layoutFilter, capacityFilter, otherRoomFeaturesFilter });
+    props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, layoutFilter, capacityFilter, otherRoomFeaturesFilter, ISAmenitiesFilter });
   }
 
   const renderFormalFilters = () => {
