@@ -152,7 +152,7 @@ export default function Table(props) {
   const getCurrentFilters = () => {
     let filters = [];
 
-    ['accessibilityFilter', 'audioVisualFilter', 'otherRoomFeaturesFilter', 'buildingFilter', 'furnitureFilter', 'layoutFilter'].forEach(key => {
+    ['accessibilityFilter', 'audioVisualFilter', 'otherRoomFeaturesFilter', 'buildingFilter', 'furnitureFilter', 'layoutFilter', 'ISAmenitiesFilter'].forEach(key => {
       if ( ! _.isEmpty(props.filters[key] ) ) {
         props.filters[key].forEach(filter => {
           filters.push(filter.label);
