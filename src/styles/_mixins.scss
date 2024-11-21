@@ -7,7 +7,7 @@
 @mixin btn {
 	all: unset;
 	cursor: pointer;
-	display: inline-block;
+	display: block;
 	padding: 0.75rem 1rem;
 	border: 1px solid transparent;
 	font-weight: 500;
@@ -43,10 +43,11 @@
 	&.disabled, &[disabled] {
 		background: $utility-grey-inactive;
 		border-color: $ubc-grey-medium;
-		text-transform: none;
-		font-weight: 700;
+		text-transform: uppercase;
+		font-weight: 500;
 		cursor: not-allowed;
 		pointer-events: none;
+    display: block;
 	}
 }
 

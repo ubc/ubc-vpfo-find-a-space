@@ -233,14 +233,7 @@ export default function Filters(props) {
   useEffect(() => {
     if ( _.isEmpty(props.filters) ) {
       // Ensure our filter states are empty.
-      setAudioVisualFilter([]);
-      setOtherRoomFeaturesFilter([]);
-      setAccessibilityFilter([]);
-      setBuildingFilter([]);
-      setFurnitureFilter([]);
-      setLayoutFilter([]);
-      setCapacityFilter('');
-      setISAmenitiesFilter([]);
+      resetLocalFilters();
     }
   }, [props.filters])
 
@@ -460,8 +453,21 @@ export default function Filters(props) {
     filterToggleClass += ' vpfo-lsb-filters-mobile-toggle-closed'
   }
 
+  const resetLocalFilters = () => {
+    setAudioVisualFilter([]);
+    setOtherRoomFeaturesFilter([]);
+    setAccessibilityFilter([]);
+    setBuildingFilter([]);
+    setFurnitureFilter([]);
+    setLayoutFilter([]);
+    setCapacityFilter('');
+    setISAmenitiesFilter([]);
+  }
+
   const clearFilters = () => {
     props.clearFilters();
+
+    resetLocalFilters();
   }
 
   return (<>
