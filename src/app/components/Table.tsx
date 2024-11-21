@@ -152,7 +152,7 @@ export default function Table(props) {
   const getCurrentFilters = () => {
     let filters = [];
 
-    ['accessibilityFilter', 'audioVisualFilter', 'otherRoomFeaturesFilter'].forEach(key => {
+    ['accessibilityFilter', 'audioVisualFilter', 'otherRoomFeaturesFilter', 'buildingFilter', 'furnitureFilter', 'layoutFilter'].forEach(key => {
       if ( ! _.isEmpty(props.filters[key] ) ) {
         props.filters[key].forEach(filter => {
           filters.push(filter.label);
@@ -160,12 +160,12 @@ export default function Table(props) {
       }
     });
 
-    ['buildingFilter', 'furnitureFilter', 'layoutFilter'].forEach(key => {
-      if ( ! _.isEmpty(props.filters[key] ) ) {
-        // console.log(props.filters[key]);
-        filters.push(props.filters[key].label);
-      }
-    });
+    // [].forEach(key => {
+    //   if ( ! _.isEmpty(props.filters[key] ) ) {
+    //     // console.log(props.filters[key]);
+    //     filters.push(props.filters[key].label);
+    //   }
+    // });
 
     if ( props.filters['capacityFilter'] && props.filters['capacityFilter'] !== null ) {
       // console.log(props.filters['capacityFilter'])
@@ -241,12 +241,12 @@ export default function Table(props) {
 
         <div>
           {prevOffsets.length !== 0 && (
-            <button className="btn btn-secondary me-5 text-nowrap" onClick={prevPage} disabled={props.loading}>
+            <button className="btn btn-secondary me-5 text-nowrap vpfo-lsp-pagination-button" onClick={prevPage} disabled={props.loading}>
               Prev page
             </button>
           )}
           {nextPageOffset && (
-            <button className="btn btn-primary text-nowrap" onClick={nextPage} disabled={props.loading}>
+            <button className="btn btn-primary text-nowrap vpfo-lsp-pagination-button" onClick={nextPage} disabled={props.loading}>
               Next page
             </button>
           )}
