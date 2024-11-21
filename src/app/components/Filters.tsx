@@ -305,6 +305,7 @@ export default function Filters(props) {
           value={furnitureFilter}
           name="vpfo-lsb-furniture"
           isClearable
+          isMulti
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-furniture-input"
@@ -326,6 +327,7 @@ export default function Filters(props) {
           value={layoutFilter}
           name="vpfo-lsb-layout"
           isClearable
+          isMulti
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-layout-input"
@@ -368,6 +370,7 @@ export default function Filters(props) {
           value={buildingFilter}
           name="vpfo-lsb-building"
           isClearable
+          isMulti
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-building-input"

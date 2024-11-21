@@ -497,24 +497,42 @@ class Airtable_Api {
 		}
 
 		if ( ! empty( $building_filter ) ) {
-			$building_code = sanitize_text_field( $building_filter['value'][0] ?? '' );
-			if ( $building_code ) {
-				$formula_parts[] = "{Building Code} = '$building_code'";
+			$building_filter_parts = array();
+
+			foreach ( $building_filter as $filter ) {
+				$value = sanitize_text_field( $filter['value'][0] ?? '' );
+				if ( $value ) {
+					$building_filter_parts[] = "{Building Code} = '$value'";
+				}
 			}
+
+			$formula_parts[] = 'OR(' . implode( ', ', $building_filter_parts ) . ')';
 		}
 
 		if ( ! empty( $furniture_filter ) ) {
-			$value = sanitize_text_field( $furniture_filter['value'][0] ?? '' );
-			if ( $value ) {
-				$formula_parts[] = "FIND('$value', {Filter_Furniture})";
+			$furniture_filter_parts = array();
+
+			foreach ( $furniture_filter as $filter ) {
+				$value = sanitize_text_field( $filter['value'] ?? '' );
+				if ( $value ) {
+					$furniture_filter_parts[] = "FIND('$value', {Filter_Furniture})";
+				}
 			}
+
+			$formula_parts[] = 'OR(' . implode( ', ', $furniture_filter_parts ) . ')';
 		}
 
 		if ( ! empty( $layout_filter ) ) {
-			$value = sanitize_text_field( $layout_filter['value'][0] ?? '' );
-			if ( $value ) {
-				$formula_parts[] = "FIND('$value', {Filter_Room_Layout_Type})";
+			$layout_filter_parts = array();
+
+			foreach ( $layout_filter as $filter ) {
+				$value = sanitize_text_field( $filter['value'] ?? '' );
+				if ( $value ) {
+					$layout_filter_parts[] = "FIND('$value', {Filter_Room_Layout_Type})";
+				}
 			}
+
+			$formula_parts[] = 'OR(' . implode( ', ', $layout_filter_parts ) . ')';
 		}
 
 		if ( ! empty( $accessibility_filter ) ) {
