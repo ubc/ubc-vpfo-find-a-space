@@ -135,6 +135,7 @@ export default function App() {
 
 	const handleShowClassroom = (newClassroom) => {
     searchParams.set('classroom', encodeURIComponent(newClassroom));
+    searchParams.set('building', '');
 		setSearchParams(searchParams);
 	}
 
@@ -145,6 +146,7 @@ export default function App() {
 
 	const handleShowBuilding = (newBuilding) => {
     searchParams.set('building', encodeURIComponent(newBuilding));
+    searchParams.set('classroom', '');
 		setSearchParams(searchParams);
 	}
 	
