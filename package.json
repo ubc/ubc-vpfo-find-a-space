@@ -19,6 +19,7 @@
 		"typescript": "^5.6.2"
 	},
 	"dependencies": {
+		"@koga73/overlay": "^3.0.3",
 		"@tanstack/react-table": "^8.20.5",
 		"accordion-js": "^3.3.4",
 		"axios": "^1.7.7",

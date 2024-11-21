@@ -7,6 +7,7 @@ import Classroom from './components/Classroom'
 import Building from './components/Building'
 import { useSearchParams } from'react-router-dom';
 import _ from 'lodash';
+import '@koga73/overlay/js/overlay.js';
 
 export default function App() {
 	const [searchParams, setSearchParams] = useSearchParams();

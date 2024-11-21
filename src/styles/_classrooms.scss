@@ -8,6 +8,9 @@
 // Accordion css
 @import "~accordion-js/dist/accordion.css";
 
+// Image lightbox
+@import "~@koga73/overlay/css/overlay";
+
 .vpfo-spaces-page {
 	.classroom-title {
 		.building-title {
@@ -320,6 +323,47 @@
 	.classroom-footer {
 		p {
 			font-size: 1rem;
+		}
+	}
+}
+
+.overlay-container {
+	display: none;
+
+	@include media-breakpoint-up(lg) {
+		display: block;
+	}
+
+	.overlay-background {
+		background-image: unset;
+		background-color: rgba($ubc-blue, 0.9);
+	}
+
+	.overlay-frame {
+		border-radius: 0;
+		padding: 0;
+		background-color: unset;
+		max-width: 95vw;
+		max-height: 95vh;
+
+		.overlay-close {
+			transition: unset;
+			border: unset;
+			padding: unset;
+
+			&::after {
+				font-family: $font-fontawesome;
+				content: '\58';
+				font-weight: 700;
+				background-color: $ubc-brand-blue;
+			}
+		}
+	}
+
+	#classroom-layout-modal {
+		img {
+			width: 100%;
+			height: auto;
 		}
 	}
 }
