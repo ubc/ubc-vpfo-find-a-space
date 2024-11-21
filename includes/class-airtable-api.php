@@ -121,7 +121,6 @@ class Airtable_Api {
 
 		if ( $params['should_cache'] ?? false ) {
 			$cache_key = sprintf( '%s_%s_%s', $campus, $func, md5( wp_json_encode( $params ) ) );
-			delete_transient( $cache_key ); // Delete the cache if it exists.
 			$records   = get_transient( $cache_key );
 
 			if ( $records ) {
