@@ -197,32 +197,48 @@ export default function Table(props) {
     </div>;
   }
 
+  const renderResultCount = () => {
+    let count = rooms?.length?.toString() ?? '0';
+
+    if ( nextPageOffset ) {
+      count = '10+';
+    }
+
+    return <p className="vpfo-lsb-result-count">Showing { count } Results</p>
+  }
+
   return (
     <div ref={containerRef} className="vpfo-lsb-table-container">
       { props.loading &&
         <div className="vpfo-lsb-loading-scrim"><div className="vpfo-lsb-loading-indicator"></div></div>
       }
       <div className="vpfo-lsb-table-top-bar">
-        <div className="vpfo-lsb-current-filters">
-          { hasActiveFilter() && renderActiveFilters() }
-        </div>
-        <div className="vpfo-lsb-sort">
-          <div className="select-group">
-            <label id="vpfo-lsb-sort" htmlFor="vpfo-lsb-sort-input">
-              Sort Results
-            </label>
-            <div style={{width: 200}}>
-              <Select 
-                options={sortByOptions}
-                value={sortBy}
-                styles={selectStyles}
-                name="vpfo-lsb-sort"
-                components={animatedComponents}
-                inputId="vpfo-lsb-sort-input"
-                onChange={(selected) => setSortBy(selected)}
-              />
+        <div className="vpfo-lsb-table-top-bar-inner">
+          <div className="vpfo-lsb-current-filters">
+            { hasActiveFilter() && renderActiveFilters() }
+          </div>
+          <div className="vpfo-lsb-sort">
+            <div className="select-group">
+              <label id="vpfo-lsb-sort" htmlFor="vpfo-lsb-sort-input">
+                Sort Results
+              </label>
+              <div style={{width: 200}}>
+                <Select 
+                  options={sortByOptions}
+                  value={sortBy}
+                  styles={selectStyles}
+                  name="vpfo-lsb-sort"
+                  components={animatedComponents}
+                  inputId="vpfo-lsb-sort-input"
+                  onChange={(selected) => setSortBy(selected)}
+                />
+              </div>
             </div>
           </div>
+        </div>
+
+        <div className="vpfo-lsb-result-count-container">
+          { renderResultCount() }
         </div>
       </div>
       <div className="vpfo-lsb-table">

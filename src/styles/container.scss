@@ -35,7 +35,17 @@
     width: 100%;
   }
 
-  .vpfo-lsb-table-top-bar {
+  .vpfo-lsb-result-count {
+    font-family: $font-whitney;
+    font-weight: 700;
+    color: $ubc-blue;
+    font-size: 14px;
+    line-height: 30px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .vpfo-lsb-table-top-bar-inner {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
