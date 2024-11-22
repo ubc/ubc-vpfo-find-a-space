@@ -208,7 +208,7 @@ class Find_A_Space_Ajax_Handler {
 			return wp_send_json_error( 'Base URL not found' );
 		}
 
-		$url = sprintf( '%s/buildings/%s', $base_url, $slug );
+		$url = sprintf( '%s/buildings/%s?all_classroom=1', $base_url, $slug );
 
 		$res = wp_remote_get( $url, array( 'method' => 'GET' ) );
 
