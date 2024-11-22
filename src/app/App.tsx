@@ -114,27 +114,6 @@ export default function App() {
     searchParams.set('classroom', classroom);
     searchParams.set('building', building);
     searchParams.set('filters', encodeURIComponent(JSON.stringify(filters)));
-		// const queryFilters   = getFilterStateFromQuery();
-		// const queryClassroom = getClassroomStateFromQuery();
-		// const queryBuilding  = getBuildingStateFromQuery();
-
-    // // console.log('searchParams state updated');
-    // // console.log({ queryFilters, queryClassroom, queryBuilding });
-
-		// if ( false === _.isEqual(filters, queryFilters) ) {
-		// 	// console.log('setting filters', filters, queryFilters);
-		// 	setFilters(queryFilters);
-		// }
-
-		// if ( false === _.isEqual(classroom, queryClassroom) ) {
-		// 	// console.log('setting classroom', queryClassroom);
-		// 	setClassroom(queryClassroom);
-		// }
-
-		// if ( false === _.isEqual(building, queryBuilding) ) {
-		// 	// console.log('setting building', queryBuilding);
-		// 	setBuilding(queryBuilding);
-		// }
 	}, [filters, classroom, building]);
 
 	const handleShowClassroom = (newClassroom) => {
