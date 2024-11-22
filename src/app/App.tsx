@@ -10,7 +10,54 @@ import _ from 'lodash';
 import '@koga73/overlay/js/overlay.js';
 
 export default function App() {
+
+  const getFilterStateFromQuery = () => {
+		try {
+			const filterString = searchParams.get('filters') || '{}';
+			const filters      = JSON.parse(decodeURIComponent(filterString));
+
+			return filters;
+		} catch(e) {
+			console.error('Error parsing filters:', e);
+			return {};
+		}
+	}
+
+	const getClassroomStateFromQuery = () => {
+		try {
+			let classroomSlug = searchParams.get('classroom') || null;
+
+			if ( classroomSlug ) {
+				classroomSlug = decodeURIComponent(classroomSlug);
+			}
+
+			return classroomSlug ?? '';
+		} catch(e) {
+			console.error('Error parsing classroom slug:', e);
+			return '';
+		}
+	}
+
+	const getBuildingStateFromQuery = () => {
+		try {
+			let buildingSlug = searchParams.get('building') || null;
+
+			if ( buildingSlug ) {
+				buildingSlug = decodeURIComponent(buildingSlug);
+			} 
+
+			return buildingSlug ?? '';
+		} catch(e) {
+			console.error('Error parsing building slug:', e);
+			return '';
+		}
+	}
+
 	const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState(getFilterStateFromQuery);
+	const [classroom, setClassroom] = useState(getClassroomStateFromQuery);
+	const [building, setBuilding] = useState(getBuildingStateFromQuery);
+	const [loading, setLoading] = useState(false);
 
 	// Setup click listeners for classroom links to hijack navigation.
 	useEffect(() => {
@@ -61,113 +108,63 @@ export default function App() {
 	}, []);
 
 	/**
-	 * When the query state changes, also update the application state.
+	 * When state changes, updated query param state to reflect current state.
 	 */
 	useEffect(() => {
-		const queryFilters   = getFilterStateFromQuery();
-		const queryClassroom = getClassroomStateFromQuery();
-		const queryBuilding  = getBuildingStateFromQuery();
+    searchParams.set('classroom', classroom);
+    searchParams.set('building', building);
+    searchParams.set('filters', encodeURIComponent(JSON.stringify(filters)));
+		// const queryFilters   = getFilterStateFromQuery();
+		// const queryClassroom = getClassroomStateFromQuery();
+		// const queryBuilding  = getBuildingStateFromQuery();
 
-    // console.log('searchParams state updated');
-    // console.log({ queryFilters, queryClassroom, queryBuilding });
+    // // console.log('searchParams state updated');
+    // // console.log({ queryFilters, queryClassroom, queryBuilding });
 
-		if ( false === _.isEqual(filters, queryFilters) ) {
-			// console.log('setting filters', filters, queryFilters);
-			setFilters(queryFilters);
-		}
+		// if ( false === _.isEqual(filters, queryFilters) ) {
+		// 	// console.log('setting filters', filters, queryFilters);
+		// 	setFilters(queryFilters);
+		// }
 
-		if ( false === _.isEqual(classroom, queryClassroom) ) {
-			// console.log('setting classroom', queryClassroom);
-			setClassroom(queryClassroom);
-		}
+		// if ( false === _.isEqual(classroom, queryClassroom) ) {
+		// 	// console.log('setting classroom', queryClassroom);
+		// 	setClassroom(queryClassroom);
+		// }
 
-		if ( false === _.isEqual(building, queryBuilding) ) {
-			// console.log('setting building', queryBuilding);
-			setBuilding(queryBuilding);
-		}
-	}, [searchParams]);
-
-	const getFilterStateFromQuery = () => {
-		try {
-			const filterString = searchParams.get('filters') || '{}';
-			const filters      = JSON.parse(decodeURIComponent(filterString));
-
-			return filters;
-		} catch(e) {
-			console.error('Error parsing filters:', e);
-			return {};
-		}
-	}
-
-	const getClassroomStateFromQuery = () => {
-		try {
-			let classroomSlug = searchParams.get('classroom') || null;
-
-			if ( classroomSlug ) {
-				classroomSlug = decodeURIComponent(classroomSlug);
-			}
-
-			return classroomSlug ?? '';
-		} catch(e) {
-			console.error('Error parsing classroom slug:', e);
-			return '';
-		}
-	}
-
-	const getBuildingStateFromQuery = () => {
-		try {
-			let buildingSlug = searchParams.get('building') || null;
-
-			if ( buildingSlug ) {
-				buildingSlug = decodeURIComponent(buildingSlug);
-			} 
-
-			return buildingSlug ?? '';
-		} catch(e) {
-			console.error('Error parsing building slug:', e);
-			return '';
-		}
-	}
-
-	const [filters, setFilters] = useState(getFilterStateFromQuery);
-	const [classroom, setClassroom] = useState(getClassroomStateFromQuery);
-	const [building, setBuilding] = useState(getBuildingStateFromQuery);
-	const [loading, setLoading] = useState(false);
+		// if ( false === _.isEqual(building, queryBuilding) ) {
+		// 	// console.log('setting building', queryBuilding);
+		// 	setBuilding(queryBuilding);
+		// }
+	}, [filters, classroom, building]);
 
 	const handleShowClassroom = (newClassroom) => {
-    searchParams.set('classroom', encodeURIComponent(newClassroom));
-    searchParams.set('building', '');
-		setSearchParams(searchParams);
+    setClassroom(newClassroom);
+    setBuilding('');
 	}
 
   const handleClearClassroom = () => {
-		searchParams.set('classroom', '');
-		setSearchParams(searchParams);
+    setClassroom('');
 	}
 
 	const handleShowBuilding = (newBuilding) => {
-    searchParams.set('building', encodeURIComponent(newBuilding));
-    searchParams.set('classroom', '');
-		setSearchParams(searchParams);
+    setBuilding(newBuilding);
+    setClassroom('');
 	}
 	
 	const handleClearBuilding = () => {
-    searchParams.set('building', '');
-		setSearchParams(searchParams);
+    setBuilding('');
 	}
 
 	const setFilterQueryState = (newFilters) => {
-		const filterString = encodeURIComponent(JSON.stringify(newFilters));
-    searchParams.set('filters', filterString);
-		setSearchParams(searchParams);
+    setFilters(newFilters);
 	}
 
 	const handleSubmitFilters = (newFilters) => {
-		setFilterQueryState(newFilters);
+    setFilterQueryState(newFilters);
 	}
 
 	const handleClearFilters = () => {
-		setFilterQueryState({});
+    setFilterQueryState({});
 	}
 
 	// TODO - remove console logging when ready for production
