@@ -295,6 +295,10 @@
 	.classroom-book-space {
 		@include vpfo-box-shadow;
 
+		&.no-shadow {
+			box-shadow: unset;
+		}
+
 		&:after {
 			content: '';
 			display: block;
@@ -310,13 +314,17 @@
 		p {
 			font-size: 1rem;
 		}
+
+		.button-container {
+			gap: 1rem;
+		}
 	}
 
 	.classroom-map {
 		aspect-ratio: 3/2;
 
 		@include media-breakpoint-up(lg) {
-			aspect-ratio: 7/3;
+			aspect-ratio: 16/9;
 		}
 	}
 
