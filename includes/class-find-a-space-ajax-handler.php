@@ -283,7 +283,7 @@ class Find_A_Space_Ajax_Handler {
 			'offset'       => $offset,
 			'filters'      => $filters,
 			'search'       => $search,
-			'should_cache' => true,
+			'should_cache' => false, // We cannot cache due to LIST_RECORDS_ITERATOR_NOT_AVAILABLE errors from Airtable.
 			'sort_by'      => $sort_by,
 		);
 
