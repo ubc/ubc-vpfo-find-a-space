@@ -3,6 +3,7 @@ import { StateContext } from '../StateProvider';
 import { getBuildings, getMeta } from '../services/api';
 import Search from './Search';
 import Select, { MultiValue, Options } from 'react-select'
+import Slider from 'react-slider';
 import makeAnimated from 'react-select/animated';
 import _ from 'lodash';
 
@@ -82,7 +83,7 @@ export default function Filters(props) {
   const [buildingFilter, setBuildingFilter] = useState(getInitialFilterState('buildingFilter') ?? {});
   const [furnitureFilter, setFurnitureFilter] = useState<any[]>(getInitialFilterState('furnitureFilter') ?? []);
   const [layoutFilter, setLayoutFilter] = useState<any[]>(getInitialFilterState('layoutFilter') ?? []);
-  const [capacityFilter, setCapacityFilter] = useState<null|number>(getInitialFilterState('capacityFilter') ?? '');
+  const [capacityFilter, setCapacityFilter] = useState<number>(getInitialFilterState('capacityFilter') ?? 0);
   const [ISAmenitiesFilter, setISAmenitiesFilter] = useState<any[]>(getInitialFilterState('ISAmenitiesFilter') ?? []);
 
   const setupBuildingOptions = (records) => {
@@ -268,21 +269,25 @@ export default function Filters(props) {
     </>
   }
 
+  console.log(capacityFilter);
+
   const renderCapacityInput = () => {
     return (
       <div className="input-group">
         <label htmlFor="vpfo-lsb-capacity-input">
-          Capacity
+          Minimum Capacity
         </label>
-        <input 
-          type="number" 
-          id="vpfo-lsb-capacity-input" 
-          name="vpfo-lsb-capacity" 
-          min="0"
-          placeholder="Enter minimum"
-          value={capacityFilter}
-          onChange={(e) => setCapacityFilter(parseInt(e.target.value))}
-        />
+        <div className="slider-container">
+          <Slider
+            min={0}
+            max={500}
+            value={capacityFilter}
+            onChange={(value, idx) => setCapacityFilter(value)}
+            renderThumb={(props, state) =>
+              <div {...props}>{ state.valueNow }</div>
+            }
+          />
+        </div>
       </div>
     )
   }
@@ -464,7 +469,7 @@ export default function Filters(props) {
     setBuildingFilter([]);
     setFurnitureFilter([]);
     setLayoutFilter([]);
-    setCapacityFilter('');
+    setCapacityFilter(0);
     setISAmenitiesFilter([]);
   }
 

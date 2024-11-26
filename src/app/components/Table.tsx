@@ -169,7 +169,7 @@ export default function Table(props) {
 
     if ( props.filters['capacityFilter'] && props.filters['capacityFilter'] !== null ) {
       // console.log(props.filters['capacityFilter'])
-      filters.push('Capacity ' + props.filters['capacityFilter']);
+      filters.push('Capacity ' + props.filters['capacityFilter']?.toString());
     }
 
     return filters;

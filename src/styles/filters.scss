@@ -72,6 +72,51 @@
   input[type=number] {
     -moz-appearance: textfield;
   }
+
+  // Slider
+  .slider {
+    margin-top: 12px;
+    position: relative;
+    height: 8px; // Adjust height as needed
+    background-color: $ubc-grey-medium-light;
+    border-radius: 4px; // Makes the track rounded
+  
+    .track {
+      position: absolute;
+      height: 100%;
+      background-color: $ubc-blue;
+      border-radius: 4px;
+    }
+  
+    .thumb {
+      position: absolute;
+      top: -12px;
+      touch-action: none;
+      z-index: 1;
+      width: 32px; // Adjust size to fit the value text
+      height: 32px; // Circular shape
+      background-color: $ubc-blue;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white; // Text color for the value
+      font-size: 12px; // Adjust font size as needed
+      font-weight: bold;
+  
+      .thumb-value {
+        display: inline-block;
+      }
+  
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 4px $ubc-blue;
+      }
+    }
+  }
+
 }
 
 .vpfo-lsb-filters-mobile-toggle {
