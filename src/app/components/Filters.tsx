@@ -282,6 +282,7 @@ export default function Filters(props) {
             min={0}
             max={500}
             value={capacityFilter}
+            ariaLabelledby="vpfo-lsb-capacity-input"
             onChange={(value, idx) => setCapacityFilter(value)}
             renderThumb={(props, state) =>
               <div {...props}>{ state.valueNow }</div>
