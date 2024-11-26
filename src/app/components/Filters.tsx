@@ -293,16 +293,16 @@ export default function Filters(props) {
         <label id="vpfo-lsb-furniture" htmlFor="vpfo-lsb-furniture-input">
           Style
         </label>
-        <Select 
+        <Select
           options={furnitureOptions}
           value={furnitureFilter}
           name="vpfo-lsb-furniture"
           isClearable
           isMulti
+          closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-furniture-input"
-          blurInputOnSelect
           onChange={(selected) => setFurnitureFilter(selected)}
         />
       </div>
@@ -321,10 +321,10 @@ export default function Filters(props) {
           name="vpfo-lsb-layout"
           isClearable
           isMulti
+          closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-layout-input"
-          blurInputOnSelect
           onChange={(selected) => setLayoutFilter(selected)}
         />
       </div>
@@ -342,6 +342,7 @@ export default function Filters(props) {
           value={ISAmenitiesFilter}
           isMulti
           isClearable
+          closeMenuOnSelect={false}
           styles={selectStyles}
           name="vpfo-lsb-informal-amenities"
           components={animatedComponents}
@@ -364,10 +365,10 @@ export default function Filters(props) {
           name="vpfo-lsb-building"
           isClearable
           isMulti
+          closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-building-input"
-          blurInputOnSelect
           onChange={(selected) => setBuildingFilter(selected)}
         />
       </div>
@@ -385,6 +386,7 @@ export default function Filters(props) {
           value={accessibilityFilter}
           isMulti
           isClearable
+          closeMenuOnSelect={false}
           styles={selectStyles}
           name="vpfo-lsb-accessibility"
           components={animatedComponents}
@@ -406,6 +408,7 @@ export default function Filters(props) {
           value={audioVisualFilter}
           isMulti
           isClearable
+          closeMenuOnSelect={false}
           styles={selectStyles}
           name="vpfo-lsb-audio-visual"
           components={animatedComponents}
@@ -427,6 +430,7 @@ export default function Filters(props) {
           value={otherRoomFeaturesFilter}
           isMulti
           isClearable
+          closeMenuOnSelect={false}
           styles={selectStyles}
           name="vpfo-lsb-other-room-features"
           components={animatedComponents}
