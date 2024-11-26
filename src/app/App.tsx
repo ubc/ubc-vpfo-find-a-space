@@ -53,10 +53,10 @@ export default function App() {
 	}
 
 	const [searchParams, setSearchParams] = useSearchParams();
-  const [filters, setFilters] = useState(getFilterStateFromQuery);
-	const [classroom, setClassroom] = useState(getClassroomStateFromQuery);
-	const [building, setBuilding] = useState(getBuildingStateFromQuery);
-	const [loading, setLoading] = useState(false);
+	const [filters, setFilters]           = useState(getFilterStateFromQuery);
+	const [classroom, setClassroom]       = useState(getClassroomStateFromQuery);
+	const [building, setBuilding]         = useState(getBuildingStateFromQuery);
+	const [loading, setLoading]           = useState(false);
 
 	// Setup click listeners for classroom links to hijack navigation.
 	useEffect(() => {

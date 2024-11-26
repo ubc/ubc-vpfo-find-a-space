@@ -150,9 +150,13 @@ export default function Table(props) {
 
     ['accessibilityFilter', 'audioVisualFilter', 'otherRoomFeaturesFilter', 'buildingFilter', 'furnitureFilter', 'layoutFilter', 'ISAmenitiesFilter'].forEach(key => {
       if ( ! _.isEmpty(props.filters[key] ) ) {
-        props.filters[key].forEach(filter => {
-          filters.push(filter.label);
-        })
+        try {
+          props.filters[key].forEach(filter => {
+            filters.push(filter.label);
+          })
+        } catch(err) {
+          console.warning('Failed to parse filter:', err);
+        }
       }
     });
 
