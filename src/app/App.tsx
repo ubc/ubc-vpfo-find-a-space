@@ -110,9 +110,18 @@ export default function App() {
 	 * When state changes, updated query param state to reflect current state.
 	 */
 	useEffect(() => {
+    // console.log({
+    //   filters,
+    //   classroom,
+    //   building,
+    //   searchParams,
+    // });
+
     searchParams.set('classroom', classroom);
     searchParams.set('building', building);
     searchParams.set('filters', encodeURIComponent(JSON.stringify(filters)));
+
+    setSearchParams(searchParams);
 	}, [filters, classroom, building]);
 
 	const handleShowClassroom = (newClassroom) => {
@@ -133,16 +142,12 @@ export default function App() {
     setBuilding('');
 	}
 
-	const setFilterQueryState = (newFilters) => {
+	const handleSubmitFilters = (newFilters) => {
     setFilters(newFilters);
 	}
 
-	const handleSubmitFilters = (newFilters) => {
-    setFilterQueryState(newFilters);
-	}
-
 	const handleClearFilters = () => {
-    setFilterQueryState({});
+    setFilters({});
 	}
 
 	// TODO - remove console logging when ready for production
