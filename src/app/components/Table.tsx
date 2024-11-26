@@ -76,11 +76,7 @@ export default function Table(props) {
       setRooms([]);
     }
 
-    const newNextPageOffset = res?.data?.offset;
-
-    if ( newNextPageOffset ) {
-      setNextPageOffset(newNextPageOffset);
-    }
+    setNextPageOffset(res?.data?.offset);
 
     props.setLoading(false);
   }
