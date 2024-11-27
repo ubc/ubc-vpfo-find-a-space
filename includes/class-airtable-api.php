@@ -10,7 +10,7 @@ class Airtable_Api {
 	private $van_airtable;
 	private $okan_airtable;
 
-	const CACHE_TTL      = 3600;
+	const CACHE_TTL      = HOUR_IN_SECONDS * 12; // 12 hours
 	const ROOMS_PER_PAGE = 10;
 
 	private static $campus_mapping = array(
