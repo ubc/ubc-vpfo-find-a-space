@@ -73,6 +73,33 @@
     -moz-appearance: textfield;
   }
 
+  .slider-container {
+    display: flex;
+    align-items: baseline;
+    flex-direction: column;
+
+    .slider {
+      width: 100%;
+    }
+
+
+    .slider-endpoints {
+      display: flex;
+      justify-content: space-between;
+      flex-grow: 1;
+      width: 100%;
+      margin-top: 4px;
+
+      .slider-endpoint {
+        p {
+          margin-bottom: 0;
+          font-size: 14px;
+        }
+      }
+    }
+
+  }
+
   // Slider
   .slider {
     margin-top: 12px;

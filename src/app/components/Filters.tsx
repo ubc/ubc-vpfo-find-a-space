@@ -269,9 +269,10 @@ export default function Filters(props) {
     </>
   }
 
-  console.log(capacityFilter);
-
   const renderCapacityInput = () => {
+    const min = 0;
+    const max = 500;
+
     return (
       <div className="input-group">
         <label htmlFor="vpfo-lsb-capacity-input">
@@ -279,8 +280,8 @@ export default function Filters(props) {
         </label>
         <div className="slider-container">
           <Slider
-            min={0}
-            max={500}
+            min={min}
+            max={max}
             value={capacityFilter}
             ariaLabelledby="vpfo-lsb-capacity-input"
             onChange={(value, idx) => setCapacityFilter(value)}
@@ -288,6 +289,10 @@ export default function Filters(props) {
               <div {...props}>{ state.valueNow }</div>
             }
           />
+          <div className="slider-endpoints">
+            <div className="slider-endpoint"><p>{ min }</p></div>
+            <div className="slider-endpoint"><p>{ max }</p></div>
+          </div>
         </div>
       </div>
     )
