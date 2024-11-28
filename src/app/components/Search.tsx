@@ -16,7 +16,13 @@ const selectStyles = {
       borderColor: '#5E869F',
     }
   }),
+  menuPortal: (baseStyles, state) => ({
+    ...baseStyles,
+    zIndex: 100,
+ }),
 }
+
+const filterContainer = document.querySelector('.vpfo-lsb-filters-container');
 
 export default function Search(props) {
   const context = React.useContext(StateContext);
@@ -68,6 +74,8 @@ export default function Search(props) {
           placeholder="Search"
           loadingMessage={() => 'Loading...'}
           blurInputOnSelect
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
           components={{ ...animatedComponents, DropdownIndicator:() => null, IndicatorSeparator:() => null }}
           onChange={(selected) => {
             const url = selected.value;

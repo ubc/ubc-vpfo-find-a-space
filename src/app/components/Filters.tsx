@@ -17,7 +17,13 @@ const selectStyles = {
       borderColor: '#5E869F',
     }
   }),
+  menuPortal: (baseStyles, state) => ({
+     ...baseStyles,
+     zIndex: 100,
+  }),
 }
+
+const filterContainer = document.querySelector('.vpfo-lsb-filters-container');
 
 const groupRecordsByCategory = (data) => {
   return data.reduce((acc, current) => {
@@ -29,6 +35,9 @@ const groupRecordsByCategory = (data) => {
     return acc;
   }, {});
 };
+
+const min = 0;
+const max = 500;
 
 export default function Filters(props) {
   const context = React.useContext(StateContext);
@@ -83,7 +92,7 @@ export default function Filters(props) {
   const [buildingFilter, setBuildingFilter] = useState(getInitialFilterState('buildingFilter') ?? {});
   const [furnitureFilter, setFurnitureFilter] = useState<any[]>(getInitialFilterState('furnitureFilter') ?? []);
   const [layoutFilter, setLayoutFilter] = useState<any[]>(getInitialFilterState('layoutFilter') ?? []);
-  const [capacityFilter, setCapacityFilter] = useState<number>(getInitialFilterState('capacityFilter') ?? 0);
+  const [capacityFilter, setCapacityFilter] = useState<number[]>(getInitialFilterState('capacityFilter') ?? [min, max]);
   const [ISAmenitiesFilter, setISAmenitiesFilter] = useState<any[]>(getInitialFilterState('ISAmenitiesFilter') ?? []);
 
   const setupBuildingOptions = (records) => {
@@ -240,8 +249,14 @@ export default function Filters(props) {
 
   const submitFilters = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    let capacityFilterSend = null;
+    if ( capacityFilter.length === 2 && (capacityFilter[0] !== min || capacityFilter[1] !== max) ) {
+      capacityFilterSend = capacityFilter;
+    }
+
     // console.log("Filters:", { audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, capacityFilter });
-    props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, layoutFilter, capacityFilter, otherRoomFeaturesFilter, ISAmenitiesFilter });
+    props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, layoutFilter, capacityFilter: capacityFilterSend, otherRoomFeaturesFilter, ISAmenitiesFilter });
   }
 
   const renderFormalFilters = () => {
@@ -270,13 +285,10 @@ export default function Filters(props) {
   }
 
   const renderCapacityInput = () => {
-    const min = 0;
-    const max = 500;
-
     return (
       <div className="input-group">
         <label htmlFor="vpfo-lsb-capacity-input">
-          Minimum Capacity
+          Capacity
         </label>
         <div className="slider-container">
           <Slider
@@ -285,14 +297,10 @@ export default function Filters(props) {
             value={capacityFilter}
             ariaLabelledby="vpfo-lsb-capacity-input"
             onChange={(value, idx) => setCapacityFilter(value)}
-            renderThumb={(props, state) =>
-              <div {...props}>{ state.valueNow }</div>
-            }
+            pearling
+            minDistance={25}
+            renderThumb={(props, state) => <div {...props}>{ state.valueNow }</div>}
           />
-          <div className="slider-endpoints">
-            <div className="slider-endpoint"><p>{ min }</p></div>
-            <div className="slider-endpoint"><p>{ max }</p></div>
-          </div>
         </div>
       </div>
     )
@@ -310,6 +318,8 @@ export default function Filters(props) {
           name="vpfo-lsb-furniture"
           isClearable
           isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
           closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
@@ -332,6 +342,9 @@ export default function Filters(props) {
           name="vpfo-lsb-layout"
           isClearable
           isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
+          menuPortalTarget={document.querySelector('body')}
           closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
@@ -352,6 +365,8 @@ export default function Filters(props) {
           options={ISAmenitiesOptions}
           value={ISAmenitiesFilter}
           isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
           isClearable
           closeMenuOnSelect={false}
           styles={selectStyles}
@@ -376,6 +391,8 @@ export default function Filters(props) {
           name="vpfo-lsb-building"
           isClearable
           isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
           closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
@@ -396,6 +413,8 @@ export default function Filters(props) {
           options={accessibilityOptions}
           value={accessibilityFilter}
           isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
           isClearable
           closeMenuOnSelect={false}
           styles={selectStyles}
@@ -418,6 +437,8 @@ export default function Filters(props) {
           options={audioVisualOptions}
           value={audioVisualFilter}
           isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
           isClearable
           closeMenuOnSelect={false}
           styles={selectStyles}
@@ -440,6 +461,8 @@ export default function Filters(props) {
           options={otherRoomFeatureOptions}
           value={otherRoomFeaturesFilter}
           isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
           isClearable
           closeMenuOnSelect={false}
           styles={selectStyles}
@@ -475,7 +498,7 @@ export default function Filters(props) {
     setBuildingFilter([]);
     setFurnitureFilter([]);
     setLayoutFilter([]);
-    setCapacityFilter(0);
+    setCapacityFilter([min, max]);
     setISAmenitiesFilter([]);
   }
 

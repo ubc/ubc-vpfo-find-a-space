@@ -455,7 +455,7 @@ class Airtable_Api {
 			return 'AND(' . implode( ', ', $formula_parts ) . ')';
 		}
 
-		$capacity_filter            = isset( $filters['capacityFilter'] ) ? (int) $filters['capacityFilter'] : null;
+		$capacity_filter            = isset( $filters['capacityFilter'] ) ? $filters['capacityFilter'] : null;
 		$audiovideo_filter          = $filters['audioVisualFilter'] ?? array();
 		$accessibility_filter       = $filters['accessibilityFilter'] ?? array();
 		$building_filter            = $filters['buildingFilter'] ?? array();
@@ -464,9 +464,22 @@ class Airtable_Api {
 		$layout_filter              = $filters['layoutFilter'] ?? array();
 		$other_room_features_filter = $filters['otherRoomFeaturesFilter'] ?? array();
 
-		if ( $capacity_filter ) {
-			$formula_parts[] = "{Capacity} >= $capacity_filter";
+		// Set a default capacity min/max
+		$capacity_min_max = array( 0, 500 );
+
+		// Sanitize capacity filter.
+		if ( $capacity_filter && count( $capacity_filter ) === 2 ) {
+			$capacity_min_max[0] = absint( $capacity_filter[0] );
+			$capacity_min_max[1] = absint( $capacity_filter[1] );
 		}
+
+		// Apply the filter for capacity only if it is not default.
+		if ( 0 !== $capacity_min_max[0] || 500 !== $capacity_min_max[1] ) {
+			$formula_parts[] = "{Capacity} >= $capacity_min_max[0]";
+			$formula_parts[] = "{Capacity} <= $capacity_min_max[1]";
+		}
+
+		// dd($formula_parts, $capacity_min_max);
 
 		if ( ! empty( $informal_amenities_filter ) ) {
 			foreach ( $informal_amenities_filter as $filter ) {
