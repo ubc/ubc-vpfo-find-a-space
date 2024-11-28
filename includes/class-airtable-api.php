@@ -479,8 +479,6 @@ class Airtable_Api {
 			$formula_parts[] = "{Capacity} <= $capacity_min_max[1]";
 		}
 
-		// dd($formula_parts, $capacity_min_max);
-
 		if ( ! empty( $informal_amenities_filter ) ) {
 			foreach ( $informal_amenities_filter as $filter ) {
 				$value = sanitize_text_field( $filter['value'] ?? '' );
