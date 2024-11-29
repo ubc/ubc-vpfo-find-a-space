@@ -33,22 +33,33 @@
 				}
 			}
 
-			.building-resources {
-				font-weight: 500;
-
-				a {
-					text-decoration: none;
-					color: $ubc-brand-blue;
-
-					&:hover, &:focus, &:active {
-						p {
-							text-decoration: underline;
-						}
-					}
+			.building-resources-links {
+				gap: 1.25rem;
+	
+				@include media-breakpoint-up(sm) {
+					gap: 1rem;
 				}
 
-				.building-amenities {
-					margin-top: 1rem;
+				@include media-breakpoint-up(lg) {
+					gap: 1.25rem;
+				}
+
+				@include media-breakpoint-up(xl) {
+					gap: 1rem;
+				}
+	
+				.btn-wrapper {
+					@include media-breakpoint-up(sm) {
+						width: calc(50% - 0.5rem);
+					}
+
+					@include media-breakpoint-up(lg) {
+						width: auto;
+					}
+
+					@include media-breakpoint-up(xl) {
+						width: calc(50% - 0.5rem);
+					}
 				}
 			}
 		}
