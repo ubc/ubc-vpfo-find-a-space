@@ -52,7 +52,7 @@ export default function Classroom(props) {
     }
     {
       classroomHtml &&
-      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(classroomHtml, { ADD_TAGS: ["iframe"], ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'] }) }} />
+      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(classroomHtml, { ADD_TAGS: ["iframe"], ADD_ATTR: ['target', 'allow', 'allowfullscreen', 'frameborder', 'scrolling'] }) }} />
     }
   </div>);
 }
