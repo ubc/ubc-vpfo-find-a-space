@@ -465,7 +465,7 @@ class Airtable_Api {
 		$other_room_features_filter = $filters['otherRoomFeaturesFilter'] ?? array();
 
 		// Set a default capacity min/max
-		$capacity_min_max = array( 0, 500 );
+		$capacity_min_max = array( 0, 503 );
 
 		// Sanitize capacity filter.
 		if ( $capacity_filter && count( $capacity_filter ) === 2 ) {
@@ -474,7 +474,7 @@ class Airtable_Api {
 		}
 
 		// Apply the filter for capacity only if it is not default.
-		if ( 0 !== $capacity_min_max[0] || 500 !== $capacity_min_max[1] ) {
+		if ( 0 !== $capacity_min_max[0] || 503 !== $capacity_min_max[1] ) {
 			$formula_parts[] = "{Capacity} >= $capacity_min_max[0]";
 			$formula_parts[] = "{Capacity} <= $capacity_min_max[1]";
 		}
