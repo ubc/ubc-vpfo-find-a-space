@@ -311,7 +311,7 @@ export default function Filters(props) {
     return (
       <div className="select-group">
         <label id="vpfo-lsb-furniture" htmlFor="vpfo-lsb-furniture-input">
-          Style
+          Furniture
         </label>
         <Select
           options={furnitureOptions}
