@@ -101,7 +101,7 @@ export default function Filters(props) {
 
     options = records.map(building => {
       return {
-        label: building.fields['Building Name'],
+        label: building.fields['Building Code'] + ' - ' + building.fields['Building Name'],
         value: building.fields['Building Code'],
       }
     })
