@@ -168,8 +168,8 @@ export default function Table(props) {
     // });
 
     if ( props.filters['capacityFilter'] && props.filters['capacityFilter'] !== null ) {
-      // console.log(props.filters['capacityFilter'])
-      filters.push('Capacity ' + props.filters['capacityFilter']?.toString());
+      const [ min, max ] = props.filters['capacityFilter'];
+      filters.push('Capacity ' + min.toString() + ' to ' + max.toString());
     }
 
     return filters;
