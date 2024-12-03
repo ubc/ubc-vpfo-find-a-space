@@ -96,7 +96,7 @@ export default function ClassroomCard(props) {
 				}
 				{ renderLayout !== null && 
 					<dl className="ms-9">
-						<dt>Style &amp; Layout</dt>
+						<dt>Style - Furniture &amp; Layout</dt>
 						<dd>{ renderLayout }</dd>
 					</dl>
 				}
