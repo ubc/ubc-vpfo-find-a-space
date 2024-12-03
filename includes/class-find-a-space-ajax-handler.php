@@ -133,7 +133,7 @@ class Find_A_Space_Ajax_Handler {
 		$params = array(
 			'campus'       => $campus,
 			'formal'       => $formal,
-			'should_cache' => true,
+			'should_cache' => false,
 		);
 
 		$data = $this->airtable_api->get( 'get_buildings', $params );
