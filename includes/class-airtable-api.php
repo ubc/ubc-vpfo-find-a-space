@@ -124,7 +124,7 @@ class Airtable_Api {
 			$records   = get_transient( $cache_key );
 
 			if ( $records ) {
-				return $records;
+				return $this->filter_empty_options( $records, $params );
 			}
 		}
 
@@ -132,7 +132,7 @@ class Airtable_Api {
 
 		if ( null !== $cache_key ) {
 			$records = $this->sanitize_for_transient( $records );
-			set_transient( $cache_key, $records, self::CACHE_TTL ); // Cache for 1 hour
+			set_transient( $cache_key, $records, self::CACHE_TTL );
 		}
 
 		return $records;
@@ -261,6 +261,8 @@ class Airtable_Api {
 			'Name',
 			'Category',
 			'Description',
+			'Formal Count',
+			'Informal Count',
 		);
 
 		$payload['sort'] = array(
