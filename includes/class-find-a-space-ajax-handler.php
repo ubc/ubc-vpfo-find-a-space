@@ -270,6 +270,8 @@ class Find_A_Space_Ajax_Handler {
 			'alpha_asc',
 			'alpha_desc',
 			'capacity_desc',
+			'capacity_asc',
+			'code_desc',
 			'code_asc',
 		);
 

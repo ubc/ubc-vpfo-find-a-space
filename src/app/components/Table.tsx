@@ -19,10 +19,12 @@ const selectStyles = {
 }
 
 const sortByOptions = [
-  { label: '(A-Z) Alphabetically', value: 'alpha_asc' },
-  { label: '(Z-A) Alphabetically', value: 'alpha_desc' },
-  { label: 'Capacity', value: 'capacity_desc' },
-  { label: 'Building Code', value: 'code_asc' },
+  { label: 'Building Name (A-Z)', value: 'alpha_asc' },
+  { label: 'Building Name (Z-A)', value: 'alpha_desc' },
+  { label: 'Building Code (A-Z', value: 'code_asc' },
+  { label: 'Building Code (Z-A)', value: 'code_desc' },
+  { label: 'Capacity (Ascending)', value: 'capacity_asc' },
+  { label: 'Capacity (Descending)', value: 'capacity_desc' },
 ]
 
 export default function Table(props) {

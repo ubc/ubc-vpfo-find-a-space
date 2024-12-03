@@ -360,14 +360,21 @@ class Airtable_Api {
 			case 'alpha_desc':
 				$sort_direction = 'desc';
 				break;
+			case 'capacity_asc':
+				$sort_field     = 'Capacity';
+				$sort_direction = 'asc';
+				break;
 			case 'capacity_desc':
 				$sort_field     = 'Capacity';
 				$sort_direction = 'desc';
-				// No change
 				break;
 			case 'code_asc':
-				$sort_field = 'Name';
-				// No change
+				$sort_field     = 'Name';
+				$sort_direction = 'asc';
+				break;
+			case 'code_desc':
+				$sort_field     = 'Name';
+				$sort_direction = 'desc';
 				break;
 		}
 
