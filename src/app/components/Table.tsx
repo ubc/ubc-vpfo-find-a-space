@@ -21,8 +21,6 @@ const selectStyles = {
 const sortByOptions = [
   { label: 'Building Name (A-Z)', value: 'alpha_asc' },
   { label: 'Building Name (Z-A)', value: 'alpha_desc' },
-  { label: 'Building Code (A-Z', value: 'code_asc' },
-  { label: 'Building Code (Z-A)', value: 'code_desc' },
   { label: 'Capacity (Ascending)', value: 'capacity_asc' },
   { label: 'Capacity (Descending)', value: 'capacity_desc' },
 ]

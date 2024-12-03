@@ -350,7 +350,7 @@ class Airtable_Api {
 
 		// Defaults for sorting on Airtable Classrooms
 		$sort_direction = 'asc';
-		$sort_field     = 'Title';
+		$sort_field     = 'Name';
 
 		// Modify sorting based on the provided sort parameter
 		switch ( $params['sort_by'] ) {
@@ -366,14 +366,6 @@ class Airtable_Api {
 				break;
 			case 'capacity_desc':
 				$sort_field     = 'Capacity';
-				$sort_direction = 'desc';
-				break;
-			case 'code_asc':
-				$sort_field     = 'Name';
-				$sort_direction = 'asc';
-				break;
-			case 'code_desc':
-				$sort_field     = 'Name';
 				$sort_direction = 'desc';
 				break;
 		}
