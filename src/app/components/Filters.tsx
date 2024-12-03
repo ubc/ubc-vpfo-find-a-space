@@ -36,12 +36,13 @@ const groupRecordsByCategory = (data) => {
   }, {});
 };
 
-const min = 0;
-const max = 503;
-
 export default function Filters(props) {
-  const context = React.useContext(StateContext);
+  const context  = React.useContext(StateContext);
+  const campus   = context.config.campus;
   const isFormal = context.config.formal;
+
+  let min = campus === 'vancouver' ? 8 : 18;
+  let max = campus === 'vancouver'? 503 : 400;
 
   const [filtersOpen, setFiltersOpen] = useState(true);
 
