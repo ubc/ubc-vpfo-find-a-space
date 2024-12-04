@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StateContext } from '../StateProvider';
 import { getRooms } from '../services/api';
 import ClassroomCard from './ClassroomCard';
+import Announcer from './Announcer';
 import _ from 'lodash';
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
@@ -19,8 +20,8 @@ const selectStyles = {
 }
 
 const sortByOptions = [
-  { label: 'Building Name (A-Z)', value: 'alpha_asc' },
-  { label: 'Building Name (Z-A)', value: 'alpha_desc' },
+  { label: 'Building Name (A to Z)', value: 'alpha_asc' },
+  { label: 'Building Name (Z to A)', value: 'alpha_desc' },
   { label: 'Capacity (Ascending)', value: 'capacity_asc' },
   { label: 'Capacity (Descending)', value: 'capacity_desc' },
 ]
@@ -32,6 +33,7 @@ export default function Table(props) {
   const [prevPageOffset, setPrevPageOffset] = useState(null);
   const [prevOffsets, setPrevOffsets]       = useState([]);
   const [sortBy, setSortBy]                 = useState(sortByOptions[0]);
+  const [announcement, setAnnouncement]     = useState('');
 
   const containerRef = React.useRef(null);
 
@@ -77,6 +79,8 @@ export default function Table(props) {
     }
 
     setNextPageOffset(res?.data?.offset);
+
+    // setAnnouncement('New page loaded');
 
     props.setLoading(false);
   }
@@ -209,6 +213,12 @@ export default function Table(props) {
 
   return (
     <div ref={containerRef} className="vpfo-lsb-table-container">
+      {/* { announcement !== '' &&
+        <Announcer
+          message={announcement}
+          ariaLive="polite"
+        />
+      } */}
       { props.loading &&
         <div className="vpfo-lsb-loading-scrim"><div className="vpfo-lsb-loading-indicator"></div></div>
       }

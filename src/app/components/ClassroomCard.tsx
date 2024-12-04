@@ -50,11 +50,12 @@ export default function ClassroomCard(props) {
 		return (
 			<div className="d-flex align-items-start justify-content-between mb-5">
 				<div>
-					<h2 className="mb-0 fw-bold text-uppercase">{ room['Name'] }</h2>
+					<h2 className="mb-0 fw-bold text-uppercase" aria-label={"Classroom: " + room['Name']}>{ room['Name'] }</h2>
           <a
             href={ room['Building Link'] }
             target="_blank"
-            className="classroom-building-name fw-bold text-uppercase mt-2 vpfo-building-link">
+            className="classroom-building-name fw-bold text-uppercase mt-2 vpfo-building-link"
+            aria-label={"Building: " + roomBuildingName}>
               { roomBuildingName }
           </a>
 				</div>
