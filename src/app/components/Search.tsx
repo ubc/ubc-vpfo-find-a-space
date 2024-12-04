@@ -19,7 +19,19 @@ const selectStyles = {
   menuPortal: (baseStyles, state) => ({
     ...baseStyles,
     zIndex: 100,
- }),
+  }),
+  placeholder: (baseStyles, state) => ({
+      ...baseStyles,
+      color: '#002145',
+  }),
+  loadingIndicator: (baseStyles, state) => ({
+   ...baseStyles,
+    color: '#002145',
+  }),
+  noOptionsMessage: (baseStyles, state) => ({
+    ...baseStyles,
+     color: '#002145',
+   }),
 }
 
 const filterContainer = document.querySelector('.vpfo-lsb-filters-container');

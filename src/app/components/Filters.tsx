@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { StateContext } from '../StateProvider';
 import { getBuildings, getMeta } from '../services/api';
 import Search from './Search';
@@ -18,9 +18,21 @@ const selectStyles = {
     }
   }),
   menuPortal: (baseStyles, state) => ({
-     ...baseStyles,
-     zIndex: 100,
+    ...baseStyles,
+    zIndex: 100,
   }),
+  placeholder: (baseStyles, state) => ({
+      ...baseStyles,
+      color: '#002145',
+  }),
+  loadingIndicator: (baseStyles, state) => ({
+   ...baseStyles,
+    color: '#002145',
+  }),
+  noOptionsMessage: (baseStyles, state) => ({
+    ...baseStyles,
+     color: '#002145',
+   }),
 }
 
 const filterContainer = document.querySelector('.vpfo-lsb-filters-container');
@@ -342,7 +354,6 @@ export default function Filters(props) {
           isMulti
           menuPortalTarget={filterContainer}
           menuPosition={'fixed'} 
-          menuPortalTarget={document.querySelector('body')}
           closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
@@ -362,13 +373,13 @@ export default function Filters(props) {
         <Select 
           options={ISAmenitiesOptions}
           value={ISAmenitiesFilter}
+          name="vpfo-lsb-informal-amenities"
+          isClearable
           isMulti
           menuPortalTarget={filterContainer}
           menuPosition={'fixed'} 
-          isClearable
           closeMenuOnSelect={false}
           styles={selectStyles}
-          name="vpfo-lsb-informal-amenities"
           components={animatedComponents}
           inputId="vpfo-lsb-informal-amenities-input"
           onChange={(selected) => setISAmenitiesFilter(selected)}
@@ -535,7 +546,7 @@ export default function Filters(props) {
           }
         </div>
 
-        <form onSubmit={submitFilters} className="vpfo-lsb-filters-container">
+        <form onSubmit={submitFilters} className="vpfo-lsb-filters-container" aria-live="polite">
 
           <Search setLoading={props.setLoading} showClassroom={props.showClassroom} />
 
