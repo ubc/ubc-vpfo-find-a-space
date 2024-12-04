@@ -40,7 +40,7 @@ export default function Building(props) {
     }
     {
       buildingHtml &&
-      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(buildingHtml) }} />
+      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(buildingHtml, { ADD_TAGS: ["iframe"], ADD_ATTR: ['target', 'allow', 'allowfullscreen', 'frameborder', 'scrolling'] }) }} />
     }
   </div>);
 }

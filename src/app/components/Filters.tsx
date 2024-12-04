@@ -3,6 +3,7 @@ import { StateContext } from '../StateProvider';
 import { getBuildings, getMeta } from '../services/api';
 import Search from './Search';
 import Select, { MultiValue, Options } from 'react-select'
+import Slider from 'react-slider';
 import makeAnimated from 'react-select/animated';
 import _ from 'lodash';
 
@@ -16,7 +17,13 @@ const selectStyles = {
       borderColor: '#5E869F',
     }
   }),
+  menuPortal: (baseStyles, state) => ({
+     ...baseStyles,
+     zIndex: 100,
+  }),
 }
+
+const filterContainer = document.querySelector('.vpfo-lsb-filters-container');
 
 const groupRecordsByCategory = (data) => {
   return data.reduce((acc, current) => {
@@ -29,11 +36,14 @@ const groupRecordsByCategory = (data) => {
   }, {});
 };
 
+const min = 0;
+const max = 503;
+
 export default function Filters(props) {
   const context = React.useContext(StateContext);
   const isFormal = context.config.formal;
 
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(true);
 
   // Meta, which contains Amenities, Resources, and Informal Amenities data.
   const [meta, setMeta] = useState(null);
@@ -41,11 +51,11 @@ export default function Filters(props) {
   // A/V select options, which are grouped by Category.
   const [audioVisualOptions, setAudioVisualOptions] = useState<any[]>([]);
 
+  // Other Room Feature options
+  const [otherRoomFeatureOptions, setOtherRoomFeatureOptions] = useState<any[]>([]);
+
   // Accessibility select options.
   const [accessibilityOptions, setAccessibilityOptions] = useState<any[]>([]);
-
-  // Buildings
-  const [buildings, setBuildings] = useState<any[]>([]);
 
   // Buildings Options
   const [buildingOptions, setBuildingOptions] = useState<any[]>([]);
@@ -77,11 +87,12 @@ export default function Filters(props) {
    * Form States
   */
   const [audioVisualFilter, setAudioVisualFilter] = useState<any[]>(getInitialFilterState('audioVisualFilter') ?? []);
+  const [otherRoomFeaturesFilter, setOtherRoomFeaturesFilter] = useState<any[]>(getInitialFilterState('otherRoomFeaturesFilter') ?? []);
   const [accessibilityFilter, setAccessibilityFilter] = useState<any[]>(getInitialFilterState('accessibilityFilter') ?? []);
   const [buildingFilter, setBuildingFilter] = useState(getInitialFilterState('buildingFilter') ?? {});
   const [furnitureFilter, setFurnitureFilter] = useState<any[]>(getInitialFilterState('furnitureFilter') ?? []);
   const [layoutFilter, setLayoutFilter] = useState<any[]>(getInitialFilterState('layoutFilter') ?? []);
-  const [capacityFilter, setCapacityFilter] = useState<null|number>(getInitialFilterState('capacityFilter') ?? '');
+  const [capacityFilter, setCapacityFilter] = useState<number[]>(getInitialFilterState('capacityFilter') ?? [min, max]);
   const [ISAmenitiesFilter, setISAmenitiesFilter] = useState<any[]>(getInitialFilterState('ISAmenitiesFilter') ?? []);
 
   const setupBuildingOptions = (records) => {
@@ -101,12 +112,11 @@ export default function Filters(props) {
     let payload = {
       ...context.config,
     }
+
     const buildings = await getBuildings(payload);
     // console.log(buildings);
 
     const data = buildings?.data?.data?.records || {};
-    
-    setBuildings(data);
 
     // Buildings filter.
     setupBuildingOptions(data);
@@ -129,6 +139,19 @@ export default function Filters(props) {
     }
 
     setAudioVisualOptions(options);
+  }
+
+  const setupOtherRoomFeaturesOptions = (meta) => {
+    let options: any[] = [];
+
+    options = meta.other_room_features.records.map(record => {
+      return {
+        label: record.fields.Name,
+        value: record.fields.Name,
+      }
+    })
+
+    setOtherRoomFeatureOptions(options);
   }
 
   const setupAccessibilityOptions = (meta) => {
@@ -207,6 +230,9 @@ export default function Filters(props) {
 
     // Informal Spaces Amenities filter.
     setupISAmenitiesOptions(data);
+
+    // Other room features filter.
+    setupOtherRoomFeaturesOptions(data);
   }
 
   useEffect(() => {
@@ -217,42 +243,43 @@ export default function Filters(props) {
   useEffect(() => {
     if ( _.isEmpty(props.filters) ) {
       // Ensure our filter states are empty.
-      setAudioVisualFilter([]);
-      setAccessibilityFilter([]);
-      setBuildingFilter([]);
-      setFurnitureFilter([]);
-      setLayoutFilter([]);
-      setCapacityFilter('');
-      setISAmenitiesFilter([]);
+      resetLocalFilters();
     }
   }, [props.filters])
 
   const submitFilters = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    let capacityFilterSend = null;
+    if ( capacityFilter.length === 2 && (capacityFilter[0] !== min || capacityFilter[1] !== max) ) {
+      capacityFilterSend = capacityFilter;
+    }
+
     // console.log("Filters:", { audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, capacityFilter });
-    props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, layoutFilter, capacityFilter });
+    props.onSubmitFilters({ audioVisualFilter, accessibilityFilter, buildingFilter, furnitureFilter, layoutFilter, capacityFilter: capacityFilterSend, otherRoomFeaturesFilter, ISAmenitiesFilter });
   }
 
   const renderFormalFilters = () => {
     return <>
       <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
+      { renderBuildingSelect() }
+      { renderCapacityInput() }
       { renderFurnitureSelect() }
       { renderLayoutSelect() }
-      { renderCapacityInput() }
-      { renderBuildingSelect() }
       { renderAccessibilitySelect() }
       { renderAudioVideoSelect() }
+      { renderOtherRoomFeaturesSelect() }
     </>
   }
 
   const renderInformalFilters = () => {
     return <>
       <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
-      { renderFurnitureSelect() }
-      { renderLayoutSelect() }
-      { renderCapacityInput() }
+      {/* { renderFurnitureSelect() } */}
+      {/* { renderLayoutSelect() } */}
       { renderBuildingSelect() }
-      { renderAccessibilitySelect() }
+      { renderCapacityInput() }
+      {/* { renderAccessibilitySelect() } */}
       { renderISAmenitiesSelect() }
     </>
   }
@@ -263,15 +290,18 @@ export default function Filters(props) {
         <label htmlFor="vpfo-lsb-capacity-input">
           Capacity
         </label>
-        <input 
-          type="number" 
-          id="vpfo-lsb-capacity-input" 
-          name="vpfo-lsb-capacity" 
-          min="0"
-          placeholder="Enter minimum"
-          value={capacityFilter}
-          onChange={(e) => setCapacityFilter(parseInt(e.target.value))}
-        />
+        <div className="slider-container">
+          <Slider
+            min={min}
+            max={max}
+            value={capacityFilter}
+            ariaLabelledby="vpfo-lsb-capacity-input"
+            onChange={(value, idx) => setCapacityFilter(value)}
+            pearling
+            minDistance={25}
+            renderThumb={(props, state) => <div {...props}>{ state.valueNow }</div>}
+          />
+        </div>
       </div>
     )
   }
@@ -282,11 +312,15 @@ export default function Filters(props) {
         <label id="vpfo-lsb-furniture" htmlFor="vpfo-lsb-furniture-input">
           Style
         </label>
-        <Select 
+        <Select
           options={furnitureOptions}
           value={furnitureFilter}
           name="vpfo-lsb-furniture"
           isClearable
+          isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
+          closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-furniture-input"
@@ -307,6 +341,11 @@ export default function Filters(props) {
           value={layoutFilter}
           name="vpfo-lsb-layout"
           isClearable
+          isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
+          menuPortalTarget={document.querySelector('body')}
+          closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-layout-input"
@@ -326,7 +365,10 @@ export default function Filters(props) {
           options={ISAmenitiesOptions}
           value={ISAmenitiesFilter}
           isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
           isClearable
+          closeMenuOnSelect={false}
           styles={selectStyles}
           name="vpfo-lsb-informal-amenities"
           components={animatedComponents}
@@ -348,6 +390,10 @@ export default function Filters(props) {
           value={buildingFilter}
           name="vpfo-lsb-building"
           isClearable
+          isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
+          closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
           inputId="vpfo-lsb-building-input"
@@ -367,7 +413,10 @@ export default function Filters(props) {
           options={accessibilityOptions}
           value={accessibilityFilter}
           isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
           isClearable
+          closeMenuOnSelect={false}
           styles={selectStyles}
           name="vpfo-lsb-accessibility"
           components={animatedComponents}
@@ -388,12 +437,39 @@ export default function Filters(props) {
           options={audioVisualOptions}
           value={audioVisualFilter}
           isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
           isClearable
+          closeMenuOnSelect={false}
           styles={selectStyles}
           name="vpfo-lsb-audio-visual"
           components={animatedComponents}
           inputId="vpfo-lsb-audio-visual-input"
           onChange={(selected) => setAudioVisualFilter(selected)}
+        />
+      </div>
+    )
+  }
+
+  const renderOtherRoomFeaturesSelect = () => {
+    return (
+      <div className="select-group">
+        <label id="vpfo-lsb-other-room-features" htmlFor="vpfo-lsb-other-room-features-input">
+          Other Room Features
+        </label>
+        <Select 
+          options={otherRoomFeatureOptions}
+          value={otherRoomFeaturesFilter}
+          isMulti
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
+          isClearable
+          closeMenuOnSelect={false}
+          styles={selectStyles}
+          name="vpfo-lsb-other-room-features"
+          components={animatedComponents}
+          inputId="vpfo-lsb-other-room-features-input"
+          onChange={(selected) => setOtherRoomFeaturesFilter(selected)}
         />
       </div>
     )
@@ -413,6 +489,23 @@ export default function Filters(props) {
     filterToggleClass += ' vpfo-lsb-filters-mobile-toggle-open'
   } else {
     filterToggleClass += ' vpfo-lsb-filters-mobile-toggle-closed'
+  }
+
+  const resetLocalFilters = () => {
+    setAudioVisualFilter([]);
+    setOtherRoomFeaturesFilter([]);
+    setAccessibilityFilter([]);
+    setBuildingFilter([]);
+    setFurnitureFilter([]);
+    setLayoutFilter([]);
+    setCapacityFilter([min, max]);
+    setISAmenitiesFilter([]);
+  }
+
+  const clearFilters = () => {
+    props.clearFilters();
+
+    resetLocalFilters();
   }
 
   return (<>
@@ -454,6 +547,13 @@ export default function Filters(props) {
           >
             Submit Filters
           </button>
+
+          <a role="button" tabIndex={0} className="vpfo-lsb-filter-clear-all btn btn-secondary" onClick={clearFilters}>
+            Clear filters
+            <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.70615 2.06895C10.0968 1.67832 10.0968 1.04395 9.70615 0.65332C9.31553 0.262695 8.68115 0.262695 8.29053 0.65332L4.9999 3.94707L1.70615 0.656445C1.31553 0.26582 0.681152 0.26582 0.290527 0.656445C-0.100098 1.04707 -0.100098 1.68145 0.290527 2.07207L3.58428 5.3627L0.293652 8.65645C-0.0969726 9.04707 -0.0969726 9.68145 0.293652 10.0721C0.684277 10.4627 1.31865 10.4627 1.70928 10.0721L4.9999 6.77832L8.29365 10.0689C8.68428 10.4596 9.31865 10.4596 9.70928 10.0689C10.0999 9.67832 10.0999 9.04395 9.70928 8.65332L6.41553 5.3627L9.70615 2.06895Z" fill="#005DA6"/>
+            </svg>
+          </a>
         </form>
       </>
     }

@@ -10,14 +10,14 @@
   margin-right: 16px;
 
   @include media-breakpoint-up(lg) {
-    width: 220px;
-    min-width: 220px;
+    width: 300px;
+    min-width: 300px;
 
     height: fit-content;
-    position: sticky;
-    overflow-y: scroll;
-    top: 16px;
-    max-height: 100vh;
+    // position: sticky;
+    // overflow-y: scroll;
+    // top: 16px;
+    // max-height: 100vh;
   }
 
   &.vpfo-lsb-filters-container-loading {
@@ -46,28 +46,6 @@
     }
   }
 
-  .input-group,
-  .select-group {
-    margin-bottom: 1rem;
-
-    label {
-      font-family: $font-whitney;
-      font-weight: 600;
-      color: $ubc-blue;
-      font-size: 14px;
-      line-height: 22px;
-    }
-  }
-
-  .input-group input {
-    display: block;
-    max-width: 100%;
-    border: 1px solid $ubc-grey-medium-dark;
-    padding: 8px;
-    height: auto;
-    width: 100%;
-  }
-
   // Styled in Filters.tsx
   .select-group select {
   }
@@ -94,6 +72,78 @@
   input[type=number] {
     -moz-appearance: textfield;
   }
+
+  .slider-container {
+    display: flex;
+    align-items: baseline;
+    flex-direction: column;
+
+    .slider {
+      width: 100%;
+    }
+
+
+    .slider-endpoints {
+      display: flex;
+      justify-content: space-between;
+      flex-grow: 1;
+      width: 100%;
+      margin-top: 4px;
+
+      .slider-endpoint {
+        p {
+          margin-bottom: 0;
+          font-size: 14px;
+        }
+      }
+    }
+
+  }
+
+  // Slider
+  .slider {
+    margin-top: 12px;
+    position: relative;
+    height: 8px; // Adjust height as needed
+    background-color: $ubc-grey-medium-light;
+    border-radius: 4px; // Makes the track rounded
+  
+    .track {
+      position: absolute;
+      height: 100%;
+      background-color: $ubc-blue;
+      border-radius: 4px;
+    }
+  
+    .thumb {
+      position: absolute;
+      top: -12px;
+      touch-action: none;
+      z-index: 1;
+      width: 32px; // Adjust size to fit the value text
+      height: 32px; // Circular shape
+      background-color: $ubc-blue;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white; // Text color for the value
+      font-size: 12px; // Adjust font size as needed
+      font-weight: bold;
+  
+      .thumb-value {
+        display: inline-block;
+      }
+  
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 4px $ubc-blue;
+      }
+    }
+  }
+
 }
 
 .vpfo-lsb-filters-mobile-toggle {

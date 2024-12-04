@@ -13,10 +13,82 @@
     flex-direction: row;
   }
 
+  .input-group,
+  .select-group {
+    margin-bottom: 1rem;
+
+    label {
+      font-family: $font-whitney;
+      font-weight: 600;
+      color: $ubc-blue;
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+
+  .input-group input {
+    display: block;
+    max-width: 100%;
+    border: 1px solid $ubc-grey-medium-dark;
+    padding: 8px;
+    height: auto;
+    width: 100%;
+  }
+
+  .vpfo-lsb-result-count {
+    font-family: $font-whitney;
+    font-weight: 700;
+    color: $ubc-blue;
+    font-size: 14px;
+    line-height: 30px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .vpfo-lsb-table-top-bar-inner {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .vpfo-lsb-sort {
+    .select-group {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 0;
+
+      label {
+        margin-right: 8px;
+        text-wrap: nowrap;
+      }
+    }
+  }
+
+  .vpfo-lsb-filter-clear-all {
+    display: inline-flex;
+    align-items: center;
+    
+    svg {
+      margin-left: 8px;
+    }
+  }
+
+  .vpfo-lsb-filters-container {
+    .vpfo-lsb-filter-clear-all {
+      margin-top: 12px;
+    }
+  }
+
   .vpfo-lsb-filter-slugs {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     flex-direction: row;
-    margin-bottom: 16px;
+    height: 100%;
+
+    .vpfo-lsb-filter-clear-all {
+      padding: 5px;
+    }
 
     .vpfo-lsb-filter-slug {
       padding-left: 8px;
@@ -28,22 +100,7 @@
       line-height: 22px;
       font-size: 14px;
       margin-right: 14px;
-    }
-
-    .vpfo-lsb-filter-clear-all {
-      display: inline-flex;
-      align-items: center;
-      
-      text-transform: uppercase;
-      color: $ubc-brand-blue;
-      font-family: $font-whitney;
-      font-weight: 700;
-      font-size: 14px;
-      text-decoration: none;
-      
-      svg {
-        margin-left: 8px;
-      }
+      margin-bottom: 8px;
     }
   }
 }

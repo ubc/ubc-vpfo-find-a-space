@@ -10,7 +10,7 @@ class Airtable_Api {
 	private $van_airtable;
 	private $okan_airtable;
 
-	const CACHE_TTL      = 3600;
+	const CACHE_TTL      = HOUR_IN_SECONDS * 12; // 12 hours
 	const ROOMS_PER_PAGE = 10;
 
 	private static $campus_mapping = array(
@@ -124,7 +124,7 @@ class Airtable_Api {
 			$records   = get_transient( $cache_key );
 
 			if ( $records ) {
-				return $records;
+				return $this->filter_empty_options( $records, $params );
 			}
 		}
 
@@ -132,7 +132,7 @@ class Airtable_Api {
 
 		if ( null !== $cache_key ) {
 			$records = $this->sanitize_for_transient( $records );
-			set_transient( $cache_key, $records, self::CACHE_TTL ); // Cache for 1 hour
+			set_transient( $cache_key, $records, self::CACHE_TTL );
 		}
 
 		return $records;
@@ -143,6 +143,13 @@ class Airtable_Api {
 		$payload['fields'] = array(
 			'Name',
 			'Description',
+		);
+
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
 		);
 
 		return $this->filter_empty_options(
@@ -161,8 +168,15 @@ class Airtable_Api {
 			'Informal Count',
 		);
 
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
+		);
+
 		$formula_parts[]            = '{Hide from Filter Drop Down} = 0';
-		$payload['filterByFormula'] = implode( 'AND ', $formula_parts );
+		$payload['filterByFormula'] = 'AND(' . implode( ', ', $formula_parts ) . ')';
 
 		return $this->filter_empty_options(
 			$this->airtable_get( 'Accessibility', $payload, $params ),
@@ -177,6 +191,13 @@ class Airtable_Api {
 			'Description',
 			'Formal Count',
 			'Informal Count',
+		);
+
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
 		);
 
 		return $this->filter_empty_options(
@@ -194,22 +215,41 @@ class Airtable_Api {
 			'Informal Count',
 		);
 
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
+		);
+
 		return $this->filter_empty_options(
 			$this->airtable_get( 'Furniture', $payload, $params ),
 			$params
 		);
 	}
 
-	public function get_resources( array $params ) {
+	public function get_other_room_features( array $params ) {
 		$payload           = array();
+		$formula_parts     = array();
 		$payload['fields'] = array(
-			'File Name',
-			'Attachment',
+			'Name',
 			'Category',
+			'Description',
 		);
 
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
+		);
+
+		$formula_parts[]            = '{Hide from Filter Drop Down} = 0';
+		$formula_parts[]            = '{Category} = "Other Room Features"';
+		$payload['filterByFormula'] = 'AND(' . implode( ', ', $formula_parts ) . ')';
+
 		return $this->filter_empty_options(
-			$this->airtable_get( 'All Resources', $payload, $params ),
+			$this->airtable_get( 'Amenities', $payload, $params ),
 			$params
 		);
 	}
@@ -221,12 +261,25 @@ class Airtable_Api {
 			'Name',
 			'Category',
 			'Description',
+			'Formal Count',
+			'Informal Count',
+		);
+
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Filter Sort',
+				'direction' => 'asc',
+			),
 		);
 
 		$formula_parts[]            = '{Hide from Filter Drop Down} = 0';
-		$payload['filterByFormula'] = implode( 'AND ', $formula_parts );
+		$formula_parts[]            = '{Category} != "Other Room Features"';
+		$payload['filterByFormula'] = 'AND(' . implode( ', ', $formula_parts ) . ')';
 
-		return $this->airtable_get( 'Amenities', $payload, $params );
+		return $this->filter_empty_options(
+			$this->airtable_get( 'Amenities', $payload, $params ),
+			$params
+		);
 	}
 
 	public function get_buildings( array $params ) {
@@ -238,6 +291,13 @@ class Airtable_Api {
 			'Building Name (override)',
 			'Formal Count',
 			'Informal Count',
+		);
+
+		$payload['sort'] = array(
+			array(
+				'field'     => 'Building Name',
+				'direction' => 'asc',
+			),
 		);
 
 		$buildings = $this->filter_empty_options(
@@ -269,7 +329,9 @@ class Airtable_Api {
 
 		$payload['fields'] = array(
 			'Title',
-			'Building Name',
+			'Name',
+			'Buildings - Building Name',
+			'Buildings - Building Name (override)',
 			'Building Code',
 			'Room Number',
 			'Image Gallery',
@@ -285,6 +347,43 @@ class Airtable_Api {
 		$payload['pageSize']        = self::ROOMS_PER_PAGE;
 		$payload['offset']          = $params['offset'] ?? null;
 		$payload['filterByFormula'] = $this->get_rooms_filter_formula( $params );
+
+		// Defaults for sorting on Airtable Classrooms
+		$sort_direction = 'asc';
+		$sort_field     = 'Title';
+
+		// Modify sorting based on the provided sort parameter
+		switch ( $params['sort_by'] ) {
+			case 'alpha_asc':
+				// No change
+				break;
+			case 'alpha_desc':
+				$sort_direction = 'desc';
+				break;
+			case 'capacity_asc':
+				$sort_field     = 'Capacity';
+				$sort_direction = 'asc';
+				break;
+			case 'capacity_desc':
+				$sort_field     = 'Capacity';
+				$sort_direction = 'desc';
+				break;
+			case 'code_asc':
+				$sort_field     = 'Name';
+				$sort_direction = 'asc';
+				break;
+			case 'code_desc':
+				$sort_field     = 'Name';
+				$sort_direction = 'desc';
+				break;
+		}
+
+		$payload['sort'] = array(
+			array(
+				'field'     => $sort_field,
+				'direction' => $sort_direction,
+			),
+		);
 
 		$rooms = $this->airtable_get( 'Classrooms', $payload, $params );
 
@@ -305,6 +404,18 @@ class Airtable_Api {
 					return $record;
 				},
 				$rooms['records']
+			);
+		}
+
+		// Sort the rooms by levenshein distance to improve search results.
+		if ( null !== $rooms['records'] && ! empty( $params['search'] ) ) {
+			$search = sanitize_text_field( $params['search'] );
+
+			usort(
+				$rooms['records'],
+				function ( $a, $b ) use ( $search ) {
+					return levenshtein( $search, strtolower( $a->fields['Name'] ) ) - levenshtein( $search, strtolower( $b->fields['Name'] ) );
+				}
 			);
 		}
 
@@ -353,16 +464,28 @@ class Airtable_Api {
 			return 'AND(' . implode( ', ', $formula_parts ) . ')';
 		}
 
-		$capacity_filter           = isset( $filters['capacityFilter'] ) ? (int) $filters['capacityFilter'] : null;
-		$audiovideo_filter         = $filters['audioVisualFilter'] ?? array();
-		$accessibility_filter      = $filters['accessibilityFilter'] ?? array();
-		$building_filter           = $filters['buildingFilter'] ?? array();
-		$furniture_filter          = $filters['furnitureFilter'] ?? array();
-		$informal_amenities_filter = $filters['informalAmenitiesFilter'] ?? array();
-		$layout_filter             = $filters['layoutFilter'] ?? array();
+		$capacity_filter            = isset( $filters['capacityFilter'] ) ? $filters['capacityFilter'] : null;
+		$audiovideo_filter          = $filters['audioVisualFilter'] ?? array();
+		$accessibility_filter       = $filters['accessibilityFilter'] ?? array();
+		$building_filter            = $filters['buildingFilter'] ?? array();
+		$furniture_filter           = $filters['furnitureFilter'] ?? array();
+		$informal_amenities_filter  = $filters['ISAmenitiesFilter'] ?? array();
+		$layout_filter              = $filters['layoutFilter'] ?? array();
+		$other_room_features_filter = $filters['otherRoomFeaturesFilter'] ?? array();
 
-		if ( $capacity_filter ) {
-			$formula_parts[] = "{Capacity} >= $capacity_filter";
+		// Set a default capacity min/max
+		$capacity_min_max = array( 0, 503 );
+
+		// Sanitize capacity filter.
+		if ( $capacity_filter && count( $capacity_filter ) === 2 ) {
+			$capacity_min_max[0] = absint( $capacity_filter[0] );
+			$capacity_min_max[1] = absint( $capacity_filter[1] );
+		}
+
+		// Apply the filter for capacity only if it is not default.
+		if ( 0 !== $capacity_min_max[0] || 503 !== $capacity_min_max[1] ) {
+			$formula_parts[] = "{Capacity} >= $capacity_min_max[0]";
+			$formula_parts[] = "{Capacity} <= $capacity_min_max[1]";
 		}
 
 		if ( ! empty( $informal_amenities_filter ) ) {
@@ -383,25 +506,52 @@ class Airtable_Api {
 			}
 		}
 
-		if ( ! empty( $building_filter ) ) {
-			$building_code = sanitize_text_field( $building_filter['value'][0] ?? '' );
-			if ( $building_code ) {
-				$formula_parts[] = "{Building Code} = '$building_code'";
+		if ( ! empty( $other_room_features_filter ) ) {
+			foreach ( $other_room_features_filter as $filter ) {
+				$value = sanitize_text_field( $filter['value'] ?? '' );
+				if ( $value ) {
+					$formula_parts[] = "FIND('$value', {Filter_Amenities})";
+				}
 			}
+		}
+
+		if ( ! empty( $building_filter ) ) {
+			$building_filter_parts = array();
+
+			foreach ( $building_filter as $filter ) {
+				$value = sanitize_text_field( $filter['value'][0] ?? '' );
+				if ( $value ) {
+					$building_filter_parts[] = "{Building Code} = '$value'";
+				}
+			}
+
+			$formula_parts[] = 'OR(' . implode( ', ', $building_filter_parts ) . ')';
 		}
 
 		if ( ! empty( $furniture_filter ) ) {
-			$value = sanitize_text_field( $furniture_filter['value'][0] ?? '' );
-			if ( $value ) {
-				$formula_parts[] = "FIND('$value', {Filter_Furniture})";
+			$furniture_filter_parts = array();
+
+			foreach ( $furniture_filter as $filter ) {
+				$value = sanitize_text_field( $filter['value'] ?? '' );
+				if ( $value ) {
+					$furniture_filter_parts[] = "FIND('$value', {Filter_Furniture})";
+				}
 			}
+
+			$formula_parts[] = 'OR(' . implode( ', ', $furniture_filter_parts ) . ')';
 		}
 
 		if ( ! empty( $layout_filter ) ) {
-			$value = sanitize_text_field( $layout_filter['value'][0] ?? '' );
-			if ( $value ) {
-				$formula_parts[] = "FIND('$value', {Filter_Room_Layout_Type})";
+			$layout_filter_parts = array();
+
+			foreach ( $layout_filter as $filter ) {
+				$value = sanitize_text_field( $filter['value'] ?? '' );
+				if ( $value ) {
+					$layout_filter_parts[] = "FIND('$value', {Filter_Room_Layout_Type})";
+				}
 			}
+
+			$formula_parts[] = 'OR(' . implode( ', ', $layout_filter_parts ) . ')';
 		}
 
 		if ( ! empty( $accessibility_filter ) ) {
@@ -422,7 +572,7 @@ class Airtable_Api {
 			foreach ( $search_parts as $part ) {
 				$part = strtolower( trim( $part ) );
 
-				$search_formula_parts[] = "FIND('$part', LOWER({Title}))";
+				$search_formula_parts[] = "FIND('$part', LOWER({Name}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Building Name}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Building Code}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Room Number}))";

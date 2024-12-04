@@ -101,20 +101,20 @@ class Find_A_Space_Ajax_Handler {
 			'should_cache' => true,
 		);
 
-		$shared_amenities   = $this->airtable_api->get( 'get_shared_amenities', $params );
-		$resources          = $this->airtable_api->get( 'get_resources', $params );
-		$informal_amenities = $this->airtable_api->get( 'get_informal_amenities', $params );
-		$accessibility      = $this->airtable_api->get( 'get_accessibility', $params );
-		$classroom_layouts  = $this->airtable_api->get( 'get_classroom_layouts', $params );
-		$furniture          = $this->airtable_api->get( 'get_furniture', $params );
+		$shared_amenities    = $this->airtable_api->get( 'get_shared_amenities', $params );
+		$other_room_features = $this->airtable_api->get( 'get_other_room_features', $params );
+		$informal_amenities  = $this->airtable_api->get( 'get_informal_amenities', $params );
+		$accessibility       = $this->airtable_api->get( 'get_accessibility', $params );
+		$classroom_layouts   = $this->airtable_api->get( 'get_classroom_layouts', $params );
+		$furniture           = $this->airtable_api->get( 'get_furniture', $params );
 
 		$payload = array(
-			'shared_amenities'   => $shared_amenities,
-			'resources'          => $resources,
-			'informal_amenities' => $informal_amenities,
-			'accessibility'      => $accessibility,
-			'classroom_layouts'  => $classroom_layouts,
-			'furniture'          => $furniture,
+			'shared_amenities'    => $shared_amenities,
+			'other_room_features' => $other_room_features,
+			'informal_amenities'  => $informal_amenities,
+			'accessibility'       => $accessibility,
+			'classroom_layouts'   => $classroom_layouts,
+			'furniture'           => $furniture,
 		);
 
 		return wp_send_json( array( 'data' => $payload ) );
@@ -133,7 +133,7 @@ class Find_A_Space_Ajax_Handler {
 		$params = array(
 			'campus'       => $campus,
 			'formal'       => $formal,
-			'should_cache' => true,
+			'should_cache' => false,
 		);
 
 		$data = $this->airtable_api->get( 'get_buildings', $params );
@@ -208,7 +208,7 @@ class Find_A_Space_Ajax_Handler {
 			return wp_send_json_error( 'Base URL not found' );
 		}
 
-		$url = sprintf( '%s/buildings/%s', $base_url, $slug );
+		$url = sprintf( '%s/buildings/%s?all_classroom=1', $base_url, $slug );
 
 		$res = wp_remote_get( $url, array( 'method' => 'GET' ) );
 
@@ -263,7 +263,21 @@ class Find_A_Space_Ajax_Handler {
 		$offset  = sanitize_text_field( $data['offset'] ?? null );
 		$search  = sanitize_text_field( $data['search'] ?? null );
 		$formal  = rest_sanitize_boolean( $data['formal'] ?? null );
+		$sort_by = sanitize_text_field( $data['sortBy'] ?? null );
 		$filters = $data['filters'] ?? null;
+
+		$allowed_sort_by = array(
+			'alpha_asc',
+			'alpha_desc',
+			'capacity_desc',
+			'capacity_asc',
+			'code_desc',
+			'code_asc',
+		);
+
+		if ( ! in_array( $sort_by, $allowed_sort_by, true ) ) {
+			$sort_by = 'alpha_asc';
+		}
 
 		$params = array(
 			'campus'       => $campus,
@@ -271,7 +285,8 @@ class Find_A_Space_Ajax_Handler {
 			'offset'       => $offset,
 			'filters'      => $filters,
 			'search'       => $search,
-			'should_cache' => true,
+			'should_cache' => false, // We cannot cache due to LIST_RECORDS_ITERATOR_NOT_AVAILABLE errors from Airtable.
+			'sort_by'      => $sort_by,
 		);
 
 		$data = $this->airtable_api->get( 'get_rooms', $params );

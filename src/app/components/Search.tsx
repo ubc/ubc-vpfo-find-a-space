@@ -16,7 +16,13 @@ const selectStyles = {
       borderColor: '#5E869F',
     }
   }),
+  menuPortal: (baseStyles, state) => ({
+    ...baseStyles,
+    zIndex: 100,
+ }),
 }
+
+const filterContainer = document.querySelector('.vpfo-lsb-filters-container');
 
 export default function Search(props) {
   const context = React.useContext(StateContext);
@@ -26,7 +32,7 @@ export default function Search(props) {
       callback: (options: any[]) => void
     ) => {
     // console.log('Fetching options...', { search });
-    if ( search.length < 3 ) return [];
+    if ( search.length < 2 ) return [];
 
     const payload = {
       ...context.config,
@@ -39,7 +45,7 @@ export default function Search(props) {
 
     if (res?.data?.records) {
       options = res.data.records.map(room => ({
-        label: room.fields.Title,
+        label: room.fields.Name,
         value: room.fields['Room Link']
       }));
     } else {
@@ -63,11 +69,14 @@ export default function Search(props) {
           loadOptions={getSelectOptions}
           name="vpfo-lsb-search"
           styles={selectStyles}
-          components={animatedComponents}
           noOptionsMessage={() => 'Start typing to search'}
           inputId="vpfo-lsb-search-input"
           placeholder="Search"
           loadingMessage={() => 'Loading...'}
+          blurInputOnSelect
+          menuPortalTarget={filterContainer}
+          menuPosition={'fixed'} 
+          components={{ ...animatedComponents, DropdownIndicator:() => null, IndicatorSeparator:() => null }}
           onChange={(selected) => {
             const url = selected.value;
             const slug = selected.value.substring(selected.value.lastIndexOf('/') + 1);

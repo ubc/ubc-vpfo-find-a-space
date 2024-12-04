@@ -55,6 +55,12 @@
 	.classroom-building-name {
 		color: $ubc-brand-blue;
 		line-height: 1;
+		text-decoration: none;
+
+		&:hover, &:focus {
+			outline: none;
+			text-decoration: underline;
+		}
 	}
 
 	dl {
