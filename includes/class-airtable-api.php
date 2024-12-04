@@ -565,6 +565,7 @@ class Airtable_Api {
 				$search_formula_parts[] = "FIND('$part', LOWER({Building Name}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Building Code}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Room Number}))";
+				$search_formula_parts[] = "FIND('$part', LOWER({Buildings - Alternate Building Name}))";
 			}
 
 			$formula_parts[] = 'OR(' . implode( ', ', $search_formula_parts ) . ')';
