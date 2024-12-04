@@ -41,9 +41,6 @@ export default function Filters(props) {
   const campus   = context.config.campus;
   const isFormal = context.config.formal;
 
-  let min = campus === 'vancouver' ? 8 : 18;
-  let max = campus === 'vancouver'? 503 : 400;
-
   const [filtersOpen, setFiltersOpen] = useState(true);
 
   // Meta, which contains Amenities, Resources, and Informal Amenities data.
@@ -93,7 +90,7 @@ export default function Filters(props) {
   const [buildingFilter, setBuildingFilter] = useState(getInitialFilterState('buildingFilter') ?? {});
   const [furnitureFilter, setFurnitureFilter] = useState<any[]>(getInitialFilterState('furnitureFilter') ?? []);
   const [layoutFilter, setLayoutFilter] = useState<any[]>(getInitialFilterState('layoutFilter') ?? []);
-  const [capacityFilter, setCapacityFilter] = useState<number[]>(getInitialFilterState('capacityFilter') ?? [min, max]);
+  const [capacityFilter, setCapacityFilter] = useState<number[]>(getInitialFilterState('capacityFilter') ?? [0, 1000]);
   const [ISAmenitiesFilter, setISAmenitiesFilter] = useState<any[]>(getInitialFilterState('ISAmenitiesFilter') ?? []);
 
   const setupBuildingOptions = (records) => {
@@ -252,7 +249,7 @@ export default function Filters(props) {
     event.preventDefault();
 
     let capacityFilterSend = null;
-    if ( capacityFilter.length === 2 && (capacityFilter[0] !== min || capacityFilter[1] !== max) ) {
+    if ( capacityFilter.length === 2 && (capacityFilter[0] !== meta.min_max[0] || capacityFilter[1] !== meta.min_max[1]) ) {
       capacityFilterSend = capacityFilter;
     }
 
@@ -293,8 +290,8 @@ export default function Filters(props) {
         </label>
         <div className="slider-container">
           <Slider
-            min={min}
-            max={max}
+            min={meta.min_max[0]}
+            max={meta.min_max[1]}
             value={capacityFilter}
             ariaLabelledby="vpfo-lsb-capacity-input"
             onChange={(value, idx) => setCapacityFilter(value)}
@@ -494,6 +491,10 @@ export default function Filters(props) {
 
   const resetLocalFilters = () => {
     setAudioVisualFilter([]);
+
+    const min = meta?.min_max[0] ?? 0;
+    const max = meta?.min_max[1] ?? 1000;
+
     setOtherRoomFeaturesFilter([]);
     setAccessibilityFilter([]);
     setBuildingFilter([]);

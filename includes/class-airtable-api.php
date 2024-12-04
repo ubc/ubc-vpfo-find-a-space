@@ -324,6 +324,56 @@ class Airtable_Api {
 		return $buildings;
 	}
 
+	public function get_capacity_min_max( array $params ) {
+		$is_informal_string = rest_sanitize_boolean( $params['formal'] ) ? '0' : '1';
+
+		$payload_min = array(
+			'fields'          => array(
+				'Capacity',
+			),
+			'sort'            => array(
+				array(
+					'field'     => 'Capacity',
+					'direction' => 'asc',
+				),
+			),
+			'pageSize'        => 1,
+			'filterByFormula' => 'AND({Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
+		);
+		$payload_max = array(
+			'fields'          => array(
+				'Capacity',
+			),
+			'sort'            => array(
+				array(
+					'field'     => 'Capacity',
+					'direction' => 'desc',
+				),
+			),
+			'pageSize'        => 1,
+			'filterByFormula' => 'AND({Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
+		);
+
+		$min = 0;
+		$max = 1000;
+
+		try {
+			$rooms_min = $this->airtable_get( 'Classrooms', $payload_min, $params );
+			$rooms_max = $this->airtable_get( 'Classrooms', $payload_max, $params );
+
+			if ( ! empty( $rooms_min['records'] ) ) {
+				$min = (int) $rooms_min['records'][0]->fields->Capacity;
+			}
+
+			if ( ! empty( $rooms_max['records'] ) ) {
+				$max = (int) $rooms_max['records'][0]->fields->Capacity;
+			}
+		} catch ( \Exception $exception ) { // phpcs:ignore
+		}
+
+		return array( $min, $max );
+	}
+
 	public function get_rooms( array $params ) {
 		$payload = array();
 
@@ -416,6 +466,11 @@ class Airtable_Api {
 
 	private function filter_empty_options( array $response, array $params ) {
 		$formal = (bool) $params['formal'];
+
+		// We are caching some non-standard responses.
+		if ( ! isset( $response['records'] ) ) {
+			return $response;
+		}
 
 		$records = $response['records'] ?? array();
 
@@ -554,7 +609,7 @@ class Airtable_Api {
 
 		// Finally, apply search if provided.
 		if ( $search ) {
-			$search               = preg_replace( '/[^A-Za-z0-9 ]/', '', $search ); // Remove non alphanumeric characters
+			$search               = preg_replace( '/[^A-Za-z0-9]/', '', $search ); // Remove non alphanumeric characters
 			$search_parts         = explode( ' ', $search ); // Explode search string into parts
 			$search_formula_parts = array();
 
