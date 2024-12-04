@@ -271,7 +271,7 @@ export default function Filters(props) {
 
   const renderFormalFilters = () => {
     return <>
-      <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
+      <span className="vpfo-lsb-filter-heading">Filter Results</span>
       { renderBuildingSelect() }
       { renderCapacityInput() }
       { renderFurnitureSelect() }
@@ -284,7 +284,7 @@ export default function Filters(props) {
 
   const renderInformalFilters = () => {
     return <>
-      <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
+      <span className="vpfo-lsb-filter-heading">Filter Results</span>
       {/* { renderFurnitureSelect() } */}
       {/* { renderLayoutSelect() } */}
       { renderBuildingSelect() }
@@ -532,7 +532,7 @@ export default function Filters(props) {
       meta !== null &&
       <>
         <div className={filterToggleClass} onClick={toggleFilters}>
-          <h5>Search and Filter</h5>
+          <span>Search and Filter</span>
           { filtersOpen === true &&
             <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M9.70628 1.74619C10.0969 1.35557 10.0969 0.721191 9.70628 0.330566C9.31565 -0.0600586 8.68128 -0.0600586 8.29065 0.330566L5.00002 3.62432L1.70627 0.333691C1.31565 -0.0569337 0.681274 -0.0569337 0.290649 0.333691C-0.0999756 0.724316 -0.0999756 1.35869 0.290649 1.74932L3.5844 5.03994L0.293775 8.33369C-0.0968505 8.72432 -0.0968505 9.35869 0.293775 9.74932C0.6844 10.1399 1.31877 10.1399 1.7094 9.74932L5.00002 6.45557L8.29378 9.74619C8.6844 10.1368 9.31878 10.1368 9.7094 9.74619C10.1 9.35557 10.1 8.72119 9.7094 8.33057L6.41565 5.03994L9.70628 1.74619Z" fill="white"/>
