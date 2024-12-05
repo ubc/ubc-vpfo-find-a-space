@@ -621,7 +621,7 @@ class Airtable_Api {
 				$search_formula_parts[] = "FIND('$part', LOWER({Building Code}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Room Number}))";
 				// This column is a "Lookup" and as a reuslt we have to do some adjustments in the formula.
-				$search_formula_parts[] = "FIND('$part', LOWER(ARRAYJOIN({Buildings - Alternate Building Name}))";
+				$search_formula_parts[] = "FIND('$part', LOWER(ARRAYJOIN({Buildings - Alternate Building Name})))";
 			}
 
 			$formula_parts[] = 'OR(' . implode( ', ', $search_formula_parts ) . ')';
