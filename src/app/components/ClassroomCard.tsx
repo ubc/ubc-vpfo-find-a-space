@@ -34,7 +34,7 @@ export default function ClassroomCard(props) {
 			<img
 				key={ thumbProps.src }
 				src={ thumbProps.src }
-				alt={ thumbProps.alt }
+				alt=""
 				width={ thumbProps.width }
 				height={ thumbProps.height }
 			/>
