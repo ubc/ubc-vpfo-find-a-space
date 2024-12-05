@@ -80,7 +80,7 @@ export default function Table(props) {
 
     setNextPageOffset(res?.data?.offset);
 
-    // setAnnouncement('New page loaded');
+    setAnnouncement('New page loaded');
 
     props.setLoading(false);
   }
@@ -144,6 +144,10 @@ export default function Table(props) {
     () => {
       if ( containerRef && containerRef.current ) {
         containerRef.current.scrollIntoView({ behavior: "smooth" })
+        const firstCard = document.querySelector('.vpfo-lsb-result-list .classroom-card:first-of-type .classroom-building-name');
+        if ( firstCard ) {
+          firstCard.focus();
+        }
       }
     },
     200
@@ -208,17 +212,16 @@ export default function Table(props) {
       count = '10+';
     }
 
-    return <p className="vpfo-lsb-result-count">Showing { count } Results</p>
+    let message = `Showing ${count} Results`;
+
+    return <>
+      <p className="vpfo-lsb-result-count">{ message }</p>
+      <Announcer ariaLive={'polite'} message={ message } />
+    </>
   }
 
   return (
     <div ref={containerRef} className="vpfo-lsb-table-container">
-      {/* { announcement !== '' &&
-        <Announcer
-          message={announcement}
-          ariaLive="polite"
-        />
-      } */}
       { props.loading &&
         <div className="vpfo-lsb-loading-scrim"><div className="vpfo-lsb-loading-indicator"></div></div>
       }
@@ -255,6 +258,7 @@ export default function Table(props) {
 
         { rooms.length === 0 && props.loading === false && <>
           <div className="vpfo-lsb-no-results">No results found.</div>
+          <Announcer ariaLive={'polite'} message={'No results found.'} />
         </>}
 
         { rooms.length !== 0 && <>
