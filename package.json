@@ -32,6 +32,7 @@
 		"react-dom": "^18.3.1",
 		"react-router-dom": "^6.27.0",
 		"react-select": "^5.8.1",
-		"react-slider": "^2.0.6"
+		"react-slider": "^2.0.6",
+		"tippy.js": "^6.3.7"
 	}
 }

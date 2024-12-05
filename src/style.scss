@@ -1,3 +1,7 @@
+// Tippy css. Needs to be scoped outisde of .vpfo-lsb-block
+@import 'tippy.js/dist/tippy.css';
+@import 'tippy.js/themes/light.css';
+
 .vpfo-lsb-block {
   // Bootstrap base config
   @import "~bootstrap/scss/functions";
