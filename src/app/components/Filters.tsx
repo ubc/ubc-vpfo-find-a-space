@@ -297,7 +297,7 @@ export default function Filters(props) {
   const renderCapacityInput = () => {
     return (
       <div className="input-group">
-        <label id="vpfo-lsb-capacity" htmlFor="vpfo-lsb-capacity-input">
+        <label htmlFor="vpfo-lsb-capacity-input">
           Capacity
         </label>
         <div className="slider-container">
@@ -305,10 +305,9 @@ export default function Filters(props) {
             min={meta.min_max[0]}
             max={meta.min_max[1]}
             value={capacityFilter}
-            ariaLabelledBy="#vpfo-lsb-capacity"
+            id="vpfo-lsb-capacity-input"
             onChange={(value, idx) => setCapacityFilter(value)}
             pearling
-            className="vpfo-lsb-capacity-input"
             minDistance={25}
             renderThumb={(props, state) => <div {...props}>{ state.valueNow }</div>}
           />
