@@ -13,6 +13,9 @@ class Airtable_Api {
 	const CACHE_TTL      = HOUR_IN_SECONDS * 12; // 12 hours
 	const ROOMS_PER_PAGE = 10;
 
+	const FORMAL_COUNT_KEY   = 'Formal Count';
+	const INFORMAL_COUNT_KEY = 'Informal Count';
+
 	private static $campus_mapping = array(
 		'vancouver' => 'van_airtable',
 		'okanagan'  => 'okan_airtable',
@@ -164,8 +167,8 @@ class Airtable_Api {
 		$payload['fields'] = array(
 			'Name',
 			'Description',
-			'Formal Count',
-			'Informal Count',
+			self::FORMAL_COUNT_KEY,
+			self::INFORMAL_COUNT_KEY,
 		);
 
 		$payload['sort'] = array(
@@ -189,8 +192,8 @@ class Airtable_Api {
 		$payload['fields'] = array(
 			'Name',
 			'Description',
-			'Formal Count',
-			'Informal Count',
+			self::FORMAL_COUNT_KEY,
+			self::INFORMAL_COUNT_KEY,
 		);
 
 		$payload['sort'] = array(
@@ -211,8 +214,8 @@ class Airtable_Api {
 		$payload['fields'] = array(
 			'Name',
 			'Description',
-			'Formal Count',
-			'Informal Count',
+			self::FORMAL_COUNT_KEY,
+			self::INFORMAL_COUNT_KEY,
 		);
 
 		$payload['sort'] = array(
@@ -289,8 +292,8 @@ class Airtable_Api {
 			'Building Code',
 			'Building Name',
 			'Building Name (override)',
-			'Formal Count',
-			'Informal Count',
+			self::FORMAL_COUNT_KEY,
+			self::INFORMAL_COUNT_KEY,
 		);
 
 		$payload['sort'] = array(
@@ -467,18 +470,18 @@ class Airtable_Api {
 	private function filter_empty_options( array $response, array $params ) {
 		$formal = (bool) $params['formal'];
 
-		$formal_key   = 'Formal Count';
-		$informal_key = 'Informal Count';
+		$formal_key   = self::FORMAL_COUNT_KEY;
+		$informal_key = self::INFORMAL_COUNT_KEY;
 
 		// We are caching some non-standard responses.
 		if ( ! isset( $response['records'] ) || empty( $response['records'] ) ) {
 			return $response;
 		}
 
+		// If there is no formal or informal count, return the original response.
 		$first_record = $response['records'][0];
-		if ( property_exists( $first_record->fields, 'Cumulative Formal Count' ) ) {
-			$formal_key   = 'Cumulative Formal Count';
-			$informal_key = 'Cumulative Informal Count';
+		if ( ! property_exists( $first_record->fields, self::FORMAL_COUNT_KEY ) ) {
+			return $response;
 		}
 
 		$records = $response['records'] ?? array();
@@ -486,8 +489,8 @@ class Airtable_Api {
 		$records = array_values(
 			array_filter(
 				$response['records'],
-				function ( $record ) use ( $formal, $formal_key, $informal_key ) {
-					$key = $formal ? $formal_key : $informal_key;
+				function ( $record ) use ( $formal ) {
+					$key = $formal ? Airtable_Api::FORMAL_COUNT_KEY : Airtable_Api::INFORMAL_COUNT_KEY;
 					if ( ! property_exists( $record->fields, $key ) ) {
 						return true;
 					}
