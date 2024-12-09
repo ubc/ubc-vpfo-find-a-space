@@ -228,6 +228,10 @@ export default function Filters(props) {
 
     setMeta(data);
 
+    const min = data?.min_max[0] ?? 0;
+    const max = data?.min_max[1] ?? 1000;
+    setCapacityFilter([min, max]);
+
     // Amenities filter.
     setupAccessibilityOptions(data);
 
