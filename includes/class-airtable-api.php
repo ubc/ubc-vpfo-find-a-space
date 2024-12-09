@@ -471,7 +471,7 @@ class Airtable_Api {
 		$informal_key = 'Informal Count';
 
 		// We are caching some non-standard responses.
-		if ( ! isset( $response['records'] ) ) {
+		if ( ! isset( $response['records'] ) || empty( $response['records'] ) ) {
 			return $response;
 		}
 
