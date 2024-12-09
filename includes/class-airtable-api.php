@@ -261,8 +261,8 @@ class Airtable_Api {
 			'Name',
 			'Category',
 			'Description',
-			'Formal Count',
-			'Informal Count',
+			'Cumulative Formal Count',
+			'Cumulative Informal Count',
 		);
 
 		$payload['sort'] = array(
@@ -467,9 +467,18 @@ class Airtable_Api {
 	private function filter_empty_options( array $response, array $params ) {
 		$formal = (bool) $params['formal'];
 
+		$formal_key   = 'Formal Count';
+		$informal_key = 'Informal Count';
+
 		// We are caching some non-standard responses.
 		if ( ! isset( $response['records'] ) ) {
 			return $response;
+		}
+
+		$first_record = $response['records'][0];
+		if ( property_exists( $first_record->fields, 'Cumulative Formal Count' ) ) {
+			$formal_key   = 'Cumulative Formal Count';
+			$informal_key = 'Cumulative Informal Count';
 		}
 
 		$records = $response['records'] ?? array();
@@ -477,8 +486,8 @@ class Airtable_Api {
 		$records = array_values(
 			array_filter(
 				$response['records'],
-				function ( $record ) use ( $formal ) {
-					$key = $formal ? 'Formal Count' : 'Informal Count';
+				function ( $record ) use ( $formal, $formal_key, $informal_key ) {
+					$key = $formal ? $formal_key : $informal_key;
 					if ( ! property_exists( $record->fields, $key ) ) {
 						return true;
 					}
