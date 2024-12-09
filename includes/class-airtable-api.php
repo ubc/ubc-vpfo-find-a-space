@@ -609,7 +609,7 @@ class Airtable_Api {
 
 		// Finally, apply search if provided.
 		if ( $search ) {
-			$search               = preg_replace( '/[^A-Za-z0-9]/', '', $search ); // Remove non alphanumeric characters
+			$search               = preg_replace( '/[^A-Za-z0-9 ]/', '', $search ); // Remove non alphanumeric characters
 			$search_parts         = explode( ' ', $search ); // Explode search string into parts
 			$search_formula_parts = array();
 
