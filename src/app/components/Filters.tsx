@@ -79,6 +79,8 @@ export default function Filters(props) {
   // Furniture Options
   const [ISAmenitiesOptions, setISAmenitiesOptions] = useState<any[]>([]);
 
+  const [search, setSearch] = useState(null);
+
   const getInitialFilterState = (key) => {
     if ( ! props.filters ) {
       return null;
@@ -548,7 +550,7 @@ export default function Filters(props) {
 
         <form onSubmit={submitFilters} className="vpfo-lsb-filters-container" aria-live="polite">
 
-          <Search setLoading={props.setLoading} showClassroom={props.showClassroom} />
+          <Search setLoading={props.setLoading} showClassroom={props.showClassroom} search={search} setSearch={setSearch} />
 
           { isFormal === true && renderFormalFilters() }
           { isFormal === false && renderInformalFilters() }

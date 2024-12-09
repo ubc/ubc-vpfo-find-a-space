@@ -80,6 +80,7 @@ export default function Search(props) {
           escapeClearsValue={false}
           loadOptions={getSelectOptions}
           name="vpfo-lsb-search"
+          value={props.search}
           styles={selectStyles}
           noOptionsMessage={() => 'Start typing to search'}
           inputId="vpfo-lsb-search-input"
@@ -90,9 +91,14 @@ export default function Search(props) {
           menuPosition={'fixed'} 
           components={{ ...animatedComponents, DropdownIndicator:() => null, IndicatorSeparator:() => null }}
           onChange={(selected) => {
+            if ( ! selected ) {
+              return;
+            }
+
             const url = selected.value;
             const slug = selected.value.substring(selected.value.lastIndexOf('/') + 1);
             if ( slug ) {
+              props.setSearch(null);
               props.showClassroom(slug);
             }
           }}
