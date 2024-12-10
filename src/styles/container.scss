@@ -48,7 +48,8 @@
   .vpfo-lsb-table-top-bar-inner {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   .vpfo-lsb-sort {

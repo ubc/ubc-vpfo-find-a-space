@@ -124,6 +124,14 @@ export default function App() {
     setSearchParams(searchParams);
 	}, [filters, classroom, building]);
 
+  /**
+   * Handles browser back button.
+   */
+  useEffect(() => {
+    setClassroom(getClassroomStateFromQuery());
+    setBuilding(getBuildingStateFromQuery());
+  }, [searchParams])
+
 	const handleShowClassroom = (newClassroom) => {
     setClassroom(newClassroom);
     setBuilding('');

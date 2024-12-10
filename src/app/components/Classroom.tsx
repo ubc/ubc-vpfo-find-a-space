@@ -5,6 +5,7 @@ import { getClassroom } from '../services/api';
 import instantiateSlider from '../services/slider';
 import instantiateAccordions from '../services/accordion';
 import instantiateLightbox from '../services/lightbox';
+import instantiateClipboard from '../services/clipboard';
 import DOMPurify from 'dompurify';
 
 export default function Classroom(props) {
@@ -17,6 +18,7 @@ export default function Classroom(props) {
       instantiateSlider();
       instantiateAccordions();
       instantiateLightbox();
+      instantiateClipboard();
     }
   }, [classroomHtml])
 

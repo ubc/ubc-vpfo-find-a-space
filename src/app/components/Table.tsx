@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StateContext } from '../StateProvider';
 import { getRooms } from '../services/api';
 import ClassroomCard from './ClassroomCard';
+import Announcer from './Announcer';
 import _ from 'lodash';
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
@@ -19,10 +20,8 @@ const selectStyles = {
 }
 
 const sortByOptions = [
-  { label: 'Building Name (A-Z)', value: 'alpha_asc' },
-  { label: 'Building Name (Z-A)', value: 'alpha_desc' },
-  { label: 'Building Code (A-Z', value: 'code_asc' },
-  { label: 'Building Code (Z-A)', value: 'code_desc' },
+  { label: 'Building Name (A to Z)', value: 'alpha_asc' },
+  { label: 'Building Name (Z to A)', value: 'alpha_desc' },
   { label: 'Capacity (Ascending)', value: 'capacity_asc' },
   { label: 'Capacity (Descending)', value: 'capacity_desc' },
 ]
@@ -34,6 +33,7 @@ export default function Table(props) {
   const [prevPageOffset, setPrevPageOffset] = useState(null);
   const [prevOffsets, setPrevOffsets]       = useState([]);
   const [sortBy, setSortBy]                 = useState(sortByOptions[0]);
+  const [announcement, setAnnouncement]     = useState('');
 
   const containerRef = React.useRef(null);
 
@@ -79,6 +79,8 @@ export default function Table(props) {
     }
 
     setNextPageOffset(res?.data?.offset);
+
+    setAnnouncement('New page loaded');
 
     props.setLoading(false);
   }
@@ -142,6 +144,10 @@ export default function Table(props) {
     () => {
       if ( containerRef && containerRef.current ) {
         containerRef.current.scrollIntoView({ behavior: "smooth" })
+        const firstCard = document.querySelector('.vpfo-lsb-result-list .classroom-card:first-of-type .classroom-building-name');
+        if ( firstCard ) {
+          firstCard.focus();
+        }
       }
     },
     200
@@ -170,8 +176,8 @@ export default function Table(props) {
     // });
 
     if ( props.filters['capacityFilter'] && props.filters['capacityFilter'] !== null ) {
-      // console.log(props.filters['capacityFilter'])
-      filters.push('Capacity ' + props.filters['capacityFilter']?.toString());
+      const [ min, max ] = props.filters['capacityFilter'];
+      filters.push('Capacity ' + min.toString() + ' to ' + max.toString());
     }
 
     return filters;
@@ -206,7 +212,12 @@ export default function Table(props) {
       count = '10+';
     }
 
-    return <p className="vpfo-lsb-result-count">Showing { count } Results</p>
+    let message = `Showing ${count} Results`;
+
+    return <>
+      <p className="vpfo-lsb-result-count">{ message }</p>
+      <Announcer ariaLive={'polite'} message={ message } />
+    </>
   }
 
   return (
@@ -247,6 +258,7 @@ export default function Table(props) {
 
         { rooms.length === 0 && props.loading === false && <>
           <div className="vpfo-lsb-no-results">No results found.</div>
+          <Announcer ariaLive={'polite'} message={'No results found.'} />
         </>}
 
         { rooms.length !== 0 && <>

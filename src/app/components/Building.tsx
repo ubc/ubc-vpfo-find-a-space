@@ -3,10 +3,17 @@ import { StateContext } from '../StateProvider';
 import _ from 'lodash';
 import { getBuilding } from '../services/api';
 import DOMPurify from 'dompurify';
+import instantiateClipboard from '../services/clipboard';
 
 export default function Building(props) {
   const context = React.useContext(StateContext);
   const [buildingHtml, setBuildingHtml] = useState(null);
+
+  useEffect(() => {
+    if ( buildingHtml ) {
+      instantiateClipboard();
+    }
+  }, [buildingHtml])
 
   const getBuildingHtml = async (slug) => {
     const payload = {
