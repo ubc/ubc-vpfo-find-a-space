@@ -264,8 +264,8 @@ class Airtable_Api {
 			'Name',
 			'Category',
 			'Description',
-			'Cumulative Formal Count',
-			'Cumulative Informal Count',
+			'Formal Count',
+			'Informal Count',
 		);
 
 		$payload['sort'] = array(
@@ -622,7 +622,7 @@ class Airtable_Api {
 		// Finally, apply search if provided.
 		if ( $search ) {
 			$search               = preg_replace( '/[^A-Za-z0-9 ]/', '', $search ); // Remove non alphanumeric characters
-			$search_parts         = explode( ' ', $search ); // Explode search string into parts
+			$search_parts         = array( $search );
 			$search_formula_parts = array();
 
 			foreach ( $search_parts as $part ) {
