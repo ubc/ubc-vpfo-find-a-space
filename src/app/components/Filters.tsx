@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { StateContext } from '../StateProvider';
 import { getBuildings, getMeta } from '../services/api';
 import Search from './Search';
@@ -18,9 +18,21 @@ const selectStyles = {
     }
   }),
   menuPortal: (baseStyles, state) => ({
-     ...baseStyles,
-     zIndex: 100,
+    ...baseStyles,
+    zIndex: 100,
   }),
+  placeholder: (baseStyles, state) => ({
+      ...baseStyles,
+      color: '#002145',
+  }),
+  loadingIndicator: (baseStyles, state) => ({
+   ...baseStyles,
+    color: '#002145',
+  }),
+  noOptionsMessage: (baseStyles, state) => ({
+    ...baseStyles,
+     color: '#002145',
+   }),
 }
 
 const filterContainer = document.querySelector('.vpfo-lsb-filters-container');
@@ -36,11 +48,9 @@ const groupRecordsByCategory = (data) => {
   }, {});
 };
 
-const min = 0;
-const max = 503;
-
 export default function Filters(props) {
-  const context = React.useContext(StateContext);
+  const context  = React.useContext(StateContext);
+  const campus   = context.config.campus;
   const isFormal = context.config.formal;
 
   const [filtersOpen, setFiltersOpen] = useState(true);
@@ -69,6 +79,8 @@ export default function Filters(props) {
   // Furniture Options
   const [ISAmenitiesOptions, setISAmenitiesOptions] = useState<any[]>([]);
 
+  const [search, setSearch] = useState(null);
+
   const getInitialFilterState = (key) => {
     if ( ! props.filters ) {
       return null;
@@ -92,7 +104,7 @@ export default function Filters(props) {
   const [buildingFilter, setBuildingFilter] = useState(getInitialFilterState('buildingFilter') ?? {});
   const [furnitureFilter, setFurnitureFilter] = useState<any[]>(getInitialFilterState('furnitureFilter') ?? []);
   const [layoutFilter, setLayoutFilter] = useState<any[]>(getInitialFilterState('layoutFilter') ?? []);
-  const [capacityFilter, setCapacityFilter] = useState<number[]>(getInitialFilterState('capacityFilter') ?? [min, max]);
+  const [capacityFilter, setCapacityFilter] = useState<number[]>(getInitialFilterState('capacityFilter') ?? [0, 1000]);
   const [ISAmenitiesFilter, setISAmenitiesFilter] = useState<any[]>(getInitialFilterState('ISAmenitiesFilter') ?? []);
 
   const setupBuildingOptions = (records) => {
@@ -100,7 +112,7 @@ export default function Filters(props) {
 
     options = records.map(building => {
       return {
-        label: building.fields['Building Name'],
+        label: building.fields['Building Code'] + ' - ' + building.fields['Building Name'],
         value: building.fields['Building Code'],
       }
     })
@@ -216,6 +228,10 @@ export default function Filters(props) {
 
     setMeta(data);
 
+    const min = data?.min_max[0] ?? 0;
+    const max = data?.min_max[1] ?? 1000;
+    setCapacityFilter([min, max]);
+
     // Amenities filter.
     setupAccessibilityOptions(data);
 
@@ -251,7 +267,7 @@ export default function Filters(props) {
     event.preventDefault();
 
     let capacityFilterSend = null;
-    if ( capacityFilter.length === 2 && (capacityFilter[0] !== min || capacityFilter[1] !== max) ) {
+    if ( capacityFilter.length === 2 && (capacityFilter[0] !== meta.min_max[0] || capacityFilter[1] !== meta.min_max[1]) ) {
       capacityFilterSend = capacityFilter;
     }
 
@@ -261,7 +277,7 @@ export default function Filters(props) {
 
   const renderFormalFilters = () => {
     return <>
-      <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
+      <span className="vpfo-lsb-filter-heading">Filter Results</span>
       { renderBuildingSelect() }
       { renderCapacityInput() }
       { renderFurnitureSelect() }
@@ -274,7 +290,7 @@ export default function Filters(props) {
 
   const renderInformalFilters = () => {
     return <>
-      <h5 className="vpfo-lsb-filter-heading">Filter Results</h5>
+      <span className="vpfo-lsb-filter-heading">Filter Results</span>
       {/* { renderFurnitureSelect() } */}
       {/* { renderLayoutSelect() } */}
       { renderBuildingSelect() }
@@ -292,10 +308,10 @@ export default function Filters(props) {
         </label>
         <div className="slider-container">
           <Slider
-            min={min}
-            max={max}
+            min={meta.min_max[0]}
+            max={meta.min_max[1]}
             value={capacityFilter}
-            ariaLabelledby="vpfo-lsb-capacity-input"
+            id="vpfo-lsb-capacity-input"
             onChange={(value, idx) => setCapacityFilter(value)}
             pearling
             minDistance={25}
@@ -310,7 +326,7 @@ export default function Filters(props) {
     return (
       <div className="select-group">
         <label id="vpfo-lsb-furniture" htmlFor="vpfo-lsb-furniture-input">
-          Style
+          Furniture
         </label>
         <Select
           options={furnitureOptions}
@@ -344,7 +360,6 @@ export default function Filters(props) {
           isMulti
           menuPortalTarget={filterContainer}
           menuPosition={'fixed'} 
-          menuPortalTarget={document.querySelector('body')}
           closeMenuOnSelect={false}
           styles={selectStyles}
           components={animatedComponents}
@@ -364,13 +379,13 @@ export default function Filters(props) {
         <Select 
           options={ISAmenitiesOptions}
           value={ISAmenitiesFilter}
+          name="vpfo-lsb-informal-amenities"
+          isClearable
           isMulti
           menuPortalTarget={filterContainer}
           menuPosition={'fixed'} 
-          isClearable
           closeMenuOnSelect={false}
           styles={selectStyles}
-          name="vpfo-lsb-informal-amenities"
           components={animatedComponents}
           inputId="vpfo-lsb-informal-amenities-input"
           onChange={(selected) => setISAmenitiesFilter(selected)}
@@ -493,6 +508,10 @@ export default function Filters(props) {
 
   const resetLocalFilters = () => {
     setAudioVisualFilter([]);
+
+    const min = meta?.min_max[0] ?? 0;
+    const max = meta?.min_max[1] ?? 1000;
+
     setOtherRoomFeaturesFilter([]);
     setAccessibilityFilter([]);
     setBuildingFilter([]);
@@ -519,7 +538,7 @@ export default function Filters(props) {
       meta !== null &&
       <>
         <div className={filterToggleClass} onClick={toggleFilters}>
-          <h5>Search and Filter</h5>
+          <span>Search and Filter</span>
           { filtersOpen === true &&
             <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M9.70628 1.74619C10.0969 1.35557 10.0969 0.721191 9.70628 0.330566C9.31565 -0.0600586 8.68128 -0.0600586 8.29065 0.330566L5.00002 3.62432L1.70627 0.333691C1.31565 -0.0569337 0.681274 -0.0569337 0.290649 0.333691C-0.0999756 0.724316 -0.0999756 1.35869 0.290649 1.74932L3.5844 5.03994L0.293775 8.33369C-0.0968505 8.72432 -0.0968505 9.35869 0.293775 9.74932C0.6844 10.1399 1.31877 10.1399 1.7094 9.74932L5.00002 6.45557L8.29378 9.74619C8.6844 10.1368 9.31878 10.1368 9.7094 9.74619C10.1 9.35557 10.1 8.72119 9.7094 8.33057L6.41565 5.03994L9.70628 1.74619Z" fill="white"/>
@@ -533,9 +552,9 @@ export default function Filters(props) {
           }
         </div>
 
-        <form onSubmit={submitFilters} className="vpfo-lsb-filters-container">
+        <form onSubmit={submitFilters} className="vpfo-lsb-filters-container" aria-live="polite">
 
-          <Search setLoading={props.setLoading} showClassroom={props.showClassroom} />
+          <Search setLoading={props.setLoading} showClassroom={props.showClassroom} search={search} setSearch={setSearch} />
 
           { isFormal === true && renderFormalFilters() }
           { isFormal === false && renderInformalFilters() }

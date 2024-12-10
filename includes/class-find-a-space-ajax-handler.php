@@ -107,6 +107,7 @@ class Find_A_Space_Ajax_Handler {
 		$accessibility       = $this->airtable_api->get( 'get_accessibility', $params );
 		$classroom_layouts   = $this->airtable_api->get( 'get_classroom_layouts', $params );
 		$furniture           = $this->airtable_api->get( 'get_furniture', $params );
+		$min_max             = $this->airtable_api->get( 'get_capacity_min_max', $params );
 
 		$payload = array(
 			'shared_amenities'    => $shared_amenities,
@@ -115,6 +116,7 @@ class Find_A_Space_Ajax_Handler {
 			'accessibility'       => $accessibility,
 			'classroom_layouts'   => $classroom_layouts,
 			'furniture'           => $furniture,
+			'min_max'             => $min_max,
 		);
 
 		return wp_send_json( array( 'data' => $payload ) );
@@ -271,8 +273,6 @@ class Find_A_Space_Ajax_Handler {
 			'alpha_desc',
 			'capacity_desc',
 			'capacity_asc',
-			'code_desc',
-			'code_asc',
 		);
 
 		if ( ! in_array( $sort_by, $allowed_sort_by, true ) ) {

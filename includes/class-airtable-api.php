@@ -13,6 +13,9 @@ class Airtable_Api {
 	const CACHE_TTL      = HOUR_IN_SECONDS * 12; // 12 hours
 	const ROOMS_PER_PAGE = 10;
 
+	const FORMAL_COUNT_KEY   = 'Formal Count';
+	const INFORMAL_COUNT_KEY = 'Informal Count';
+
 	private static $campus_mapping = array(
 		'vancouver' => 'van_airtable',
 		'okanagan'  => 'okan_airtable',
@@ -164,8 +167,8 @@ class Airtable_Api {
 		$payload['fields'] = array(
 			'Name',
 			'Description',
-			'Formal Count',
-			'Informal Count',
+			self::FORMAL_COUNT_KEY,
+			self::INFORMAL_COUNT_KEY,
 		);
 
 		$payload['sort'] = array(
@@ -189,8 +192,8 @@ class Airtable_Api {
 		$payload['fields'] = array(
 			'Name',
 			'Description',
-			'Formal Count',
-			'Informal Count',
+			self::FORMAL_COUNT_KEY,
+			self::INFORMAL_COUNT_KEY,
 		);
 
 		$payload['sort'] = array(
@@ -211,8 +214,8 @@ class Airtable_Api {
 		$payload['fields'] = array(
 			'Name',
 			'Description',
-			'Formal Count',
-			'Informal Count',
+			self::FORMAL_COUNT_KEY,
+			self::INFORMAL_COUNT_KEY,
 		);
 
 		$payload['sort'] = array(
@@ -261,8 +264,8 @@ class Airtable_Api {
 			'Name',
 			'Category',
 			'Description',
-			'Formal Count',
-			'Informal Count',
+			'Cumulative Formal Count',
+			'Cumulative Informal Count',
 		);
 
 		$payload['sort'] = array(
@@ -289,13 +292,13 @@ class Airtable_Api {
 			'Building Code',
 			'Building Name',
 			'Building Name (override)',
-			'Formal Count',
-			'Informal Count',
+			self::FORMAL_COUNT_KEY,
+			self::INFORMAL_COUNT_KEY,
 		);
 
 		$payload['sort'] = array(
 			array(
-				'field'     => 'Building Name',
+				'field'     => 'Building Code',
 				'direction' => 'asc',
 			),
 		);
@@ -324,6 +327,56 @@ class Airtable_Api {
 		return $buildings;
 	}
 
+	public function get_capacity_min_max( array $params ) {
+		$is_informal_string = rest_sanitize_boolean( $params['formal'] ) ? '0' : '1';
+
+		$payload_min = array(
+			'fields'          => array(
+				'Capacity',
+			),
+			'sort'            => array(
+				array(
+					'field'     => 'Capacity',
+					'direction' => 'asc',
+				),
+			),
+			'pageSize'        => 1,
+			'filterByFormula' => 'AND({Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
+		);
+		$payload_max = array(
+			'fields'          => array(
+				'Capacity',
+			),
+			'sort'            => array(
+				array(
+					'field'     => 'Capacity',
+					'direction' => 'desc',
+				),
+			),
+			'pageSize'        => 1,
+			'filterByFormula' => 'AND({Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
+		);
+
+		$min = 0;
+		$max = 1000;
+
+		try {
+			$rooms_min = $this->airtable_get( 'Classrooms', $payload_min, $params );
+			$rooms_max = $this->airtable_get( 'Classrooms', $payload_max, $params );
+
+			if ( ! empty( $rooms_min['records'] ) ) {
+				$min = (int) $rooms_min['records'][0]->fields->Capacity;
+			}
+
+			if ( ! empty( $rooms_max['records'] ) ) {
+				$max = (int) $rooms_max['records'][0]->fields->Capacity;
+			}
+		} catch ( \Exception $exception ) { // phpcs:ignore
+		}
+
+		return array( $min, $max );
+	}
+
 	public function get_rooms( array $params ) {
 		$payload = array();
 
@@ -350,7 +403,7 @@ class Airtable_Api {
 
 		// Defaults for sorting on Airtable Classrooms
 		$sort_direction = 'asc';
-		$sort_field     = 'Title';
+		$sort_field     = 'Name';
 
 		// Modify sorting based on the provided sort parameter
 		switch ( $params['sort_by'] ) {
@@ -366,14 +419,6 @@ class Airtable_Api {
 				break;
 			case 'capacity_desc':
 				$sort_field     = 'Capacity';
-				$sort_direction = 'desc';
-				break;
-			case 'code_asc':
-				$sort_field     = 'Name';
-				$sort_direction = 'asc';
-				break;
-			case 'code_desc':
-				$sort_field     = 'Name';
 				$sort_direction = 'desc';
 				break;
 		}
@@ -425,13 +470,27 @@ class Airtable_Api {
 	private function filter_empty_options( array $response, array $params ) {
 		$formal = (bool) $params['formal'];
 
+		$formal_key   = self::FORMAL_COUNT_KEY;
+		$informal_key = self::INFORMAL_COUNT_KEY;
+
+		// We are caching some non-standard responses.
+		if ( ! isset( $response['records'] ) || empty( $response['records'] ) ) {
+			return $response;
+		}
+
+		// If there is no formal or informal count, return the original response.
+		$first_record = $response['records'][0];
+		if ( ! property_exists( $first_record->fields, self::FORMAL_COUNT_KEY ) ) {
+			return $response;
+		}
+
 		$records = $response['records'] ?? array();
 
 		$records = array_values(
 			array_filter(
 				$response['records'],
 				function ( $record ) use ( $formal ) {
-					$key = $formal ? 'Formal Count' : 'Informal Count';
+					$key = $formal ? Airtable_Api::FORMAL_COUNT_KEY : Airtable_Api::INFORMAL_COUNT_KEY;
 					if ( ! property_exists( $record->fields, $key ) ) {
 						return true;
 					}
@@ -474,7 +533,7 @@ class Airtable_Api {
 		$other_room_features_filter = $filters['otherRoomFeaturesFilter'] ?? array();
 
 		// Set a default capacity min/max
-		$capacity_min_max = array( 0, 503 );
+		$capacity_min_max = array( 0, 1000 );
 
 		// Sanitize capacity filter.
 		if ( $capacity_filter && count( $capacity_filter ) === 2 ) {
@@ -482,11 +541,8 @@ class Airtable_Api {
 			$capacity_min_max[1] = absint( $capacity_filter[1] );
 		}
 
-		// Apply the filter for capacity only if it is not default.
-		if ( 0 !== $capacity_min_max[0] || 503 !== $capacity_min_max[1] ) {
-			$formula_parts[] = "{Capacity} >= $capacity_min_max[0]";
-			$formula_parts[] = "{Capacity} <= $capacity_min_max[1]";
-		}
+		$formula_parts[] = "{Capacity} >= $capacity_min_max[0]";
+		$formula_parts[] = "{Capacity} <= $capacity_min_max[1]";
 
 		if ( ! empty( $informal_amenities_filter ) ) {
 			foreach ( $informal_amenities_filter as $filter ) {
@@ -576,6 +632,8 @@ class Airtable_Api {
 				$search_formula_parts[] = "FIND('$part', LOWER({Building Name}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Building Code}))";
 				$search_formula_parts[] = "FIND('$part', LOWER({Room Number}))";
+				// This column is a "Lookup" and as a reuslt we have to do some adjustments in the formula.
+				$search_formula_parts[] = "FIND('$part', LOWER(ARRAYJOIN({Buildings - Alternate Building Name})))";
 			}
 
 			$formula_parts[] = 'OR(' . implode( ', ', $search_formula_parts ) . ')';
