@@ -341,7 +341,7 @@ class Airtable_Api {
 				),
 			),
 			'pageSize'        => 1,
-			'filterByFormula' => 'AND({Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
+			'filterByFormula' => 'AND({Published} = "Yes", {Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
 		);
 		$payload_max = array(
 			'fields'          => array(
@@ -354,7 +354,7 @@ class Airtable_Api {
 				),
 			),
 			'pageSize'        => 1,
-			'filterByFormula' => 'AND({Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
+			'filterByFormula' => 'AND({Published} = "Yes", {Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
 		);
 
 		$min = 0;
@@ -514,6 +514,7 @@ class Airtable_Api {
 
 		// Do not show hidden rooms.
 		$formula_parts[] = '{Is Hidden} = 0';
+		$formula_parts[] = "{Published} = 'Yes'";
 
 		// Filter to informal / formal learning spaces.
 		$formula_parts[] = '{Is Informal Space} = ' . $is_informal_string;
