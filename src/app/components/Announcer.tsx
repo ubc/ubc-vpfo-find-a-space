@@ -14,11 +14,11 @@ const offScreenStyle = {
 export default function Announcer({ message, ariaLive }) {
   return (
     <div
-      style={offScreenStyle}
-      role="log"
+      // style={offScreenStyle}
+      role="status"
       aria-live={ariaLive}
       aria-relevant="additions"
-      aria-atomic="true">
+      aria-atomic="false">
       {message ? message : ''}
     </div>
   );
