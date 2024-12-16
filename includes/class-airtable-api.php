@@ -288,6 +288,11 @@ class Airtable_Api {
 	public function get_buildings( array $params ) {
 		$payload = array();
 
+		$formula_parts   = array();
+		$formula_parts[] = "{Published} = 'Yes'";
+
+		$payload['filterByFormula'] = 'AND(' . implode( ', ', $formula_parts ) . ')';
+
 		$payload['fields'] = array(
 			'Building Code',
 			'Building Name',
@@ -469,9 +474,6 @@ class Airtable_Api {
 
 	private function filter_empty_options( array $response, array $params ) {
 		$formal = (bool) $params['formal'];
-
-		$formal_key   = self::FORMAL_COUNT_KEY;
-		$informal_key = self::INFORMAL_COUNT_KEY;
 
 		// We are caching some non-standard responses.
 		if ( ! isset( $response['records'] ) || empty( $response['records'] ) ) {
