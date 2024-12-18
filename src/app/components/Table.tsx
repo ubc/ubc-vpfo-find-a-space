@@ -216,7 +216,7 @@ export default function Table(props) {
 
     return <>
       <p className="vpfo-lsb-result-count">{ message }</p>
-      <Announcer ariaLive={'polite'} message={ message } />
+      {/* <Announcer ariaLive={'assertive'} message={ message } /> */}
     </>
   }
 
@@ -258,7 +258,7 @@ export default function Table(props) {
 
         { rooms.length === 0 && props.loading === false && <>
           <div className="vpfo-lsb-no-results">No results found.</div>
-          <Announcer ariaLive={'polite'} message={'No results found.'} />
+          {/* <Announcer ariaLive={'polite'} message={'No results found.'} /> */}
         </>}
 
         { rooms.length !== 0 && <>

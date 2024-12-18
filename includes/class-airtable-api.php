@@ -288,6 +288,11 @@ class Airtable_Api {
 	public function get_buildings( array $params ) {
 		$payload = array();
 
+		$formula_parts   = array();
+		$formula_parts[] = "{Published} = 'Yes'";
+
+		$payload['filterByFormula'] = 'AND(' . implode( ', ', $formula_parts ) . ')';
+
 		$payload['fields'] = array(
 			'Building Code',
 			'Building Name',
@@ -341,7 +346,7 @@ class Airtable_Api {
 				),
 			),
 			'pageSize'        => 1,
-			'filterByFormula' => 'AND({Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
+			'filterByFormula' => 'AND({Published} = "Yes", {Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
 		);
 		$payload_max = array(
 			'fields'          => array(
@@ -354,7 +359,7 @@ class Airtable_Api {
 				),
 			),
 			'pageSize'        => 1,
-			'filterByFormula' => 'AND({Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
+			'filterByFormula' => 'AND({Published} = "Yes", {Is Hidden} = 0, {Is Informal Space} = ' . $is_informal_string . ')',
 		);
 
 		$min = 0;
@@ -470,9 +475,6 @@ class Airtable_Api {
 	private function filter_empty_options( array $response, array $params ) {
 		$formal = (bool) $params['formal'];
 
-		$formal_key   = self::FORMAL_COUNT_KEY;
-		$informal_key = self::INFORMAL_COUNT_KEY;
-
 		// We are caching some non-standard responses.
 		if ( ! isset( $response['records'] ) || empty( $response['records'] ) ) {
 			return $response;
@@ -514,6 +516,7 @@ class Airtable_Api {
 
 		// Do not show hidden rooms.
 		$formula_parts[] = '{Is Hidden} = 0';
+		$formula_parts[] = "{Published} = 'Yes'";
 
 		// Filter to informal / formal learning spaces.
 		$formula_parts[] = '{Is Informal Space} = ' . $is_informal_string;
