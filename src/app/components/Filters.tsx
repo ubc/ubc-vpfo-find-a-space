@@ -218,6 +218,13 @@ export default function Filters(props) {
     setISAmenitiesOptions(options);
   }
 
+  const setupGlossaryTerms = (meta) => {
+    const glossary = meta?.glossary_terms || {};
+    window.vpfo_glossary_terms = glossary;
+
+    return;
+  }
+
   const setupMeta = async () => {
     let payload = {
       ...context.config,
@@ -249,6 +256,9 @@ export default function Filters(props) {
 
     // Other room features filter.
     setupOtherRoomFeaturesOptions(data);
+
+    // Glossary terms into window.
+    setupGlossaryTerms(data);
   }
 
   useEffect(() => {

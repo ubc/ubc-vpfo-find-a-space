@@ -6,6 +6,7 @@ import instantiateSlider from '../services/slider';
 import instantiateAccordions from '../services/accordion';
 import instantiateLightbox from '../services/lightbox';
 import instantiateClipboard from '../services/clipboard';
+import instantiateGlossaryTooltips from '../services/glossary-tooltip';
 import DOMPurify from 'dompurify';
 
 export default function Classroom(props) {
@@ -19,6 +20,7 @@ export default function Classroom(props) {
       instantiateAccordions();
       instantiateLightbox();
       instantiateClipboard();
+      instantiateGlossaryTooltips();
     }
   }, [classroomHtml])
 

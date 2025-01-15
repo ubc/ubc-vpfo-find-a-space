@@ -119,4 +119,12 @@
 		// 	background: linear-gradient(to bottom, $utility-white 0%, $utility-white 12.5%, transparent 100%);
 		// }
 	}
+
+  .glossary-info {
+    cursor: pointer;
+    display: inline-flex;
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
+  }
 }
