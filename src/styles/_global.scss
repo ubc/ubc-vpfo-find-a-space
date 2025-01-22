@@ -3,6 +3,11 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
+// Site style was leaking into our plugin, this fixes it.
+.vpfo .vpfo-spaces-page a.btn[target="_blank"]::after {
+  content: '';
+}
+
 .vpfo-spaces-page {
 	-webkit-font-smoothing: antialiased;
 	font-family: $font-whitney;
