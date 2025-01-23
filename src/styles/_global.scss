@@ -4,7 +4,7 @@
 @import "~bootstrap/scss/mixins";
 
 // Site style was leaking into our plugin, this fixes it.
-.vpfo .vpfo-spaces-page a.btn[target="_blank"]::after {
+.vpfo .vpfo-lsb-block a.btn[target="_blank"]::after {
   content: '';
 }
 
