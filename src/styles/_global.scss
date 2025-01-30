@@ -3,6 +3,11 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
+// Site style was leaking into our plugin, this fixes it.
+.vpfo .vpfo-spaces-page a.btn[target="_blank"]::after {
+  content: '';
+}
+
 .vpfo-spaces-page {
 	-webkit-font-smoothing: antialiased;
 	font-family: $font-whitney;
@@ -119,4 +124,12 @@
 		// 	background: linear-gradient(to bottom, $utility-white 0%, $utility-white 12.5%, transparent 100%);
 		// }
 	}
+
+  .glossary-info {
+    cursor: pointer;
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    margin-left: 4px;
+  }
 }

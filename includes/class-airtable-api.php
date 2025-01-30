@@ -187,6 +187,17 @@ class Airtable_Api {
 		);
 	}
 
+	public function get_glossary( array $params ) {
+		$payload['fields'] = array(
+			'Term',
+			'Definition',
+		);
+
+		$resources = $this->airtable_get( 'Glossary', $payload, $params );
+
+		return $resources;
+	}
+
 	public function get_classroom_layouts( array $params ) {
 		$payload           = array();
 		$payload['fields'] = array(

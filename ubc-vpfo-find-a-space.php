@@ -4,7 +4,7 @@
  * Description:       Example block scaffolded with Create Block tool.
  * Requires at least: 6.6
  * Requires PHP:      7.0
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Paperleaf ZGM
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -27,7 +27,7 @@ require_once 'vendor/autoload.php';
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'UBC_VPFO_FIND_A_SPACE_VERSION', '1.0.0' );
+define( 'UBC_VPFO_FIND_A_SPACE_VERSION', '1.0.1' );
 
 require plugin_dir_path( __FILE__ ) . 'includes/class-find-a-space.php';
 
