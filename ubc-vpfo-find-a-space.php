@@ -27,7 +27,7 @@ require_once 'vendor/autoload.php';
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'UBC_VPFO_FIND_A_SPACE_VERSION', '1.0.1' );
+define( 'UBC_VPFO_FIND_A_SPACE_VERSION', '1.0.2' );
 
 require plugin_dir_path( __FILE__ ) . 'includes/class-find-a-space.php';
 
