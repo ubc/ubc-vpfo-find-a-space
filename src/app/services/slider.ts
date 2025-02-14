@@ -1,8 +1,8 @@
 import Glider from 'glider-js';
 
 export default function instantiateSlider() {
-  const gliderElement           = document.querySelector( '.classroom-image-gallery .glider' ) as null|HTMLElement;
-  const gliderThumbnailsElement = document.querySelector( '.classroom-image-gallery .glider-thumbnails' ) as null|HTMLElement;
+  const gliderElement           = document.querySelector( '.image-gallery .glider' ) as null|HTMLElement;
+  const gliderThumbnailsElement = document.querySelector( '.image-gallery .glider-thumbnails' ) as null|HTMLElement;
 
   // Check if the glider element exists
   if ( ! gliderElement || ! gliderThumbnailsElement ) {
@@ -36,7 +36,7 @@ export default function instantiateSlider() {
   gliderThumbnailsElement.style.opacity = '1';
   gliderThumbnailsElement.style.height  = 'auto';
 
-  const thumbnails = document.querySelectorAll( '.classroom-image-gallery .glider-thumbnails .glider-thumbnail img' );
+  const thumbnails = document.querySelectorAll( '.image-gallery .glider-thumbnails .glider-thumbnail img' );
 
   // Function to update the active class on thumbnails
   function updateActiveThumbnail(index) {
