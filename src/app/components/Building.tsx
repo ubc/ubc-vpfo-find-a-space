@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { getBuilding } from '../services/api';
 import DOMPurify from 'dompurify';
 import instantiateClipboard from '../services/clipboard';
+import instantiateSlider from '../services/slider';
 
 export default function Building(props) {
   const context = React.useContext(StateContext);
@@ -11,6 +12,7 @@ export default function Building(props) {
 
   useEffect(() => {
     if ( buildingHtml ) {
+      instantiateSlider();
       instantiateClipboard();
     }
   }, [buildingHtml])
