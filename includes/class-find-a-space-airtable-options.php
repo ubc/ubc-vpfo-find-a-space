@@ -1,6 +1,6 @@
 <?php
 
-namespace UbcVpfoSpacesPage;
+namespace UbcVpfoFindASpace;
 
 defined( 'ABSPATH' ) || exit;
 
