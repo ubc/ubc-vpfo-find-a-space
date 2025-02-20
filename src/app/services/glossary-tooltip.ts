@@ -64,8 +64,10 @@ export default function instantiateGlossaryTooltips() {
             if (beforeText) fragment.appendChild(document.createTextNode(beforeText));
             fragment.appendChild(termSpan);
             fragment.appendChild(infoIndicator);
-            
-            node.parentNode.replaceChild(fragment, node);
+
+            if ( node.parentNode ) {
+              node.parentNode.replaceChild(fragment, node);
+            }
           }
         });
       } else if (node.nodeType === Node.ELEMENT_NODE) {
