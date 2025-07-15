@@ -314,7 +314,7 @@ class Airtable_Api {
 
 		$payload['sort'] = array(
 			array(
-				'field'     => 'Building Code',
+				'field'     => 'Code',
 				'direction' => 'asc',
 			),
 		);
