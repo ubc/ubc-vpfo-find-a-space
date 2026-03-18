@@ -314,7 +314,7 @@ class Airtable_Api {
 
 		$payload['sort'] = array(
 			array(
-				'field'     => 'Building Code',
+				'field'     => 'Code',
 				'direction' => 'asc',
 			),
 		);
@@ -628,7 +628,7 @@ class Airtable_Api {
 			foreach ( $accessibility_filter as $filter ) {
 				$value = sanitize_text_field( $filter['value'] ?? '' );
 				if ( $value ) {
-					$formula_parts[] = "FIND('$value', {Filter_Accessibility})";
+					$formula_parts[] = "FIND(', $value', CONCATENATE(', ', {Filter_Accessibility}))";
 				}
 			}
 		}
