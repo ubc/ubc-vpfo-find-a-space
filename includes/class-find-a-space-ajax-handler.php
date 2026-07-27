@@ -78,11 +78,19 @@ class Find_A_Space_Ajax_Handler {
 		// Single building
 		add_action( 'wp_ajax_find_a_space_building', array( $this, 'single_building_callback' ) );
 		add_action( 'wp_ajax_nopriv_find_a_space_building', array( $this, 'single_building_callback' ) );
+
+		// Refresh an expired nonce. Deliberately requires no nonce of its own.
+		add_action( 'wp_ajax_find_a_space_get_nonce', array( $this, 'get_nonce_callback' ) );
+		add_action( 'wp_ajax_nopriv_find_a_space_get_nonce', array( $this, 'get_nonce_callback' ) );
 	}
 
 	private function verify_nonce() {
 		return ( isset( $_REQUEST['_nonce'] )
 			&& wp_verify_nonce( $_REQUEST['_nonce'], self::NONCE_KEY ) );
+	}
+
+	public function get_nonce_callback() {
+		return wp_send_json( array( 'nonce' => wp_create_nonce( self::NONCE_KEY ) ) );
 	}
 
 	public function meta_callback() {
