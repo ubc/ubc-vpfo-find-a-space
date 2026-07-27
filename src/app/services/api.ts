@@ -3,12 +3,29 @@ import axios, {isCancel, AxiosError} from 'axios';
 axios.defaults.baseURL = (window as any).find_a_space_script_vars.ajax_url;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
-function ajaxPost(action, payload) {
-  return axios.post('', {
+let currentNonce = (window as any).find_a_space_script_vars._nonce;
+
+async function refreshNonce() {
+  const res = await axios.post('', { action: 'find_a_space_get_nonce' });
+  currentNonce = res?.data?.nonce;
+  return currentNonce;
+}
+
+async function ajaxPost(action, payload, isRetry = false) {
+  const res = await axios.post('', {
     action: action,
     data  : payload,
-    _nonce: (window as any).find_a_space_script_vars._nonce,
+    _nonce: currentNonce,
   });
+
+  // The nonce embedded in the page can go stale on long-lived or cached
+  // pages. Refresh it and retry once before giving up.
+  if ( res?.data?.success === false && res?.data?.data === 'Invalid nonce' && ! isRetry ) {
+    await refreshNonce();
+    return ajaxPost(action, payload, true);
+  }
+
+  return res;
 }
 
 export function getClassroom(payload) {
